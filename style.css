@@ -59,14 +59,14 @@ header > div button:hover {
   display: flex;
   flex-direction: column;
   gap: 0.9375rem;
-  width: 10rem;
+  width: 8rem;
 }
 .sidebar menu a {
   color: #CDCDCD;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0;
   transition: all 300ms ease-in-out;
   line-height: 120%;
   z-index: 10;
@@ -98,7 +98,7 @@ header > div button:hover {
 .sidebar footer {
   display: flex;
   flex-direction: column;
-  width: 10rem;
+  width: 8rem;
   gap: 1.25rem;
 }
 .sidebar footer a {
