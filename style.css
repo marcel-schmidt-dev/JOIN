@@ -7,18 +7,57 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+}
+.sidebar a {
+  text-decoration: none;
 }
 .sidebar menu {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9375rem;
+  width: 10rem;
 }
 .sidebar menu a {
+  color: #CDCDCD;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  transition: all 300ms ease-in-out;
+  line-height: 120%;
+  z-index: 10;
 }
 .sidebar menu a svg path {
   fill: #CDCDCD;
+  transition: all 300ms ease-in-out;
+}
+.sidebar menu a::before {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 42px;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  transition: all 300ms ease-in-out;
+}
+.sidebar menu a:hover {
+  color: #FFF;
+}
+.sidebar menu a:hover:before {
+  background-color: #091931;
+}
+.sidebar menu a:hover svg path {
+  fill: #FFF;
 }
 
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter.ttf") format("truetype");
+}
 * {
   margin: 0;
   padding: 0;
@@ -28,6 +67,7 @@
 body {
   background-color: #F6F7F8;
   font-size: 16px;
+  font-family: "Inter", sans-serif;
 }
 
 .app {
