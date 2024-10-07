@@ -53,6 +53,20 @@
 .sidebar menu a:hover svg path {
   fill: #FFF;
 }
+.sidebar footer {
+  display: flex;
+  flex-direction: column;
+  width: 10rem;
+  gap: 1.25rem;
+}
+.sidebar footer a {
+  color: #A8A8A8;
+  transition: all 300ms ease-in-out;
+  line-height: 120%;
+}
+.sidebar footer a:hover {
+  color: #29ABE2;
+}
 
 @font-face {
   font-family: "Inter";
