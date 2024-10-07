@@ -1,6 +1,20 @@
 @import './scss/vars.scss';
+@import './scss/sidebar.scss';
 @import './scss/contact.scss';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     background-color: $background;
+    font-size: 16px;
+}
+
+.app {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
 }

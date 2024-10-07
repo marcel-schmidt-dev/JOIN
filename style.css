@@ -1,3 +1,37 @@
+.sidebar {
+  width: 100%;
+  max-width: 232px;
+  background-color: #2A3647;
+  padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.sidebar menu {
+  width: 100%;
+}
+.sidebar menu a {
+  display: flex;
+  justify-content: center;
+}
+.sidebar menu a svg path {
+  fill: #CDCDCD;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background-color: #F6F7F8;
+  font-size: 16px;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
 }/*# sourceMappingURL=style.css.map */
