@@ -12,7 +12,7 @@ export default function returnSidebar() {
             </menu>
             <footer>
                 <a href="#">Privacy Policy</a>
-                <a href="#">legal notice</a>
+                <a href="#">Legal notice</a>
             </footer>
         </div>
     `
