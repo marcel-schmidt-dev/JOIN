@@ -1,9 +1,8 @@
-import returnHeader from "./components/header.js";
-import returnSidebar from "./components/sideBar.js";
+import returnHeader from "./components/header/header.js";
+import returnSidebar from "./components/sidebar/sidebar.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     const urlPath = window.location.pathname;
-    console.log(urlPath);
 
     if (urlPath !== '/' && urlPath !== '/index.html') {
         document.body.innerHTML += /*html*/`
@@ -13,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 ${returnHeader()}
                 <div class="content"></div>
             </div>
-        </div>
-    `
+        </div>`
     }
 });

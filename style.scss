@@ -1,7 +1,7 @@
 @import './scss/vars.scss';
-@import './scss/header.scss';
-@import './scss/sidebar.scss';
-@import './scss/contact.scss';
+@import './components/header/header.scss';
+@import './components/header/header.scss';
+@import './components/contacts/contacts.scss';
 
 @font-face {
     font-family: 'Inter';

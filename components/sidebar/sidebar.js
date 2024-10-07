@@ -1,4 +1,4 @@
-import returnIcon from "./icons.js"
+import returnIcon from "../icons.js"
 
 export default function returnSidebar() {
     return /*html*/`
