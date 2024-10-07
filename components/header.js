@@ -5,8 +5,8 @@ export default function returnHeader() {
         <header>
             <span>Kanban Projekt Management Tool</span>
             <div>
-                ${returnIcon('help')}
-                <button>JN</button>
+                <a href="./help.html">${returnIcon('help')}</a>
+                <button>G</button>
             </div>
         </header>
     `
