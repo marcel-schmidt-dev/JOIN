@@ -5,14 +5,14 @@ export default function returnSidebar() {
         <div class="sidebar">
             ${returnIcon('logo-light')}
             <menu>
-                <a href="#">${returnIcon('summary')} Summary</a>
-                <a href="#">${returnIcon('add-task')} Add Task</a>
-                <a href="#">${returnIcon('board')} Board</a>
-                <a href="#">${returnIcon('contacts')} Contacts</a>
+                <a href="./summary.html">${returnIcon('summary')} Summary</a>
+                <a href="./add-task.html">${returnIcon('add-task')} Add Task</a>
+                <a href="./board.html">${returnIcon('board')} Board</a>
+                <a href="./contacts.html">${returnIcon('contacts')} Contacts</a>
             </menu>
             <footer>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Legal notice</a>
+                <a href="./privacy-policy.html">Privacy Policy</a>
+                <a href="./legal-notice.html">Legal notice</a>
             </footer>
         </div>
     `
