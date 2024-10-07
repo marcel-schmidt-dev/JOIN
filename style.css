@@ -1,3 +1,45 @@
+header {
+  background-color: #FFF;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2.5rem;
+  padding-left: 6.25rem;
+}
+header > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+header > div span {
+  font-size: 1.25rem;
+  line-height: 120%;
+}
+header > div svg {
+  fill: #A8A8A8;
+}
+header > div button {
+  background-color: transparent;
+  box-shadow: inset 0px 0px 0px 1px #2A3647;
+  font-size: 1.75rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #29ABE2;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
+}
+header > div button:hover {
+  background-color: #2A3647;
+  color: #FFF;
+}
+
 .sidebar {
   width: 100%;
   max-width: 232px;
@@ -88,4 +130,7 @@ body {
   width: 100%;
   min-height: 100vh;
   display: flex;
+}
+.app > div {
+  flex: 1;
 }/*# sourceMappingURL=style.css.map */
