@@ -1,1 +1,6 @@
+@import './scss/vars.scss';
 @import './scss/contact.scss';
+
+body {
+    background-color: $background;
+}
