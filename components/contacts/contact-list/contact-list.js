@@ -28,7 +28,7 @@ function returnContactListTemplate(contactList) {
         const firstLetter = contact.fullName.charAt(0).toUpperCase();
         if (firstLetter !== currentLetter) {
             currentLetter = firstLetter;
-            htmlList += `<div class="letter">${currentLetter}</div>`;
+            htmlList += `<div class="letter">${currentLetter}</div><hr>`;
         }
         htmlList += /*html*/`
             <div class="contact">
