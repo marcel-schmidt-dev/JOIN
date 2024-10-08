@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.innerHTML += /*html*/`
         <div class="app">
             ${returnSidebar()}
-            <div>
+            <div class="content-container">
                 ${returnHeader()}
                 <div class="content"></div>
             </div>
