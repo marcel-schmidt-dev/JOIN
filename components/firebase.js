@@ -22,7 +22,7 @@ function getFirebaseDatabase() {
 export function getContacts() {
     const contactsRef = ref(getFirebaseDatabase(), 'contacts');
 
-    get(contactsRef)
+    return get(contactsRef)
         .then((snapshot) => {
             return snapshot.val();
         });
