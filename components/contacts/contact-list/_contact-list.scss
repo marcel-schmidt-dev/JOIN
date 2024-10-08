@@ -21,7 +21,7 @@
             align-items: center;
             justify-content: center;
             gap: 1rem;
-            padding: 12px;
+            padding: 18px;
             font-size: 1.25rem;
             font-weight: bold;
             cursor: pointer;
@@ -48,7 +48,12 @@
             line-height: 120%;
             background-color: #fff;
             color: #000;
-            padding: 16px 2.25rem;
+            padding: 16px 30px;
+        }
+
+        hr {
+            margin: 8px 0;
+            background-color: #D1D1D1;
         }
 
         .contact {
