@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js';
 import { getDatabase, ref, get, push } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js';
-import returnRandomUserColor from './user-colors.js';
+import { returnRandomUserColor } from './utility-functions.js';
 
 function getFirebaseDatabase() {
     const firebaseConfig = {
