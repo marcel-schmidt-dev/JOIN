@@ -2,6 +2,7 @@
 @import './components/header/header.scss';
 @import './components/sidebar/sidebar.scss';
 @import './components/contacts/contacts.scss';
+@import './components/contacts/contact-list/contact-list.scss';
 
 @font-face {
     font-family: 'Inter';
@@ -28,4 +29,31 @@ body {
     >div {
         flex: 1;
     }
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+
+    .content {
+        height: 100%;
+        flex: 1;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: $navy-blue;
+    border-radius: 100vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: $dark-navy-blue;
 }
