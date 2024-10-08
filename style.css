@@ -86,13 +86,13 @@ header > div button:hover {
   display: block;
   transition: all 300ms ease-in-out;
 }
-.sidebar menu a:hover {
+.sidebar menu a.active {
   color: #FFF;
 }
-.sidebar menu a:hover:before {
+.sidebar menu a.active:before {
   background-color: #091931;
 }
-.sidebar menu a:hover svg path {
+.sidebar menu a.active svg path {
   fill: #FFF;
 }
 .sidebar footer {
