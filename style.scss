@@ -1,65 +1,66 @@
-@import './scss/vars.scss';
-@import './components/header/header.scss';
-@import './components/sidebar/sidebar.scss';
-@import './components/contacts/contacts.scss';
-@import './components/contacts/contact-list/contact-list.scss';
+@import "./scss/vars.scss";
+@import "./components/header/header.scss";
+@import "./components/sidebar/sidebar.scss";
+@import "./components/contacts/contacts.scss";
+@import "./components/contacts/contact-list/contact-list.scss";
+@import "./components/contacts/contact-details/contact-details";
 
 @font-face {
-    font-family: 'Inter';
-    src: url('./fonts/Inter.ttf') format('truetype');
+  font-family: "Inter";
+  src: url("./fonts/Inter.ttf") format("truetype");
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    background-color: $background;
-    font-size: 16px;
-    font-family: 'Inter', sans-serif;
+  background-color: $background;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
 }
 
 .app {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
 
-    >div {
-        flex: 1;
-    }
+  > div {
+    flex: 1;
+  }
 }
 
 .content-container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    .content {
-        height: 100%;
-        flex: 1;
-    }
+  .content {
+    height: 100%;
+    flex: 1;
+  }
 }
 
 ::-webkit-scrollbar {
-    width: 5px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  background: #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: $navy-blue;
-    border-radius: 100vw;
+  background: $navy-blue;
+  border-radius: 100vw;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: $dark-navy-blue;
+  background: $dark-navy-blue;
 }
 
 @media (max-width: 1024px) {
-    .app {
-        flex-direction: column-reverse;
-    }
+  .app {
+    flex-direction: column-reverse;
+  }
 }

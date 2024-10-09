@@ -246,6 +246,102 @@ header > div button:hover {
   font-size: 1rem;
 }
 
+.contact-section {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 400px;
+}
+.contact-section h1 {
+  font-weight: 900;
+}
+.contact-section .separator {
+  border-radius: 5px;
+  width: 3px;
+  height: 50px;
+  background-color: #29abe2;
+  margin-left: 12px;
+  margin-right: 12px;
+}
+.contact-section .contact-header {
+  font-size: 36px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.contact-section .contact-header p {
+  font-size: 20px;
+}
+.contact-section .contact-action {
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  margin-left: 40px;
+}
+.contact-section .contact-action p {
+  font-weight: bold;
+}
+.contact-section .names {
+  display: flex;
+  font-size: 32px;
+}
+.contact-section .btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.contact-section .initals {
+  display: inline-block;
+  text-align: center;
+  line-height: 100px;
+  height: 100px;
+  width: 100px;
+  color: white;
+  font-size: 48px;
+  font-weight: 700;
+}
+.contact-section .contact-initals {
+  border: 3px solid white;
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.contact-section .contact-second {
+  display: flex;
+  align-items: center;
+}
+.contact-section .contact-information {
+  padding-top: 50px;
+}
+.contact-section .contact-details {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.contact-section .contact-information a {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.contact-section .contact-information span {
+  font-weight: 800;
+}
+.contact-section a {
+  text-decoration: none;
+  cursor: pointer;
+  color: #007cee;
+}
+.contact-section .button-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @font-face {
   font-family: "Inter";
   src: url("./fonts/Inter.ttf") format("truetype");
