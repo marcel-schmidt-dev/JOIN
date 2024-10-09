@@ -8,6 +8,24 @@ header {
   padding: 1.25rem 25px;
   position: relative;
 }
+header > svg {
+  display: none;
+}
+@media (max-width: 1024px) {
+  header > svg {
+    display: block;
+    max-height: 40px;
+    width: auto;
+  }
+}
+header > span {
+  display: inline-block;
+}
+@media (max-width: 1024px) {
+  header > span {
+    display: none;
+  }
+}
 header > div {
   display: flex;
   align-items: center;

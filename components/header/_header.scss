@@ -11,6 +11,24 @@ header {
     padding: 1.25rem 25px;
     position: relative;
 
+    >svg {
+        display: none;
+
+        @media (max-width: 1024px) {
+            display: block;
+            max-height: 40px;
+            width: auto;
+        }
+    }
+
+    >span {
+        display: inline-block;
+
+        @media (max-width: 1024px) {
+            display: none;
+        }
+    }
+
     >div {
         display: flex;
         align-items: center;
