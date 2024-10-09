@@ -80,3 +80,58 @@
         }
     }
 }
+
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 16px;
+        flex-direction: row;
+        justify-content: space-around;
+        background-color: $navy-blue;
+        z-index: 1000;
+        max-height: 80px;
+
+        >svg {
+            display: none;
+        }
+
+        footer {
+            display: none;
+        }
+
+        menu {
+            flex-direction: row;
+            width: 100%;
+            justify-content: space-around;
+            padding: 0;
+
+            a {
+                position: relative;
+                flex-direction: column;
+                justify-content: center;
+                height: 80px;
+                width: 80px;
+                gap: 4px;
+                padding: 0;
+
+                &::before {
+                    z-index: -1;
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    left: 0;
+                    top: 0;
+                    background-color: transparent;
+                    display: block;
+                    border-radius: 8px;
+                }
+
+                svg {
+                    height: 24px;
+                }
+            }
+        }
+    }
+}
