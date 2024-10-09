@@ -1,8 +1,11 @@
 import returnIcon from "./../../icons.js";
 import { getInitialsFromName } from "./../../utility-functions.js";
-export default function getContactInfosTemplate(contactInfos) {
-  console.log(contactInfos);
+import { deleteContact } from "../../firebase.js";
+import { renderContacts } from "../contacts.js";
 
+window.handleDeleteContact = handleDeleteContact;
+
+export default function getContactInfosTemplate(contactInfos) {
   return /*html*/ `
    
       <section class="contact-section">
@@ -12,17 +15,17 @@ export default function getContactInfosTemplate(contactInfos) {
       <p>Better with team</p>
     </div>
         <div class="contact-second">
-          <div class="contact-initals" style="background-color: ${contactInfos.userColor}">
-            <h2 class="initals">${getInitialsFromName(contactInfos.fullName)}</h2>
+          <div class="contact-initials" style="background-color: ${contactInfos.userColor}">
+            <h2 class="initials">${getInitialsFromName(contactInfos.fullName)}</h2>
           </div>
   
           <div class="contact-action">
             <div class="names">
-              <p>${contactInfos.fullName}</p>
+              ${contactInfos.fullName}
             </div>
             <div class= button-center>
               <button onclick="edit()" class="btn"> ${returnIcon("pen-outline")} Edit</button>
-              <button onclick="deleteContact()" class="btn"> ${returnIcon("trash-outline")}Delete</button>
+              <button onclick="handleDeleteContact(${contactInfos.id})" class="btn"> ${returnIcon("trash-outline")}Delete</button>
             </div>
           </div>
         </div>
@@ -30,11 +33,16 @@ export default function getContactInfosTemplate(contactInfos) {
           <span>Contact Information</span>
           <div class="contact-details">
             <span>E-Mail</span>
-            <a href="">${contactInfos.email}</a>
+            <a href="mailto:${contactInfos.email}">${contactInfos.email}</a>
             <span>Phone</span>
-            <a href="">${contactInfos.number}</a>
+            <a href="tel:${contactInfos.phone}">${contactInfos.phone}</a>
           </div>
         </div>
       </section>
   `;
+}
+
+function handleDeleteContact(id) {
+  deleteContact(id);
+  renderContacts();
 }
