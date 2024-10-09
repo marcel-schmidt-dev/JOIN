@@ -245,30 +245,29 @@ header > div button:hover {
 }
 
 .contact-section {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  width: 400px;
+  padding-top: 110px;
+  padding-left: 50px;
 }
 .contact-section h1 {
-  font-weight: 900;
+  font-weight: bold;
+  font-size: 3.75rem;
 }
 .contact-section .separator {
   border-radius: 5px;
   width: 3px;
   height: 50px;
   background-color: #29abe2;
-  margin-left: 12px;
-  margin-right: 12px;
+  margin: 0 30px;
 }
 .contact-section .contact-header {
   font-size: 36px;
   display: flex;
   justify-content: start;
   align-items: center;
+  margin-bottom: 32px;
 }
 .contact-section .contact-header p {
-  font-size: 20px;
+  font-size: 1.6875rem;
 }
 .contact-section .contact-action {
   display: flex;
@@ -282,6 +281,8 @@ header > div button:hover {
 .contact-section .names {
   display: flex;
   font-size: 32px;
+  margin-bottom: 8px;
+  font-weight: 500;
 }
 .contact-section .btn {
   background-color: transparent;
@@ -289,22 +290,30 @@ header > div button:hover {
   cursor: pointer;
   display: flex;
   align-items: center;
+  gap: 8px;
+  color: #2A3647;
+  font-size: 1rem;
 }
-.contact-section .initals {
+.contact-section .btn svg {
+  fill: #2A3647;
+}
+.contact-section .initials {
   display: inline-block;
   text-align: center;
   line-height: 100px;
   height: 100px;
   width: 100px;
+  font-weight: 500;
   color: white;
   font-size: 48px;
-  font-weight: 700;
 }
-.contact-section .contact-initals {
+.contact-section .contact-initials {
   border: 3px solid white;
   border-radius: 50%;
-  height: 100px;
-  width: 100px;
+  height: 100%;
+  width: 100%;
+  max-width: 120px;
+  aspect-ratio: 1/1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -322,12 +331,16 @@ header > div button:hover {
   display: flex;
   flex-direction: column;
 }
-.contact-section .contact-information a {
-  padding-top: 12px;
-  padding-bottom: 12px;
+.contact-section .contact-details span {
+  font-weight: bold;
+  margin-bottom: 15px;
 }
-.contact-section .contact-information span {
-  font-weight: 800;
+.contact-section .contact-details a:nth-child(2) {
+  margin-bottom: 20px;
+}
+.contact-section .contact-information > span {
+  margin-bottom: 15px;
+  font-size: 1.25rem;
 }
 .contact-section a {
   text-decoration: none;
@@ -338,6 +351,7 @@ header > div button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 16px;
 }
 
 @font-face {

@@ -1,28 +1,32 @@
-.contact-section {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+@import '../../../scss/vars.scss';
 
-  width: 400px;
+.contact-section {
+  padding-top: 110px;
+  padding-left: 50px;
+
   h1 {
-    font-weight: 900;
+    font-weight: bold;
+    font-size: 3.75rem;
   }
+
   .separator {
     border-radius: 5px;
     width: 3px;
     height: 50px;
     background-color: #29abe2;
-    margin-left: 12px;
-    margin-right: 12px;
+    margin: 0 30px;
   }
+
   .contact-header {
     font-size: 36px;
     display: flex;
     justify-content: start;
     align-items: center;
-  }
-  .contact-header p {
-    font-size: 20px;
+    margin-bottom: 32px;
+
+    p {
+      font-size: 1.6875rem;
+    }
   }
 
   .contact-action {
@@ -31,12 +35,16 @@
     flex-direction: column;
     margin-left: 40px;
   }
+
   .contact-action p {
     font-weight: bold;
   }
+
   .names {
     display: flex;
     font-size: 32px;
+    margin-bottom: 8px;
+    font-weight: 500;
   }
 
   .btn {
@@ -45,33 +53,45 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    gap: 8px;
+    color: $navy-blue;
+    font-size: 1rem;
+
+    svg {
+      fill: $navy-blue;
+    }
   }
-  .initals {
+
+  .initials {
     display: inline-block;
     text-align: center;
     line-height: 100px;
     height: 100px;
     width: 100px;
-
+    font-weight: 500;
     color: white;
     font-size: 48px;
-    font-weight: 700;
   }
-  .contact-initals {
+
+  .contact-initials {
     border: 3px solid white;
     border-radius: 50%;
-    height: 100px;
-    width: 100px;
+    height: 100%;
+    width: 100%;
+    max-width: 120px;
+    aspect-ratio: 1/1;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
   }
+
   .contact-second {
     display: flex;
 
     align-items: center;
   }
+
   .contact-information {
     padding-top: 50px;
   }
@@ -80,14 +100,22 @@
     margin-top: 30px;
     display: flex;
     flex-direction: column;
+
+    span {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
   }
-  .contact-information a {
-    padding-top: 12px;
-    padding-bottom: 12px;
+
+  .contact-details a:nth-child(2) {
+    margin-bottom: 20px;
   }
-  .contact-information span {
-    font-weight: 800;
+
+  .contact-information>span {
+    margin-bottom: 15px;
+    font-size: 1.25rem;
   }
+
   a {
     text-decoration: none;
     cursor: pointer;
@@ -98,5 +126,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 16px;
   }
 }
