@@ -1,24 +1,21 @@
-import { getContacts } from "../../firebase.js";
 import returnIcon from "../../icons.js";
 import { getInitialsFromName } from "../../utility-functions.js";
+import { showContactDetails } from "../contacts.js";
 
-export default async function returnContactList() {
-
-    const contactList = Object.values(await getContacts());
-
+export default function returnContactListTemplate(contactList) {
     return /*html*/`
         <div class="contact-list">
             <div class="button-container">
                 <button>Add new contact ${returnIcon('add-user')}</button>
             </div>
             <div class="list-content">
-                ${returnContactListTemplate(contactList)}
+                ${returnContactList(contactList)}
             </div>
         </div>
     `
 }
 
-function returnContactListTemplate(contactList) {
+function returnContactList(contactList) {
     let currentLetter = '';
     let htmlList = '';
 
@@ -31,7 +28,7 @@ function returnContactListTemplate(contactList) {
             htmlList += `<div class="letter">${currentLetter}</div><hr>`;
         }
         htmlList += /*html*/`
-            <div class="contact">
+            <div class="contact" onclick="showContactDetails('${contact.id}')">
                 <div class="initials-bubble" style="background-color: ${contact.userColor}">
                     ${getInitialsFromName(contact.fullName)}
                 </div >
