@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js';
-import { getDatabase, ref, get, push } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js';
+import { getDatabase, ref, get, push, remove } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js';
 import { returnRandomUserColor } from './utility-functions.js';
 
 function getFirebaseDatabase() {
@@ -46,4 +46,9 @@ export function addContact(fullName, email, phone) {
     const contactsRef = ref(getFirebaseDatabase(), 'contacts');
 
     push(contactsRef, userObject)
+}
+
+export function deleteContact(id) {
+    const contactsRef = ref(getFirebaseDatabase(), `contacts/${id}`);
+    remove(contactsRef);
 }
