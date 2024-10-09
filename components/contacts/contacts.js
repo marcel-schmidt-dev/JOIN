@@ -6,15 +6,11 @@ window.showContactDetails = showContactDetails;
 
 let contactList;
 
-document.addEventListener("DOMContentLoaded", async function () {
-  const contentRef = document.querySelector(".content");
-  contactList = await getContacts();
-
-  contentRef.innerHTML += returnContactListTemplate(contactList);
+document.addEventListener("DOMContentLoaded", async () => {
+  await renderContacts();
 });
 
 export function showContactDetails(id) {
-
   const contact = contactList.find(contact => contact.id === id);
 
   const contentRef = document.querySelector(".content");
@@ -22,5 +18,13 @@ export function showContactDetails(id) {
   if (contactSectionRef) contactSectionRef.remove();
 
   contentRef.innerHTML += getContactInfosTemplate(contact);
+}
 
+export async function renderContacts() {
+  const contentRef = document.querySelector(".content");
+
+  contentRef.innerHTML = '';
+  contactList = await getContacts();
+
+  contentRef.innerHTML += returnContactListTemplate(contactList);
 }
