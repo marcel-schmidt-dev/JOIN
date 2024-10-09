@@ -1,6 +1,5 @@
 import returnIcon from "../../icons.js";
 import { getInitialsFromName } from "../../utility-functions.js";
-import { showContactDetails } from "../contacts.js";
 
 export default function returnContactListTemplate(contactList) {
     return /*html*/`
