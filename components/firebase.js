@@ -24,7 +24,14 @@ export function getContacts() {
 
     return get(contactsRef)
         .then((snapshot) => {
-            return snapshot.val();
+            const contacts = [];
+            snapshot.forEach(childSnapshot => {
+                const contact = childSnapshot.val();
+                contact.id = childSnapshot.key;
+                contacts.push(contact);
+            });
+
+            return contacts;
         });
 }
 
