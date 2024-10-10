@@ -1,0 +1,280 @@
+@import "../../../scss/vars.scss";
+
+.edit-contact {
+  max-width: 1440px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .overlay-add-contact {
+    max-width: 1212px;
+    width: 100%;
+    height: 592px;
+    border: 1px solid black;
+    border-radius: 30px;
+    top: -2901px;
+    left: 42px;
+    display: flex;
+  }
+  .add-contact {
+    max-width: 467px;
+    width: 100%;
+    height: 592px;
+    background-color: #2a3647;
+    border-radius: 30px 0px 0px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+  .description {
+    max-width: 371px;
+    width: 100%;
+    height: 129px;
+    gap: 16px;
+    color: white;
+    font-size: 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .description-box {
+    max-width: 371px;
+    width: 100%;
+    height: 113px;
+    gap: 8px;
+    display: inline;
+  }
+  h1 {
+    font-size: 70px;
+    width: 100%;
+  }
+  .subheadline {
+    font-size: 32px;
+  }
+  .join-icon {
+    max-width: 53.93px;
+    width: 100%;
+    height: 66.48px;
+  }
+  .join-container {
+    max-width: 371px;
+    width: 100%;
+  }
+
+  .separator {
+    width: 90px;
+    height: 3px;
+    background-color: #29abe2;
+  }
+  .person-container {
+    max-width: 300px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    bottom: 25px;
+  }
+  .input-container {
+    max-width: 422px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: 30px;
+    position: relative;
+    top: 137px;
+  }
+  .form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .form-name {
+    display: flex;
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+    padding: 10px;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+  }
+  .name-input {
+    border: none;
+    width: 100%;
+    height: 100%;
+    color: #d1d1d1;
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .form-email {
+    display: flex;
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+    padding: 10px;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+  }
+  .form-number {
+    display: flex;
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+    padding: 10px;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+  }
+  .x-container {
+    display: flex;
+    justify-content: right;
+    bottom: 70px;
+    position: relative;
+  }
+  .x-icon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+  }
+  .button-container {
+    margin-top: 32px;
+    display: flex;
+    gap: 24px;
+  }
+  .button-1 {
+    max-width: 113px;
+    width: 100%;
+    height: 55px;
+    cursor: pointer;
+  }
+  .button-2 {
+    max-width: 111px;
+    width: 100%;
+    height: 57px;
+    cursor: pointer;
+  }
+  .person-icon {
+    width: 120px;
+    height: 120px;
+    background-color: #ff7a00;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+  }
+  .button-delete {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: white;
+    font-size: 20px;
+    font-weight: 400;
+    border: 1px solid #2a3647;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .button-delete-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .button-save {
+    cursor: pointer;
+    background-color: #2a3647;
+    color: white;
+    font-size: 21px;
+    border: 1px solid #2a3647;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .button-save-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  @media (max-width: 1070px) {
+    h1 {
+      font-size: 50px;
+    }
+    .subheadline {
+      font-size: 24px;
+    }
+    .button-1 {
+      max-width: 90px;
+      width: 100%;
+    }
+    .button-2 {
+      max-width: 160px;
+      width: 100%;
+    }
+  }
+  @media (max-width: 500px) {
+    .contact-section {
+      max-width: 500px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+    .overlay-add-contact {
+      max-width: 396px;
+      width: 100%;
+      height: 760px;
+      display: flex;
+      flex-direction: column;
+    }
+    .add-contact {
+      max-width: 396px;
+      width: 100%;
+      height: 352px;
+      border-radius: 30px 30px 0px 0px;
+    }
+    .person-container {
+      width: 100%;
+      height: 60px;
+      max-width: 396px;
+    }
+    .input-container {
+      max-width: 396px;
+      margin: 0px;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      top: 10px;
+    }
+    .join-container {
+      display: none;
+    }
+    .subheadline {
+      margin-bottom: 10px;
+    }
+    .x-icon {
+      position: absolute;
+      top: -338px;
+      left: 153px;
+    }
+    .form {
+      max-width: 396px;
+      width: 100%;
+      align-items: center;
+    }
+    .form-name {
+      width: 364px;
+    }
+    .form-email {
+      width: 364px;
+    }
+    .form-number {
+      width: 364px;
+    }
+    .button-container {
+      margin-top: 0px;
+    }
+  }
+}

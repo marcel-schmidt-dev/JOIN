@@ -184,6 +184,12 @@ header > div button:hover {
   display: flex;
   flex-direction: column;
 }
+@media (max-width: 1023px) {
+  .contact-list {
+    max-width: 100%;
+    flex: 1;
+  }
+}
 .contact-list .button-container {
   background-color: #FFF;
   width: 100%;
@@ -210,6 +216,26 @@ header > div button:hover {
 }
 .contact-list .button-container button:hover {
   background-color: #29ABE2;
+}
+@media (max-width: 1023px) {
+  .contact-list .button-container {
+    position: fixed;
+    padding: 0;
+    border-radius: 50%;
+    max-width: 56px;
+    bottom: 100px;
+    right: 20px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  }
+  .contact-list .button-container span {
+    display: none;
+  }
+  .contact-list .button-container button {
+    border-radius: 50%;
+    width: 56px;
+    padding: 12px;
+    aspect-ratio: 1/1;
+  }
 }
 .contact-list .list-content {
   overflow-y: auto;
@@ -404,6 +430,284 @@ header > div button:hover {
     top: 230px;
     right: 20px;
     fill: #29abe2;
+  }
+}
+
+.edit-contact {
+  max-width: 1440px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit-contact .overlay-add-contact {
+  max-width: 1212px;
+  width: 100%;
+  height: 592px;
+  border: 1px solid black;
+  border-radius: 30px;
+  top: -2901px;
+  left: 42px;
+  display: flex;
+}
+.edit-contact .add-contact {
+  max-width: 467px;
+  width: 100%;
+  height: 592px;
+  background-color: #2a3647;
+  border-radius: 30px 0px 0px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.edit-contact .description {
+  max-width: 371px;
+  width: 100%;
+  height: 129px;
+  gap: 16px;
+  color: white;
+  font-size: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.edit-contact .description-box {
+  max-width: 371px;
+  width: 100%;
+  height: 113px;
+  gap: 8px;
+  display: inline;
+}
+.edit-contact h1 {
+  font-size: 70px;
+  width: 100%;
+}
+.edit-contact .subheadline {
+  font-size: 32px;
+}
+.edit-contact .join-icon {
+  max-width: 53.93px;
+  width: 100%;
+  height: 66.48px;
+}
+.edit-contact .join-container {
+  max-width: 371px;
+  width: 100%;
+}
+.edit-contact .separator {
+  width: 90px;
+  height: 3px;
+  background-color: #29abe2;
+}
+.edit-contact .person-container {
+  max-width: 300px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  bottom: 25px;
+}
+.edit-contact .input-container {
+  max-width: 422px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: 30px;
+  position: relative;
+  top: 137px;
+}
+.edit-contact .form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.edit-contact .form-name {
+  display: flex;
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+}
+.edit-contact .name-input {
+  border: none;
+  width: 100%;
+  height: 100%;
+  color: #d1d1d1;
+  font-size: 20px;
+  font-weight: 400;
+}
+.edit-contact .form-email {
+  display: flex;
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+}
+.edit-contact .form-number {
+  display: flex;
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+}
+.edit-contact .x-container {
+  display: flex;
+  justify-content: right;
+  bottom: 70px;
+  position: relative;
+}
+.edit-contact .x-icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+.edit-contact .button-container {
+  margin-top: 32px;
+  display: flex;
+  gap: 24px;
+}
+.edit-contact .button-1 {
+  max-width: 113px;
+  width: 100%;
+  height: 55px;
+  cursor: pointer;
+}
+.edit-contact .button-2 {
+  max-width: 111px;
+  width: 100%;
+  height: 57px;
+  cursor: pointer;
+}
+.edit-contact .person-icon {
+  width: 120px;
+  height: 120px;
+  background-color: #ff7a00;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+}
+.edit-contact .button-delete {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  font-size: 20px;
+  font-weight: 400;
+  border: 1px solid #2a3647;
+  border-radius: 10px;
+  padding: 16px;
+}
+.edit-contact .button-delete-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.edit-contact .button-save {
+  cursor: pointer;
+  background-color: #2a3647;
+  color: white;
+  font-size: 21px;
+  border: 1px solid #2a3647;
+  border-radius: 10px;
+  padding: 16px;
+}
+.edit-contact .button-save-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-width: 1070px) {
+  .edit-contact h1 {
+    font-size: 50px;
+  }
+  .edit-contact .subheadline {
+    font-size: 24px;
+  }
+  .edit-contact .button-1 {
+    max-width: 90px;
+    width: 100%;
+  }
+  .edit-contact .button-2 {
+    max-width: 160px;
+    width: 100%;
+  }
+}
+@media (max-width: 500px) {
+  .edit-contact .contact-section {
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+  .edit-contact .overlay-add-contact {
+    max-width: 396px;
+    width: 100%;
+    height: 760px;
+    display: flex;
+    flex-direction: column;
+  }
+  .edit-contact .add-contact {
+    max-width: 396px;
+    width: 100%;
+    height: 352px;
+    border-radius: 30px 30px 0px 0px;
+  }
+  .edit-contact .person-container {
+    width: 100%;
+    height: 60px;
+    max-width: 396px;
+  }
+  .edit-contact .input-container {
+    max-width: 396px;
+    margin: 0px;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    top: 10px;
+  }
+  .edit-contact .join-container {
+    display: none;
+  }
+  .edit-contact .subheadline {
+    margin-bottom: 10px;
+  }
+  .edit-contact .x-icon {
+    position: absolute;
+    top: -338px;
+    left: 153px;
+  }
+  .edit-contact .form {
+    max-width: 396px;
+    width: 100%;
+    align-items: center;
+  }
+  .edit-contact .form-name {
+    width: 364px;
+  }
+  .edit-contact .form-email {
+    width: 364px;
+  }
+  .edit-contact .form-number {
+    width: 364px;
+  }
+  .edit-contact .button-container {
+    margin-top: 0px;
   }
 }
 

@@ -2,8 +2,11 @@ import returnIcon from "./../../icons.js";
 import { getInitialsFromName } from "./../../utility-functions.js";
 import { deleteContact } from "../../firebase.js";
 import { renderContacts } from "../contacts.js";
+import getEditContactTemplate from "../edit-contact/edit-contact.js";
+import edit from "../contacts.js";
 
 window.handleDeleteContact = handleDeleteContact;
+window.handleEditContact = handleEditContact;
 
 export default function getContactInfosTemplate(contactInfos) {
   return /*html*/ `
