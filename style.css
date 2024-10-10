@@ -371,6 +371,41 @@ header > div button:hover {
   align-items: center;
   gap: 16px;
 }
+@media (max-width: 1023px) {
+  .contact-section .second-separator {
+    border-radius: 5px;
+    width: 120px;
+    height: 2px;
+    background-color: #29abe2;
+  }
+  .contact-section .separator {
+    display: none;
+  }
+  .contact-section .contact-header {
+    flex-direction: column;
+    align-items: start;
+  }
+  .contact-section .burger-menu {
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    fill: white;
+    background-color: #2a3647;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 1px 2px #c8c9c9;
+  }
+  .contact-section .arrow-left {
+    position: absolute;
+    top: 230px;
+    right: 20px;
+    fill: #29abe2;
+  }
+}
 
 @font-face {
   font-family: "Inter";

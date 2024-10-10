@@ -7,12 +7,14 @@ window.handleDeleteContact = handleDeleteContact;
 
 export default function getContactInfosTemplate(contactInfos) {
   return /*html*/ `
-   
+  
       <section class="contact-section">
+      <div class="arrow-left">${returnIcon("arrow-left")} </div>
       <div class="contact-header">
       <h1>Contacts</h1>
       <div class="separator"></div>
       <p>Better with team</p>
+      <div class="second-separator"></div>
     </div>
         <div class="contact-second">
           <div class="contact-initials" style="background-color: ${contactInfos.userColor}">
@@ -25,7 +27,7 @@ export default function getContactInfosTemplate(contactInfos) {
             </div>
             <div class= button-center>
               <button onclick="edit()" class="btn"> ${returnIcon("pen-outline")} Edit</button>
-              <button onclick="handleDeleteContact(${contactInfos.id})" class="btn"> ${returnIcon("trash-outline")}Delete</button>
+              <button onclick="handleDeleteContact(${contactInfos.id})" class="btn">  ${returnIcon("trash-outline")}Delete</button>
             </div>
           </div>
         </div>
@@ -38,11 +40,15 @@ export default function getContactInfosTemplate(contactInfos) {
             <a href="tel:${contactInfos.phone}">${contactInfos.phone}</a>
           </div>
         </div>
+         <div class="burger-menu">${returnIcon("burger-menu")}</div>
       </section>
   `;
 }
 
 function handleDeleteContact(id) {
   deleteContact(id);
+  renderContacts();
+}
+function handleEditContact() {
   renderContacts();
 }
