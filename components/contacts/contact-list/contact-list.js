@@ -5,7 +5,7 @@ export default function returnContactListTemplate(contactList) {
     return /*html*/`
         <div class="contact-list">
             <div class="button-container">
-                <button>Add new contact ${returnIcon('add-user')}</button>
+                <button><span>Add new contact</span> ${returnIcon('add-user')}</button>
             </div>
             <div class="list-content">
                 ${returnContactList(contactList)}
