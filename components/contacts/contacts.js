@@ -1,7 +1,7 @@
 import returnContactListTemplate from "./contact-list/contact-list.js";
-import { getContacts } from "../firebase.js";
-import getContactInfosTemplate from "./contact-details/contact-details.js";
-import getEditContactTemplate from "./edit-contact/edit-contact.js";
+import { getContacts, addContact, deleteContact } from "../firebase.js";
+import getContactDetailsTemplate from "./contact-details/contact-details.js";
+import getContactOverlayTemplate from "./contact-overlay/contact-overlay.js";
 
 window.showContactDetails = showContactDetails;
 
@@ -12,20 +12,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 export function showContactDetails(id) {
-  const contact = contactList.find((contact) => contact.id === id);
+  const contact = contactList.find((contact) => contact.id.toString() === id.toString());
 
   const contentRef = document.querySelector(".content");
   const contactSectionRef = contentRef.querySelector(".contact-section");
   if (contactSectionRef) contactSectionRef.remove();
 
-  contentRef.innerHTML += getContactInfosTemplate(contact);
+  contentRef.innerHTML += getContactDetailsTemplate(contact);
 }
 
-export default function edit(id) {
-  const contact = contactList.find((contact) => contact.id === id);
+export function handleContactOverlayTemplate(id = false) {
+  let contact;
+
+  if (id) {
+    contact = contactList.find((contact) => contact.id.toString() === id.toString());
+  } else {
+    contact = false;
+  }
+
   const contentRef = document.querySelector(".content");
   contentRef.innerHTML = "";
-  contentRef.innerHTML += getEditContactTemplate(contact);
+  contentRef.innerHTML += getContactOverlayTemplate(contact);
+}
+
+export function handleDeleteContact(id) {
+  deleteContact(id);
+  renderContacts();
 }
 
 export async function renderContacts() {

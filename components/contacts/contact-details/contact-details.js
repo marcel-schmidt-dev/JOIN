@@ -1,14 +1,12 @@
 import returnIcon from "./../../icons.js";
 import { getInitialsFromName } from "./../../utility-functions.js";
-import { deleteContact } from "../../firebase.js";
-import { renderContacts } from "../contacts.js";
-import getEditContactTemplate from "../edit-contact/edit-contact.js";
-import edit from "../contacts.js";
+import { handleContactOverlayTemplate } from "../contacts.js";
+import { handleDeleteContact } from "../contacts.js";
 
 window.handleDeleteContact = handleDeleteContact;
-window.handleEditContact = handleEditContact;
+window.handleContactOverlayTemplate = handleContactOverlayTemplate;
 
-export default function getContactInfosTemplate(contactInfos) {
+export default function getContactDetailsTemplate(contactInfos) {
   return /*html*/ `
   
       <section class="contact-section">
@@ -20,7 +18,7 @@ export default function getContactInfosTemplate(contactInfos) {
       <div class="second-separator"></div>
     </div>
         <div class="contact-second">
-          <div class="contact-initials" style="background-color: ${contactInfos.userColor}">
+          <div class="contact-initials" style="background-color: ${"#" + contactInfos.userColor}">
             <h2 class="initials">${getInitialsFromName(contactInfos.fullName)}</h2>
           </div>
   
@@ -29,7 +27,7 @@ export default function getContactInfosTemplate(contactInfos) {
               ${contactInfos.fullName}
             </div>
             <div class= button-center>
-              <button onclick="edit()" class="btn"> ${returnIcon("pen-outline")} Edit</button>
+              <button onclick="handleContactOverlayTemplate(${contactInfos.id})" class="btn"> ${returnIcon("pen-outline")} Edit</button>
               <button onclick="handleDeleteContact(${contactInfos.id})" class="btn">  ${returnIcon("trash-outline")}Delete</button>
             </div>
           </div>
@@ -46,12 +44,4 @@ export default function getContactInfosTemplate(contactInfos) {
          <div class="burger-menu">${returnIcon("burger-menu")}</div>
       </section>
   `;
-}
-
-function handleDeleteContact(id) {
-  deleteContact(id);
-  renderContacts();
-}
-function handleEditContact() {
-  renderContacts();
 }
