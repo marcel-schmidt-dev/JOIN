@@ -3,6 +3,7 @@ import { handleDeleteContact } from "../contacts.js";
 import { editContact } from "../../firebase.js";
 import { renderContacts } from "../contacts.js";
 import { getInitialsFromName } from "../../utility-functions.js";
+import { addContact } from "../../firebase.js";
 
 export default function getContactOverlayTemplate(contactInfos) {
   function handleEditContact(id, userColor) {
@@ -10,6 +11,7 @@ export default function getContactOverlayTemplate(contactInfos) {
     const email = document.getElementById("email").value;
     const phone = document.getElementById("number").value;
     editContact(id, fullName, email, phone, userColor);
+    addContact(fullName, email, phone);
     renderContacts();
   }
 
@@ -17,6 +19,7 @@ export default function getContactOverlayTemplate(contactInfos) {
   window.handleEditContact = handleEditContact;
   window.renderContacts = renderContacts;
   window.validateForm = validateForm;
+  window.addContact = addContact;
 
   return /*html*/ `
         <div class="edit-contact">
@@ -42,7 +45,7 @@ export default function getContactOverlayTemplate(contactInfos) {
           <div class="x-container" onclick="renderContacts()">
             ${returnIcon("x")}
           </div>
-          <form class="form" name="form-validation" action="" onsubmit="validateForm()" >
+          <form class="form" name="form-validation" action=""  >
             <div class="form-name">
               <input class="name-input" id="name" required type="text" name="Name" placeholder="Name" value="${contactInfos ? contactInfos.fullName : ""}" />
               ${returnIcon("user-outline")}
@@ -67,15 +70,25 @@ export default function getContactOverlayTemplate(contactInfos) {
                   : `<button class="button-delete" onclick="renderContacts()">  
                     Cancel ${returnIcon("x")} </button>`
               } </div>
-            <div class="button-save-container" >
+            <div class="button-save-container">
+              ${
+                contactInfos
+                  ? `<button class="button-save" onclick="handleEditContact(${contactInfos.id}, '${contactInfos.userColor}')">
+                Save
+                ${returnIcon("check")}
+              </button>`
+                  : `<button class="button-save" onclick="addContact(${contactInfos.fullName}, '${contactInfos.email}', '${contactInfos.phone}')">  
+                    Create contact ${returnIcon("check")} </button>`
+              } </div>
+          </div>
+        </div>
+      </div>
+      <div class="button-save-container" >
               <button class="button-save" onclick="handleEditContact(${contactInfos.id}, '${contactInfos.userColor}')">
                 ${contactInfos ? "Save" : "Create Contact"}
                 ${returnIcon("check")}
               </button>
             </div>
-          </div>
-        </div>
-      </div>
     </div>
     `;
 }

@@ -36,14 +36,16 @@ export function getContacts() {
 }
 
 export function addContact(fullName, email, phone) {
+  if (!validateForm()) {
+    return;
+  }
+
   const userObject = {
     fullName: fullName,
     email: email,
     phone: phone,
     userColor: returnRandomUserColor(),
   };
-
-  validateForm();
 
   const contactsRef = ref(getFirebaseDatabase(), "contacts");
 
