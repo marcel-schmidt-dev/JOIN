@@ -3,6 +3,7 @@ import { handleDeleteContact } from "../contacts.js";
 import { editContact } from "../../firebase.js";
 import { renderContacts } from "../contacts.js";
 import { getInitialsFromName } from "../../utility-functions.js";
+import { showToast } from "../../toast/toast.js";
 
 export default function getContactOverlayTemplate(contactInfos) {
   function handleEditContact(id, userColor) {
@@ -11,6 +12,7 @@ export default function getContactOverlayTemplate(contactInfos) {
     const phone = document.getElementById("number").value;
     editContact(id, fullName, email, phone, userColor);
     renderContacts();
+    showToast("Contact succsesfully Created" + returnIcon("check"));
   }
 
   window.handleDeleteContact = handleDeleteContact;
@@ -67,7 +69,7 @@ export default function getContactOverlayTemplate(contactInfos) {
                     Cancel ${returnIcon("x")} </button>`
               } </div>
             <div class="button-save-container" >
-              <button class="button-save" onclick="handleEditContact(${contactInfos.id}, '${contactInfos.userColor}')">
+              <button id="save-btn" class="button-save" onclick="handleEditContact(${contactInfos.id}, '${contactInfos.userColor}')">
                 ${contactInfos ? "Save" : "Create Contact"}
                 ${returnIcon("check")}
               </button>

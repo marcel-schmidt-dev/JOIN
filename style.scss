@@ -3,8 +3,9 @@
 @import "./components/sidebar/sidebar.scss";
 @import "./components/contacts/contacts.scss";
 @import "./components/contacts/contact-list/contact-list.scss";
-@import "./components/contacts/contact-details/contact-details";
-@import "./components/contacts/edit-contact/contact-overlay";
+@import "./components/contacts/contact-details/contact-details.scss";
+@import "./components/contacts/contact-overlay/contact-overlay.scss";
+@import "./components/toast/toast.scss";
 
 @font-face {
   font-family: "Inter";
