@@ -2,7 +2,7 @@ import returnIcon from "./../../icons.js";
 import { getInitialsFromName } from "./../../utility-functions.js";
 import { handleContactOverlayTemplate } from "../contacts.js";
 import { handleDeleteContact } from "../contacts.js";
-
+import { showToast } from "../../toast/toast.js";
 window.handleDeleteContact = handleDeleteContact;
 window.handleContactOverlayTemplate = handleContactOverlayTemplate;
 
@@ -28,7 +28,7 @@ export default function getContactDetailsTemplate(contactInfos) {
             </div>
             <div class= button-center>
               <button onclick="handleContactOverlayTemplate(${contactInfos.id})" class="btn"> ${returnIcon("pen-outline")} Edit</button>
-              <button onclick="handleDeleteContact(${contactInfos.id})" class="btn">  ${returnIcon("trash-outline")}Delete</button>
+              <button id="delete-btn" onclick="handleDeleteContact(${contactInfos.id})" class="btn">  ${returnIcon("trash-outline")}Delete</button>
             </div>
           </div>
         </div>

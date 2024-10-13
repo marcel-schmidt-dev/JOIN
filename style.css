@@ -712,6 +712,12 @@ header > div button:hover {
   }
 }
 
+.toast {
+  background-color: #2a3647;
+  width: 326px;
+  height: 74px;
+}
+
 @font-face {
   font-family: "Inter";
   src: url("./fonts/Inter.ttf") format("truetype");
