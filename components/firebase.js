@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getDatabase, ref, get, push, remove, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 import { returnRandomUserColor } from "./utility-functions.js";
-import { validateForm } from "./contacts/contact-overlay/contact-overlay.js";
 
 function getFirebaseDatabase() {
   const firebaseConfig = {
@@ -36,10 +35,6 @@ export function getContacts() {
 }
 
 export function addContact(fullName, email, phone) {
-  if (!validateForm()) {
-    return;
-  }
-
   const userObject = {
     fullName: fullName,
     email: email,
