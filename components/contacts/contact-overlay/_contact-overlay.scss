@@ -34,7 +34,7 @@
       }
 
       h1 {
-        color: #FFF;
+        color: #fff;
         font-weight: bold;
         font-size: 3.75rem;
         line-height: 120%;
@@ -42,7 +42,7 @@
       }
 
       p {
-        color: #FFF;
+        color: #fff;
         font-size: 1.75rem;
         line-height: 120%;
         margin-bottom: 16px;
@@ -63,7 +63,7 @@
       padding-bottom: 128px;
       padding-left: 0;
       flex: 1;
-      background-color: #FFF;
+      background-color: #fff;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -86,7 +86,7 @@
         width: 100%;
         display: flex;
 
-        >div:first-child {
+        > div:first-child {
           width: 100%;
           max-width: 275px;
           display: flex;
@@ -100,8 +100,8 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background-color: #D1D1D1;
-            border: 3px solid #FFF;
+            background-color: #d1d1d1;
+            border: 3px solid #fff;
             box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
             color: #fff;
@@ -109,22 +109,21 @@
             line-height: 120%;
             font-weight: 500;
 
-
             svg {
               width: 40px;
               height: 40px;
-              fill: #FFF;
+              fill: #fff;
               display: block;
             }
           }
         }
 
-        >div:last-child {
+        > div:last-child {
           flex: 1;
 
           .input-container {
             display: flex;
-            border: 1px solid #D1D1D1;
+            border: 1px solid #d1d1d1;
             border-radius: 10px;
             padding: 10px 20px;
             align-items: center;
@@ -138,7 +137,7 @@
               margin-right: 20px;
 
               &::placeholder {
-                color: #D1D1D1;
+                color: #d1d1d1;
               }
 
               &:focus {
@@ -155,7 +154,7 @@
             }
 
             svg {
-              fill: #D1D1D1;
+              fill: #d1d1d1;
             }
           }
 
@@ -201,22 +200,22 @@
 
               &:last-child {
                 background-color: $navy-blue;
-                color: #FFF;
+                color: #fff;
 
                 svg {
-                  fill: #FFF;
+                  fill: #fff;
                   height: 15px;
                   width: auto;
                 }
 
                 &:hover {
                   border-color: $light-blue;
-                  color: #FFF;
+                  color: #fff;
                   background-color: $light-blue;
                   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 
                   svg {
-                    fill: #FFF;
+                    fill: #fff;
                   }
                 }
               }
@@ -226,4 +225,25 @@
       }
     }
   }
+}
+#name-requested {
+  color: red;
+  display: none;
+  padding: 2px;
+  border: 1px solid red;
+  border-radius: 8px;
+}
+#email-requested {
+  color: red;
+  display: none;
+  padding: 2px;
+  border: 1px solid red;
+  border-radius: 8px;
+}
+#phone-requested {
+  color: red;
+  display: none;
+  padding: 2px;
+  border: 1px solid red;
+  border-radius: 8px;
 }
