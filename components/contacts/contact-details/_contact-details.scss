@@ -8,6 +8,7 @@
     font-weight: bold;
     font-size: 3.75rem;
   }
+
   .burger-menu {
     display: none;
   }
@@ -23,7 +24,7 @@
   .contact-header {
     font-size: 36px;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     margin-bottom: 32px;
 
@@ -34,7 +35,7 @@
 
   .contact-action {
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     flex-direction: column;
     margin-left: 40px;
   }
@@ -114,7 +115,7 @@
     margin-bottom: 20px;
   }
 
-  .contact-information > span {
+  .contact-information>span {
     margin-bottom: 15px;
     font-size: 1.25rem;
   }
@@ -139,13 +140,16 @@
       height: 2px;
       background-color: #29abe2;
     }
+
     .separator {
       display: none;
     }
+
     .contact-header {
       flex-direction: column;
-      align-items: start;
+      align-items: flex-start;
     }
+
     .burger-menu {
       position: absolute;
       bottom: 100px;
@@ -160,6 +164,7 @@
       align-items: center;
       box-shadow: 1px 1px 2px #c8c9c9;
     }
+
     .arrow-left {
       position: absolute;
       top: 230px;
