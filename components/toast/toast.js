@@ -6,6 +6,9 @@ export function showToast(message, icon) {
   contentRef.innerHTML += /*html*/ `
         <p class="toast">${message}</p>
     `;
-  button = document.getElementsByClassName("toast").add("d-none");
-  setTimeout(button, 3000);
+
+  setTimeout(() => {
+    const toastRef = document.querySelector(".toast");
+    toastRef.remove();
+  }, 3000);
 }
