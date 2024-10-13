@@ -18,7 +18,7 @@ export default function getContactOverlayTemplate(contactInfos) {
         <div class="header-container">
           ${returnIcon("logo-light")}
           <h1>${contactInfos ? "Edit Contact" : "Add Contact"}</h1>
-          ${!contactInfos && "<p>Tasks are better with team!</p>"}
+          ${!contactInfos ? "<p>Tasks are better with team!</p>" : ""}
           <hr>
         </div>
         <div class="form-container">
@@ -27,8 +27,8 @@ export default function getContactOverlayTemplate(contactInfos) {
         </div>
         <div class="form">
           <div>
-            <div class="bubble-container">
-              ${returnIcon("user-outline")}
+            <div class="bubble-container" style="background-color: ${contactInfos ? '#' + contactInfos.userColor : ''}">
+              ${contactInfos ? `<span>${getInitialsFromName(contactInfos.fullName)}</span>` : returnIcon("user-outline")}
             </div>
           </div>
           <div>
