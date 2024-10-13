@@ -86,7 +86,7 @@
         width: 100%;
         display: flex;
 
-        > div:first-child {
+        >div:first-child {
           width: 100%;
           max-width: 275px;
           display: flex;
@@ -118,7 +118,7 @@
           }
         }
 
-        > div:last-child {
+        >div:last-child {
           flex: 1;
 
           .input-container {
@@ -128,6 +128,30 @@
             padding: 10px 20px;
             align-items: center;
             margin-bottom: 32px;
+
+            #name-requested {
+              color: red;
+              display: none;
+              padding: 2px;
+              border: 1px solid red;
+              border-radius: 8px;
+            }
+
+            #email-requested {
+              color: red;
+              display: none;
+              padding: 2px;
+              border: 1px solid red;
+              border-radius: 8px;
+            }
+
+            #phone-requested {
+              color: red;
+              display: none;
+              padding: 2px;
+              border: 1px solid red;
+              border-radius: 8px;
+            }
 
             input {
               border: none;
@@ -225,25 +249,4 @@
       }
     }
   }
-}
-#name-requested {
-  color: red;
-  display: none;
-  padding: 2px;
-  border: 1px solid red;
-  border-radius: 8px;
-}
-#email-requested {
-  color: red;
-  display: none;
-  padding: 2px;
-  border: 1px solid red;
-  border-radius: 8px;
-}
-#phone-requested {
-  color: red;
-  display: none;
-  padding: 2px;
-  border: 1px solid red;
-  border-radius: 8px;
 }
