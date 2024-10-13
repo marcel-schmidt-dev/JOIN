@@ -27,26 +27,35 @@ export default function getContactOverlayTemplate(contactInfos) {
         </div>
         <div class="form">
           <div>
-            <div class="bubble-container" style="background-color: ${contactInfos ? '#' + contactInfos.userColor : ''}">
+            <div class="bubble-container" style="background-color: ${contactInfos ? "#" + contactInfos.userColor : ""}">
               ${contactInfos ? `<span>${getInitialsFromName(contactInfos.fullName)}</span>` : returnIcon("user-outline")}
             </div>
           </div>
           <div>
+            <p id="name-requested">Vollständiger Name erforderlich</p>
             <div class="input-container">
               <input id="name" type="text" name="name" placeholder="Name" value="${contactInfos ? contactInfos.fullName : ""}" />
               ${returnIcon("user-outline")}
             </div>
+            <p id="email-requested">Gültige Email-Adresse erforderlich</p>
             <div class="input-container">
               <input id="email" type="text" name="Email" placeholder="Email" value="${contactInfos ? contactInfos.email : ""}" />
               ${returnIcon("mail-outline")}
             </div>
+            <p id="phone-requested">Gültige Handynummer erforderlich</p>
             <div class="input-container">
               <input id="number" type="text" name="Phone" placeholder="Phone" value="${contactInfos ? contactInfos.phone : ""}" />
               ${returnIcon("tel-outline")}
             </div>
             <div class="button-container">
-              ${contactInfos ? `<button class="button-delete" onclick="handleDeleteContact('${contactInfos.id}')">Delete${returnIcon("trash-outline")}</button>` : `<button class="button-cancel" onclick="renderContacts()">Cancel ${returnIcon("x")} </button>`}
-              ${contactInfos ? `<button class="button-save" onclick="handleEditContact('${contactInfos.id}', '${contactInfos.userColor}')">Save${returnIcon("check")}</button>` : `<button class="button-save" onclick="handleAddContact()">Create contact ${returnIcon("check")} </button>`}
+              ${contactInfos
+      ? `<button class="button-delete" onclick="handleDeleteContact('${contactInfos.id}')">Delete${returnIcon("trash-outline")}</button>`
+      : `<button class="button-cancel" onclick="renderContacts()">Cancel ${returnIcon("x")} </button>`
+    }
+              ${contactInfos
+      ? `<button class="button-save" onclick="handleEditContact('${contactInfos.id}', '${contactInfos.userColor}')">Save${returnIcon("check")}</button>`
+      : `<button class="button-save" onclick="handleAddContact()">Create contact ${returnIcon("check")} </button>`
+    }
             </div>
           </div>
         </div>
@@ -55,22 +64,31 @@ export default function getContactOverlayTemplate(contactInfos) {
 }
 
 function validateForm(fullName, email, phone) {
+  const nameRequest = document.getElementById("name-requested");
   let nameValidation = /^[a-zA-ZäöüÄÖÜß\s-]+$/;
   if (!nameValidation.test(fullName) || fullName.length < 10) {
-    alert("Ein vollständiger Name muss angegeben werden");
+    nameRequest.style.display = "block";
     return false;
+  } else {
+    nameRequest.style.display = "none";
   }
 
+  const emailRequest = document.getElementById("email-requested");
   let emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailValidation.test(email)) {
-    alert("Eine gültige E-Mail Adresse muss angegeben werden");
+    emailRequest.style.display = "block";
     return false;
+  } else {
+    emailRequest.style.display = "none";
   }
 
+  const phoneRequest = document.getElementById("phone-requested");
   let phoneValidation = /^[0-9]+$/;
   if (!phoneValidation.test(phone) || phone.length < 10) {
-    alert("Eine gültige Handynummer mit mind. 10 Ziffern muss angegeben werden");
+    phoneRequest.style.display = "block";
     return false;
+  } else {
+    phoneRequest.style.display = "none";
   }
   return true;
 }
