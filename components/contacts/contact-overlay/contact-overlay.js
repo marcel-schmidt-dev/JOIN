@@ -99,5 +99,5 @@ function handleEditContact(id, userColor) {
 export function handleDeleteContact(id) {
   deleteContact(id);
   renderContacts();
-  showToast("Contact successfully Deleted" + returnIcon("check"));
+  showToast("Contact successfully Deleted", "check");
 }
