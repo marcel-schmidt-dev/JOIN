@@ -1,5 +1,5 @@
 header {
-  background-color: #FFF;
+  background-color: #fff;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
   width: 100%;
   display: flex;
@@ -36,7 +36,7 @@ header > div span {
   line-height: 120%;
 }
 header > div svg {
-  fill: #A8A8A8;
+  fill: #a8a8a8;
 }
 header > div button {
   background-color: transparent;
@@ -55,9 +55,14 @@ header > div button {
 }
 header > div button:hover {
   background-color: #2A3647;
-  color: #FFF;
+  color: #fff;
 }
 
+@media (max-width: 1023px) {
+  header {
+    display: none;
+  }
+}
 .sidebar {
   width: 100%;
   max-width: 232px;
@@ -80,7 +85,7 @@ header > div button:hover {
   width: 8rem;
 }
 .sidebar menu a {
-  color: #CDCDCD;
+  color: #cdcdcd;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -90,7 +95,7 @@ header > div button:hover {
   z-index: 10;
 }
 .sidebar menu a svg path {
-  fill: #CDCDCD;
+  fill: #cdcdcd;
   transition: all 300ms ease-in-out;
 }
 .sidebar menu a::before {
@@ -105,13 +110,13 @@ header > div button:hover {
   transition: all 300ms ease-in-out;
 }
 .sidebar menu a.active {
-  color: #FFF;
+  color: #fff;
 }
 .sidebar menu a.active:before {
   background-color: #091931;
 }
 .sidebar menu a.active svg path {
-  fill: #FFF;
+  fill: #fff;
 }
 .sidebar footer {
   display: flex;
@@ -120,7 +125,7 @@ header > div button:hover {
   gap: 1.25rem;
 }
 .sidebar footer a {
-  color: #A8A8A8;
+  color: #a8a8a8;
   transition: all 300ms ease-in-out;
   line-height: 120%;
 }
@@ -174,6 +179,11 @@ header > div button:hover {
   }
   .sidebar menu a svg {
     height: 24px;
+  }
+}
+@media (max-width: 1023px) {
+  .sidebar {
+    display: none;
   }
 }
 .contact-list {
@@ -459,20 +469,20 @@ header > div button:hover {
   max-width: 467px;
   width: 100%;
   height: 592px;
-  background-color: #2a3647;
+  background-color: #2A3647;
   border-radius: 30px 0px 0px 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: #F6F7F8;
 }
 .edit-contact .description {
   max-width: 371px;
   width: 100%;
   height: 129px;
   gap: 16px;
-  color: white;
+  color: #F6F7F8;
   font-size: 64px;
   display: flex;
   flex-direction: column;
@@ -487,8 +497,21 @@ header > div button:hover {
   display: inline;
 }
 .edit-contact h1 {
-  font-size: 70px;
+  font-size: 61px;
   width: 100%;
+  font-weight: 700;
+}
+.edit-contact svg[join-icon] {
+  width: 55.6px;
+  height: 66.48px;
+}
+.edit-contact p {
+  font-size: 27px;
+  font-weight: 400;
+}
+.edit-contact svg[add-user] {
+  width: 10px;
+  height: 10px;
 }
 .edit-contact .subheadline {
   font-size: 32px;
@@ -505,7 +528,7 @@ header > div button:hover {
 .edit-contact .separator {
   width: 90px;
   height: 3px;
-  background-color: #29abe2;
+  background-color: #29ABE2;
 }
 .edit-contact .person-container {
   max-width: 300px;
@@ -548,6 +571,7 @@ header > div button:hover {
   color: #d1d1d1;
   font-size: 20px;
   font-weight: 400;
+  background-color: #F6F7F8;
 }
 .edit-contact .form-email {
   display: flex;
@@ -601,20 +625,35 @@ header > div button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 3px solid #ffffff;
+  border: 3px solid #F6F7F8;
   border-radius: 50%;
+  background-color: #d1d1d1;
 }
 .edit-contact .button-delete {
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: white;
+  background-color: #F6F7F8;
   font-size: 20px;
   font-weight: 400;
-  border: 1px solid #2a3647;
+  border: 1px solid #2A3647;
   border-radius: 10px;
   padding: 16px;
+  height: 56px;
+}
+.edit-contact .button-cancel {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #F6F7F8;
+  font-size: 20px;
+  font-weight: 400;
+  border: 1px solid #2A3647;
+  border-radius: 10px;
+  padding: 16px;
+  height: 56px;
 }
 .edit-contact .button-delete-container {
   display: flex;
@@ -623,17 +662,40 @@ header > div button:hover {
 }
 .edit-contact .button-save {
   cursor: pointer;
-  background-color: #2a3647;
+  background-color: #2A3647;
   color: white;
   font-size: 21px;
-  border: 1px solid #2a3647;
+  border: 1px solid #2A3647;
   border-radius: 10px;
   padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 57px;
 }
 .edit-contact .button-save-container {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.edit-contact .svg-logo-light {
+  width: 55.6px;
+  height: 66.5px;
+}
+.edit-contact .svg-person-icon {
+  width: 16px;
+  height: 16px;
+  fill: #a8a8a8;
+}
+.edit-contact .svg-mail-icon {
+  width: 20px;
+  height: 16px;
+  fill: #a8a8a8;
+}
+.edit-contact .svg-phone-icon {
+  width: 18px;
+  height: 18px;
+  fill: #a8a8a8;
 }
 @media (max-width: 1070px) {
   .edit-contact h1 {
@@ -651,7 +713,7 @@ header > div button:hover {
     width: 100%;
   }
 }
-@media (max-width: 500px) {
+@media (max-width: 1023px) {
   .edit-contact .contact-section {
     max-width: 500px;
     width: 100%;
@@ -712,6 +774,9 @@ header > div button:hover {
   }
   .edit-contact .button-container {
     margin-top: 0px;
+  }
+  .edit-contact .button-cancel {
+    display: none;
   }
 }
 
