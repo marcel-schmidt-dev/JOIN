@@ -1,19 +1,25 @@
 @import "../../scss/vars.scss";
 
-.toast {
-  background-color: #2a3647;
-  width: 300px;
-  height: 60px;
+.toast-container {
+  background-color: $navy-blue;
   border-radius: 16px;
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px;
+  padding: 10px 20px;
   position: absolute;
-  top: 110px;
+  top: 10px;
   right: 20px;
-}
-.d-none {
-  display: none;
+  gap: 16px;
+
+  span {
+    flex: 1;
+  }
+
+  svg {
+    fill: #fff;
+    height: 15px;
+    width: auto;
+  }
 }
