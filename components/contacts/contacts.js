@@ -1,5 +1,5 @@
 import returnContactListTemplate from "./contact-list/contact-list.js";
-import { getContacts, addContact, deleteContact } from "../firebase.js";
+import { getContacts } from "../firebase.js";
 import getContactDetailsTemplate from "./contact-details/contact-details.js";
 import getContactOverlayTemplate from "./contact-overlay/contact-overlay.js";
 import { showToast } from "../toast/toast.js";
@@ -34,12 +34,6 @@ export function handleContactOverlayTemplate(id = false) {
   const contentRef = document.querySelector(".content");
   contentRef.innerHTML = "";
   contentRef.innerHTML += getContactOverlayTemplate(contact);
-}
-
-export function handleDeleteContact(id) {
-  deleteContact(id);
-  renderContacts();
-  showToast("Contact succsesfully Deleted" + returnIcon("check"));
 }
 
 export async function renderContacts() {
