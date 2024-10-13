@@ -1,67 +1,72 @@
-@import '../../scss/vars.scss';
+@import "../../scss/vars.scss";
 
 header {
-    background-color: #FFF;
-    -webkit-box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
-    width: 100%;
+  background-color: #fff;
+  -webkit-box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 25px;
+  position: relative;
+
+  > svg {
+    display: none;
+
+    @media (max-width: 1024px) {
+      display: block;
+      max-height: 40px;
+      width: auto;
+    }
+  }
+
+  > span {
+    display: inline-block;
+
+    @media (max-width: 1024px) {
+      display: none;
+    }
+  }
+
+  > div {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 1.25rem 25px;
-    position: relative;
+    gap: 1rem;
 
-    >svg {
-        display: none;
-
-        @media (max-width: 1024px) {
-            display: block;
-            max-height: 40px;
-            width: auto;
-        }
+    span {
+      font-size: 1.25rem;
+      line-height: 120%;
     }
 
-    >span {
-        display: inline-block;
-
-        @media (max-width: 1024px) {
-            display: none;
-        }
+    svg {
+      fill: #a8a8a8;
     }
 
-    >div {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
+    button {
+      background-color: transparent;
+      box-shadow: inset 0px 0px 0px 1px $navy-blue;
+      font-size: 1.75rem;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: $light-blue;
+      cursor: pointer;
+      transition: all 300ms ease-in-out;
 
-        span {
-            font-size: 1.25rem;
-            line-height: 120%;
-        }
-
-        svg {
-            fill: #A8A8A8;
-        }
-
-        button {
-            background-color: transparent;
-            box-shadow: inset 0px 0px 0px 1px $navy-blue;
-            font-size: 1.75rem;
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: $light-blue;
-            cursor: pointer;
-            transition: all 300ms ease-in-out;
-
-            &:hover {
-                background-color: $navy-blue;
-                color: #FFF;
-            }
-        }
+      &:hover {
+        background-color: $navy-blue;
+        color: #fff;
+      }
     }
+  }
+}
+@media (max-width: 1023px) {
+  header {
+    display: none;
+  }
 }

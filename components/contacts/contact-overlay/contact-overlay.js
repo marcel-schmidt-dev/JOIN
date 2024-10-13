@@ -69,7 +69,7 @@ export default function getContactOverlayTemplate(contactInfos) {
                 Delete
                 ${returnIcon("trash-outline")}
               </button>`
-                  : `<button class="button-delete" onclick="renderContacts()">  
+                  : `<button class="button-cancel" onclick="renderContacts()">  
                     Cancel ${returnIcon("x")} </button>`
               } </div>
             <div class="button-save-container">
@@ -85,7 +85,7 @@ export default function getContactOverlayTemplate(contactInfos) {
           </div>
         </div>
       </div>
-      <div class="button-save-container" >
+      <!-- <div class="button-save-container" >
               <button class="button-save" onclick="handleEditContact(${contactInfos.id}, '${contactInfos.userColor}')">
             <div class="button-save-container" >
               <button id="save-btn" class="button-save" onclick="handleEditContact(${contactInfos.id}, '${contactInfos.userColor}')">
@@ -93,7 +93,7 @@ export default function getContactOverlayTemplate(contactInfos) {
                 ${returnIcon("check")}
               </button>
             </div>
-    </div>
+    </div> -->
     `;
 }
 

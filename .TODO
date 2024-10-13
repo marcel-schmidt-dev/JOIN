@@ -1,0 +1,10 @@
+- Contact Details, Icons müssen ausgeblendet werden in der Desktop Ansicht.
+- Muss in der responsiven Ansicht über allem drüber Liegen
+- Contact Overlay, Funktionalität sicherstellen, aufräumen und Design anpassen.
+- Toast Design anpassen
+- Toast Funktionalität sicherstellen
+
+- Kontaktliste angeklickter Kontakt wird als Aktiv angezeigt
+- Sidebar HoverEffekt anpassen und Aktiv state
+
+- Animationen hinzufügen
