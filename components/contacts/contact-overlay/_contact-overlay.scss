@@ -128,6 +128,30 @@
             padding: 10px 20px;
             align-items: center;
 
+            #name-requested {
+              color: red;
+              display: none;
+              padding: 2px;
+              border: 1px solid red;
+              border-radius: 8px;
+            }
+
+            #email-requested {
+              color: red;
+              display: none;
+              padding: 2px;
+              border: 1px solid red;
+              border-radius: 8px;
+            }
+
+            #phone-requested {
+              color: red;
+              display: none;
+              padding: 2px;
+              border: 1px solid red;
+              border-radius: 8px;
+            }
+
             input {
               border: none;
               flex: 1;

@@ -11,7 +11,7 @@ header {
   padding: 1.25rem 25px;
   position: relative;
 
-  > svg {
+  >svg {
     display: none;
 
     @media (max-width: 1024px) {
@@ -21,7 +21,7 @@ header {
     }
   }
 
-  > span {
+  >span {
     display: inline-block;
 
     @media (max-width: 1024px) {
@@ -29,7 +29,7 @@ header {
     }
   }
 
-  > div {
+  >div {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -63,10 +63,5 @@ header {
         color: #fff;
       }
     }
-  }
-}
-@media (max-width: 1023px) {
-  header {
-    display: none;
   }
 }

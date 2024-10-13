@@ -56,16 +56,14 @@ export default function getContactOverlayTemplate(contactInfos) {
             <p id="phone-requested">Gültige Handynummer erforderlich</p>
             </div>
             <div class="button-container">
-              ${
-                contactInfos
-                  ? `<button class="button-delete" onclick="handleDeleteContact('${contactInfos.id}')">Delete${returnIcon("trash-outline")}</button>`
-                  : `<button class="button-cancel" onclick="renderContacts()">Cancel ${returnIcon("x")} </button>`
-              }
-              ${
-                contactInfos
-                  ? `<button class="button-save" onclick="handleEditContact('${contactInfos.id}', '${contactInfos.userColor}')">Save${returnIcon("check")}</button>`
-                  : `<button class="button-save" onclick="handleAddContact()">Create contact ${returnIcon("check")} </button>`
-              }
+              ${contactInfos
+      ? `<button class="button-delete" onclick="handleDeleteContact('${contactInfos.id}')">Delete${returnIcon("trash-outline")}</button>`
+      : `<button class="button-cancel" onclick="renderContacts()">Cancel ${returnIcon("x")} </button>`
+    }
+              ${contactInfos
+      ? `<button class="button-save" onclick="handleEditContact('${contactInfos.id}', '${contactInfos.userColor}')">Save${returnIcon("check")}</button>`
+      : `<button class="button-save" onclick="handleAddContact()">Create contact ${returnIcon("check")} </button>`
+    }
             </div>
           </div>
         </div>
@@ -136,5 +134,5 @@ function handleEditContact(id, userColor) {
 export function handleDeleteContact(id) {
   deleteContact(id);
   renderContacts();
-  showToast("Contact successfully Deleted" + returnIcon("check"));
+  showToast("Contact successfully Deleted", "check");
 }

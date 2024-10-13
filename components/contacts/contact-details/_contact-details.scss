@@ -3,13 +3,42 @@
 .contact-section {
   padding-top: 110px;
   padding-left: 50px;
+  overflow-y: auto;
+
+  @media (max-width: 1023px) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background-color: #F6F7F8;
+    padding: 25px;
+    height: 100%;
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .arrow-left {
+      display: none;
+
+      svg {
+        fill: $light-blue;
+      }
+
+      @media (max-width: 1023px) {
+        display: block;
+      }
+    }
+  }
 
   h1 {
     font-weight: bold;
     font-size: 3.75rem;
   }
 
-  .burger-menu {
+  .burger-menu-container {
     display: none;
   }
 
@@ -63,6 +92,11 @@
 
     svg {
       fill: $navy-blue;
+    }
+
+    @media (max-width: 1023px) {
+      display: none;
+
     }
   }
 
@@ -133,12 +167,13 @@
     gap: 16px;
   }
 
-  @media (max-width: 1023px) {
+  @media (max-width: 1200px) {
     .second-separator {
       border-radius: 5px;
       width: 120px;
       height: 2px;
       background-color: #29abe2;
+      margin-top: 16px;
     }
 
     .separator {
@@ -149,27 +184,69 @@
       flex-direction: column;
       align-items: flex-start;
     }
+  }
 
-    .burger-menu {
-      position: absolute;
+  @media (max-width: 1023px) {
+    .burger-menu-container {
+      position: fixed;
       bottom: 100px;
       right: 20px;
-      fill: white;
-      background-color: #2a3647;
-      height: 56px;
-      width: 56px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 1px 1px 2px #c8c9c9;
+      display: block;
+      cursor: pointer;
+
+      .burger-menu {
+        fill: white;
+        background-color: #2a3647;
+        height: 56px;
+        width: 56px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 1px 1px 2px #c8c9c9;
+        z-index: 100;
+      }
+
+      .menu {
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 66px;
+        right: 0;
+        background-color: #FFF;
+        padding: 10px;
+        width: 100%;
+        min-width: 120px;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+        border-radius: 20px 20px 0 20px;
+        display: none;
+
+        &.active {
+          display: block;
+        }
+
+        .menu-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px;
+          cursor: pointer;
+          transition: all 300ms ease-in-out;
+
+          svg {
+            height: 20px;
+            transition: all 300ms ease-in-out;
+          }
+
+          &:hover {
+            color: $light-blue;
+
+            svg {
+              fill: $light-blue;
+            }
+          }
+        }
+      }
     }
 
-    .arrow-left {
-      position: absolute;
-      top: 230px;
-      right: 20px;
-      fill: #29abe2;
-    }
   }
 }
