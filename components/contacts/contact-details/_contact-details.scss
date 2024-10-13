@@ -8,6 +8,9 @@
     font-weight: bold;
     font-size: 3.75rem;
   }
+  .burger-menu {
+    display: none;
+  }
 
   .separator {
     border-radius: 5px;
@@ -149,8 +152,8 @@
       right: 20px;
       fill: white;
       background-color: #2a3647;
-      height: 50px;
-      width: 50px;
+      height: 56px;
+      width: 56px;
       border-radius: 50%;
       display: flex;
       justify-content: center;
