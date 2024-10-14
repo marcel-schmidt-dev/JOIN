@@ -83,7 +83,7 @@
 
         .contact {
             display: flex;
-            padding: 1.5rem 1rem;
+            padding: 1rem;
             border-radius: .625rem;
             align-items: center;
             gap: 35px;
@@ -91,12 +91,23 @@
             cursor: pointer;
 
             &:hover {
-                background-color: $navy-blue;
+                background: rgb(249, 249, 249);
+                background: linear-gradient(0deg, rgba(249, 249, 249, 1) 0%, rgba(240, 240, 240, 1) 100%);
+
+                .details {
+                    color: #000;
+                }
+            }
+
+            &.active {
+                background: $navy-blue;
 
                 .details {
                     color: #FFF;
                 }
             }
+
+
 
             .initials-bubble {
                 width: 2.625rem;
