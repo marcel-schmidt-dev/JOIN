@@ -2,7 +2,7 @@ import returnIcon from "../../icons.js";
 import { getInitialsFromName } from "../../utility-functions.js";
 
 export default function returnContactListTemplate(contactList) {
-  return /*html*/ `
+    return /*html*/ `
         <div class="contact-list">
             <div class="button-container">
                 <button onclick="handleContactOverlayTemplate()" ><span>Add new contact</span> ${returnIcon("add-user")}</button>
@@ -15,19 +15,19 @@ export default function returnContactListTemplate(contactList) {
 }
 
 function returnContactList(contactList) {
-  let currentLetter = "";
-  let htmlList = "";
+    let currentLetter = "";
+    let htmlList = "";
 
-  const sortedContacts = contactList.sort((a, b) => a.fullName.localeCompare(b.fullName));
+    const sortedContacts = contactList.sort((a, b) => a.fullName.localeCompare(b.fullName));
 
-  sortedContacts.forEach((contact) => {
-    const firstLetter = contact.fullName.charAt(0).toUpperCase();
-    if (firstLetter !== currentLetter) {
-      currentLetter = firstLetter;
-      htmlList += `<div class="letter">${currentLetter}</div><hr>`;
-    }
-    htmlList += /*html*/ `
-            <div class="contact" onclick="showContactDetails('${contact.id}')">
+    sortedContacts.forEach((contact) => {
+        const firstLetter = contact.fullName.charAt(0).toUpperCase();
+        if (firstLetter !== currentLetter) {
+            currentLetter = firstLetter;
+            htmlList += `<div class="letter">${currentLetter}</div><hr>`;
+        }
+        htmlList += /*html*/ `
+            <div class="contact" onclick="showContactDetails('${contact.id}')" data-id="${contact.id}">
                 <div class="initials-bubble" style="background-color: ${"#" + contact.userColor}">
                     ${getInitialsFromName(contact.fullName)}
                 </div >
@@ -37,7 +37,7 @@ function returnContactList(contactList) {
                 </div>
             </div >
         `;
-  });
+    });
 
-  return htmlList;
+    return htmlList;
 }
