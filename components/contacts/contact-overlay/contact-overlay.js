@@ -118,7 +118,7 @@ function handleAddContact() {
   if (validateForm(fullName, email, phone)) {
     addContact(fullName, email, phone);
     renderContacts();
-    showToast("Contact successfully Created" + returnIcon("check"));
+    showToast("Contact successfully Created", "add-user");
   }
 }
 
@@ -128,11 +128,11 @@ function handleEditContact(id, userColor) {
   const phone = document.getElementById("number").value;
   editContact(id, fullName, email, phone, userColor);
   renderContacts();
-  showToast("Contact successfully Edited" + returnIcon("check"));
+  showToast("Contact successfully Edited", "pen");
 }
 
 export function handleDeleteContact(id) {
   deleteContact(id);
   renderContacts();
-  showToast("Contact successfully Deleted", "check");
+  showToast("Contact successfully Deleted", "trash-outline");
 }
