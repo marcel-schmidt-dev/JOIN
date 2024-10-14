@@ -2,8 +2,6 @@ import returnContactListTemplate from "./contact-list/contact-list.js";
 import { getContacts } from "../firebase.js";
 import getContactDetailsTemplate from "./contact-details/contact-details.js";
 import getContactOverlayTemplate from "./contact-overlay/contact-overlay.js";
-import { showToast } from "../toast/toast.js";
-import returnIcon from "../icons.js";
 window.showContactDetails = showContactDetails;
 
 let contactList;
@@ -16,10 +14,20 @@ export function showContactDetails(id) {
   const contact = contactList.find((contact) => contact.id.toString() === id.toString());
 
   const contentRef = document.querySelector(".content");
-  const contactSectionRef = contentRef.querySelector(".contact-section");
-  if (contactSectionRef) contactSectionRef.remove();
+  let contactSectionRef = contentRef.querySelector(".contact-details-container");
 
-  contentRef.innerHTML += getContactDetailsTemplate(contact);
+  if (contactSectionRef) {
+    contactSectionRef.innerHTML = getContactDetailsTemplate(contact);
+  } else {
+    contentRef.innerHTML += `<div class="contact-details-container">${getContactDetailsTemplate(contact)}</div>`;
+  }
+
+  const contactListItems = document.querySelectorAll(".contact");
+  contactListItems.forEach(item => item.classList.remove("active"));
+  const activeContact = document.querySelector(`.contact[data-id="${id}"]`);
+  if (activeContact) {
+    activeContact.classList.add("active");
+  }
 }
 
 export function handleContactOverlayTemplate(id = false) {
