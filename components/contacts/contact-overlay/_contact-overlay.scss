@@ -267,3 +267,32 @@
 .input-content {
   margin-bottom: 32px;
 }
+@media (max-width: 1023px) {
+  .edit-contact {
+    .card {
+      flex-direction: column;
+      max-width: 396px;
+      height: 760px;
+
+      .header-container {
+        padding: 66px 24px 66px 24px;
+
+        svg {
+          display: none;
+        }
+        h1 {
+          font-size: 47px;
+          font-weight: 700;
+        }
+        p {
+          font-size: 20px;
+          font-weight: 400;
+        }
+        .bubble-container {
+          position: absolute;
+          top: 0;
+        }
+      }
+    }
+  }
+}
