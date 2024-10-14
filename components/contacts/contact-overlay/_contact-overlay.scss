@@ -249,6 +249,7 @@
     }
   }
 }
+
 #name-requested {
   color: red;
   display: none;
@@ -287,6 +288,7 @@
             fill: white;
           }
         }
+
         .form {
           position: relative;
           margin-left: auto;
@@ -305,7 +307,7 @@
             align-items: center;
 
             .button-container {
-              > button:first-child {
+              .button-none {
                 display: none;
               }
             }

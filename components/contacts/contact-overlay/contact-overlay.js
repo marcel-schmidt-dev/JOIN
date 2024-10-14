@@ -59,7 +59,7 @@ export default function getContactOverlayTemplate(contactInfos) {
               ${
                 contactInfos
                   ? `<button class="button-delete" onclick="handleDeleteContact('${contactInfos.id}')">Delete${returnIcon("trash-outline")}</button>`
-                  : `<button class="button-cancel" onclick="renderContacts()">Cancel ${returnIcon("x")} </button>`
+                  : `<button class="button-cancel button-none" onclick="renderContacts()">Cancel ${returnIcon("x")} </button>`
               }
               ${
                 contactInfos
@@ -74,40 +74,22 @@ export default function getContactOverlayTemplate(contactInfos) {
 }
 
 function validateForm(fullName, email, phone) {
-  const nameRequest = document.getElementById("name-requested");
-  const inputNameRequest = document.getElementById("input-container-name");
-  let nameValidation = /^[a-zA-ZäöüÄÖÜß\s-]+$/;
-  if (!nameValidation.test(fullName) || fullName.length < 10) {
-    nameRequest.style.display = "block";
-    inputNameRequest.style.borderColor = "red";
-    return false;
-  } else {
-    nameRequest.style.display = "none";
-    inputNameRequest.style.borderColor = "#d1d1d1";
-  }
-
-  const emailRequest = document.getElementById("email-requested");
-  const inputEmailRequest = document.getElementById("input-container-email");
-  let emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailValidation.test(email)) {
-    emailRequest.style.display = "block";
-    inputEmailRequest.style.borderColor = "red";
-    return false;
-  } else {
-    emailRequest.style.display = "none";
-    inputEmailRequest.style.borderColor = "#d1d1d1";
-  }
-
-  const phoneRequest = document.getElementById("phone-requested");
-  const inputPhoneRequest = document.getElementById("input-container-phone");
-  let phoneValidation = /^[0-9]+$/;
-  if (!phoneValidation.test(phone) || phone.length < 10) {
-    phoneRequest.style.display = "block";
-    inputPhoneRequest.style.borderColor = "red";
-    return false;
-  } else {
-    phoneRequest.style.display = "none";
-    inputPhoneRequest.style.borderColor = "#d1d1d1";
+  const formValidations = [
+    { value: fullName, regex: /^[a-zA-ZäöüÄÖÜß\s-]+$/, minLength: 10, element: "name" },
+    { value: email, regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, element: "email" },
+    { value: phone, regex: /^[0-9]+$/, minLength: 10, element: "phone" },
+  ];
+  for (let { value, regex, minLength, element } of formValidations) {
+    const request = document.getElementById(`${element}-requested`);
+    const input = document.getElementById(`input-container-${element}`);
+    if (!regex.test(value) || (minLength && value.length < minLength)) {
+      request.style.display = "block";
+      input.style.borderColor = "red";
+      return false;
+    } else {
+      request.style.display = "none";
+      input.style.borderColor = "#d1d1d1";
+    }
   }
   return true;
 }
