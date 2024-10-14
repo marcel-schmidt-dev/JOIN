@@ -96,6 +96,14 @@
       width: auto;
     }
 
+    &:hover {
+      color: $light-blue;
+
+      svg {
+        fill: $light-blue;
+      }
+    }
+
     @media (max-width: 1023px) {
       display: none;
 
@@ -196,6 +204,7 @@
       right: 20px;
       display: block;
       cursor: pointer;
+      z-index: 100;
 
       .burger-menu {
         fill: white;
@@ -207,7 +216,6 @@
         justify-content: center;
         align-items: center;
         box-shadow: 1px 1px 2px #c8c9c9;
-        z-index: 100;
       }
 
       .menu {
