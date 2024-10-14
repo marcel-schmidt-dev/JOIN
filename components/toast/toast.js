@@ -10,7 +10,6 @@ export function showToast(message, icon) {
           ${returnIcon(icon)}
         </div>
     `;
-
   setTimeout(() => {
     const toastRef = document.querySelector(".toast-container");
     toastRef.remove();
