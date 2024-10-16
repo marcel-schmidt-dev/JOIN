@@ -127,3 +127,14 @@ export function editTask(slot, id, title, description, type, priority, dueDate, 
     assignee: assignee,
   });
 }
+
+export function moveTaskToSlot(oldSlot, newSlot, id) {
+  const db = getFirebaseDatabase();
+  const taskRef = ref(db, `board/${oldSlot}/${id}`);
+  const newTaskRef = ref(db, `board/${newSlot}`);
+  get(taskRef).then((snapshot) => {
+    const task = snapshot.val();
+    push(newTaskRef, task);
+    remove(taskRef);
+  });
+}
