@@ -43,6 +43,15 @@ export function getContacts() {
   });
 }
 
+export async function getContact(id) {
+  const contactsRef = ref(getFirebaseDatabase(), `contacts/${id}`);
+  const snapshot = await get(contactsRef); {
+    const contact = snapshot.val();
+    contact.id = snapshot.key;
+    return contact;
+  };
+}
+
 export function addContact(fullName, email, phone) {
   const userObject = {
     fullName: fullName,
