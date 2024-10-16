@@ -107,3 +107,23 @@ function returnSubtaskArray(subTasks) {
 
   return subTaskArray;
 }
+
+export function deleteTask(slot, id) {
+  const db = getFirebaseDatabase();
+  const taskRef = ref(db, `board/${slot}/${id}`);
+  remove(taskRef);
+}
+
+export function editTask(slot, id, title, description, type, priority, dueDate, subTasks, assignee) {
+  const db = getFirebaseDatabase();
+  const taskRef = ref(db, `board/${slot}/${id}`);
+  set(taskRef, {
+    title: title,
+    description: description,
+    type: type,
+    priority: priority,
+    dueDate: dueDate,
+    subTasks: returnSubtaskArray(subTasks),
+    assignee: assignee,
+  });
+}
