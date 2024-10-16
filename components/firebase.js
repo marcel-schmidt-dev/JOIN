@@ -70,11 +70,14 @@ export function editContact(id, name, email, phone, userColor) {
   });
 }
 
-export function getBoard(slot) {
+export function returnBoard(slot) {
   const db = getFirebaseDatabase();
   get(ref(db, "board/")).then((snapshot) => {
     const board = snapshot.val();
-    console.log(board);
+    if (slot === undefined) {
+      return board;
+    }
+    return board[slot];
   });
 }
 
