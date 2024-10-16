@@ -1,143 +1,141 @@
 .contact-list {
-    max-width: 450px;
-    background-color: #FFF;
+  max-width: 450px;
+  background-color: #fff;
+  height: 100%;
+  padding-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 1023px) {
+    max-width: 100%;
+    flex: 1;
+  }
+
+  .button-container {
+    background-color: #fff;
+    width: 100%;
+    padding: 25px;
+
+    button {
+      background-color: $navy-blue;
+      border-radius: 0.625rem;
+      color: #fff;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 18px;
+      font-size: 1.25rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: all 300ms ease-in-out;
+
+      svg {
+        fill: #fff;
+      }
+
+      &:hover {
+        background-color: $light-blue;
+      }
+    }
+
+    @media (max-width: 1023px) {
+      position: fixed;
+      padding: 0;
+      border-radius: 50%;
+      max-width: 56px;
+      bottom: 100px;
+      right: 20px;
+      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+      span {
+        display: none;
+      }
+
+      button {
+        border-radius: 50%;
+        width: 56px;
+        padding: 12px;
+        aspect-ratio: 1/1;
+      }
+    }
+  }
+
+  .list-content {
+    overflow-y: auto;
     height: 100%;
-    padding-bottom: 25px;
-    display: flex;
-    flex-direction: column;
+    padding: 0 25px;
 
-    @media(max-width: 1023px) {
-        max-width: 100%;
-        flex: 1;
+    .letter {
+      font-size: 1.25rem;
+      line-height: 120%;
+      background-color: #fff;
+      color: #000;
+      padding: 16px 30px;
     }
 
-    .button-container {
-        background-color: #FFF;
-        width: 100%;
-        padding: 25px;
-
-        button {
-            background-color: $navy-blue;
-            border-radius: .625rem;
-            color: #FFF;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            padding: 18px;
-            font-size: 1.25rem;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            transition: all 300ms ease-in-out;
-
-            svg {
-                fill: #fff;
-            }
-
-            &:hover {
-                background-color: $light-blue;
-            }
-        }
-
-        @media (max-width: 1023px) {
-            position: fixed;
-            padding: 0;
-            border-radius: 50%;
-            max-width: 56px;
-            bottom: 100px;
-            right: 20px;
-            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-
-            span {
-                display: none;
-            }
-
-            button {
-                border-radius: 50%;
-                width: 56px;
-                padding: 12px;
-                aspect-ratio: 1/1;
-            }
-        }
+    hr {
+      margin: 8px 0;
+      background-color: #d1d1d1;
     }
 
-    .list-content {
-        overflow-y: auto;
-        height: 100%;
-        padding: 0 25px;
+    .contact {
+      display: flex;
+      padding: 1rem;
+      border-radius: 0.625rem;
+      align-items: center;
+      gap: 35px;
+      transition: all 300ms ease-in-out;
+      cursor: pointer;
 
-        .letter {
-            font-size: 1.25rem;
-            line-height: 120%;
-            background-color: #fff;
-            color: #000;
-            padding: 16px 30px;
+      @media (max-width: 1023px) {
+        gap: 15px;
+      }
+
+      &:hover {
+        background: rgb(249, 249, 249);
+        background: linear-gradient(0deg, rgba(249, 249, 249, 1) 0%, rgba(240, 240, 240, 1) 100%);
+
+        .details {
+          color: #000;
         }
+      }
 
-        hr {
-            margin: 8px 0;
-            background-color: #D1D1D1;
+      &.active {
+        background: $navy-blue;
+
+        .details {
+          color: #fff;
         }
+      }
 
-        .contact {
-            display: flex;
-            padding: 1rem;
-            border-radius: .625rem;
-            align-items: center;
-            gap: 35px;
-            transition: all 300ms ease-in-out;
-            cursor: pointer;
+      .initials-bubble {
+        min-width: 2.625rem;
+        height: 2.625rem;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        border: 2px solid #fff;
+      }
 
-            @media (max-width: 1023px) {
-                gap: 15px;
-            }
+      .details {
+        font-size: 1.25rem;
+        line-height: 120%;
+        transition: all 300ms ease-in-out;
 
-            &:hover {
-                background: rgb(249, 249, 249);
-                background: linear-gradient(0deg, rgba(249, 249, 249, 1) 0%, rgba(240, 240, 240, 1) 100%);
+        span {
+          color: #007cee;
+          font-size: 1rem;
 
-                .details {
-                    color: #000;
-                }
-            }
-
-            &.active {
-                background: $navy-blue;
-
-                .details {
-                    color: #FFF;
-                }
-            }
-
-
-
-            .initials-bubble {
-                min-width: 2.625rem;
-                height: 2.625rem;
-                border-radius: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #FFF;
-                border: 2px solid #fff;
-            }
-
-            .details {
-                font-size: 1.25rem;
-                line-height: 120%;
-                transition: all 300ms ease-in-out;
-
-                span {
-                    color: #007CEE;
-                    font-size: 1rem;
-
-                    @media (max-width: 1023px) {
-                        font-size: .75rem;
-                    }
-                }
-            }
+          @media (max-width: 1023px) {
+            font-size: 0.75rem;
+          }
         }
+      }
     }
+  }
 }

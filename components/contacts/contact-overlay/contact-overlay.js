@@ -110,11 +110,13 @@ function handleEditContact(id, userColor) {
   const fullName = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const phone = document.getElementById("number").value;
-  editContact(id, fullName, email, phone, userColor);
-  renderContacts();
-  showToast("Contact successfully Edited", "pen");
+  if (validateForm(fullName, email, phone)) {
+    addContact(fullName, email, phone);
+    editContact(id, fullName, email, phone, userColor);
+    renderContacts();
+    showToast("Contact successfully Edited", "pen");
+  }
 }
-
 export function handleDeleteContact(id) {
   deleteContact(id);
   renderContacts();
