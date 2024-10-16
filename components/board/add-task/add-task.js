@@ -1,11 +1,20 @@
 import returnIcon from "../../icons";
 
 document.addEventListener("DOMContentLoaded", async () => {
+  await renderTaskTemplate();
   await getAddTaskTemplate();
 });
 
+async function renderTaskTemplate() {
+  const contactSectionRef = document.querySelector(".content");
+
+  contactSectionRef.innerHTML = /*html*/ `
+        <div class="task-content"></div>
+    `;
+}
+
 async function getAddTaskTemplate() {
-  const addTaskRef = document.querySelector(".content");
+  const addTaskRef = document.querySelector(".task-content");
   addTaskRef.innerHTML += /*html*/ `
         <div class="content">
             <h1>Add Task</h1>
