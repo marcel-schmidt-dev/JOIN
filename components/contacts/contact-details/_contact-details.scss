@@ -10,7 +10,7 @@
     left: 0;
     top: 0;
     width: 100%;
-    background-color: #F6F7F8;
+    background-color: #f6f7f8;
     padding: 25px;
     height: 100%;
   }
@@ -22,6 +22,7 @@
 
     .arrow-left {
       display: none;
+      cursor: pointer;
 
       svg {
         fill: $light-blue;
@@ -106,7 +107,6 @@
 
     @media (max-width: 1023px) {
       display: none;
-
     }
   }
 
@@ -160,7 +160,7 @@
     margin-bottom: 20px;
   }
 
-  .contact-information>span {
+  .contact-information > span {
     margin-bottom: 15px;
     font-size: 1.25rem;
   }
@@ -223,7 +223,7 @@
         position: absolute;
         bottom: 66px;
         right: 0;
-        background-color: #FFF;
+        background-color: #fff;
         padding: 10px;
         width: 100%;
         min-width: 120px;
@@ -258,6 +258,5 @@
         }
       }
     }
-
   }
 }

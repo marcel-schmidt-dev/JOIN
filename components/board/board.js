@@ -53,9 +53,7 @@ async function getBoardTemplate() {
       <div class="slots">
         <div class="slots-header"><h2>Done</h2></div>
         <div class="slot-content" id="done-tasks">
-          <p>test</p>
-          <p>test3</p>
-          <p>test5</p>
+         
         </div>
       </div>
     </section>
@@ -64,10 +62,18 @@ async function getBoardTemplate() {
 }
 
 async function renderTasks() {
-  const todoSlot = document.querySelector("#todo-tasks");
-  const inProgressSlot = document.querySelector("#inProgress-tasks");
-  const awaitFeedbackSlot = document.querySelector("#awaitFeedback-tasks");
-  const doneSlot = document.querySelector("#done-tasks");
+  const slots = {
+    todo: document.querySelector("#todo-tasks"),
+    inProgress: document.querySelector("#inProgress-tasks"),
+    awaitFeedback: document.querySelector("#awaitFeedback-tasks"),
+    done: document.querySelector("#done-tasks"),
+  };
   const boardData = await returnBoard();
-  console.log(boardData);
+  for (let status in boardData) {
+    boardData[status].forEach((task) => {
+      let taskElement = document.createElement("div");
+      taskElement.textContent = task.title;
+      slots[status].appendChild(taskElement);
+    });
+  }
 }
