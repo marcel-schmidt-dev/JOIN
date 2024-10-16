@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
   await renderBoard();
-});
-document.addEventListener("DOMContentLoaded", async () => {
   await getBoardTemplate();
 });
+
 async function renderBoard() {
   const contactSectionRef = document.querySelector(".content");
 
@@ -20,7 +19,7 @@ async function renderBoard() {
 }
 
 async function getBoardTemplate() {
-  const contactSectionRef = document.querySelector(".content");
+  const contactSectionRef = document.querySelector(".board-container");
   contactSectionRef.innerHTML += /*html*/ `
           <section class="slot-section">
       <div class="slots">
