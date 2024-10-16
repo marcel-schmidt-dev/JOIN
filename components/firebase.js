@@ -54,10 +54,45 @@ export function deleteContact(id) {
 
 export function editContact(id, name, email, phone, userColor) {
   const db = getDatabase();
-  set(ref(db, "contacts/" + id), {
+  set(ref(db, `contacts/${id}`), {
     fullName: name,
     email: email,
     phone: phone,
     userColor: userColor,
   });
+}
+
+export function getBoard() {
+  const db = getFirebaseDatabase();
+  get(ref(db, "board/")).then((snapshot) => {
+    const board = snapshot.val();
+    console.log(board);
+  });
+}
+
+export function addTask(slot, title, description, type, priority, dueDate, subTasks, assignee) {
+  const db = getFirebaseDatabase();
+  const taskRef = ref(db, `board/${slot}`);
+  push(taskRef, {
+    title: title,
+    description: description,
+    type: type,
+    priority: priority,
+    dueDate: dueDate,
+    subTasks: returnSubtaskArray(subTasks),
+    assignee: assignee,
+  });
+}
+
+function returnSubtaskArray(subTasks) {
+  let subTaskArray = [];
+
+  subTasks.forEach((subTask) => {
+    subTaskArray.push({
+      title: subTask,
+      checked: false,
+    });
+  });
+
+  return subTaskArray;
 }
