@@ -6,6 +6,7 @@
 @import "./components/contacts/contact-details/contact-details.scss";
 @import "./components/contacts/contact-overlay/contact-overlay.scss";
 @import "./components/toast/toast.scss";
+@import "./components/board/board.scss";
 
 @font-face {
   font-family: "Inter";
@@ -29,7 +30,7 @@ body {
   height: 100vh;
   display: flex;
 
-  >div {
+  > div {
     flex: 1;
   }
 }

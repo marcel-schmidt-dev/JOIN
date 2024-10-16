@@ -53,8 +53,6 @@ export function deleteContact(id) {
 }
 
 export function editContact(id, name, email, phone, userColor) {
-  console.log(id, name, email, phone);
-
   const db = getDatabase();
   set(ref(db, "contacts/" + id), {
     fullName: name,
