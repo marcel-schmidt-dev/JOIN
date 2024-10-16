@@ -107,3 +107,34 @@ function returnSubtaskArray(subTasks) {
 
   return subTaskArray;
 }
+
+export function deleteTask(slot, id) {
+  const db = getFirebaseDatabase();
+  const taskRef = ref(db, `board/${slot}/${id}`);
+  remove(taskRef);
+}
+
+export function editTask(slot, id, title, description, type, priority, dueDate, subTasks, assignee) {
+  const db = getFirebaseDatabase();
+  const taskRef = ref(db, `board/${slot}/${id}`);
+  set(taskRef, {
+    title: title,
+    description: description,
+    type: type,
+    priority: priority,
+    dueDate: dueDate,
+    subTasks: returnSubtaskArray(subTasks),
+    assignee: assignee,
+  });
+}
+
+export function moveTaskToSlot(oldSlot, newSlot, id) {
+  const db = getFirebaseDatabase();
+  const taskRef = ref(db, `board/${oldSlot}/${id}`);
+  const newTaskRef = ref(db, `board/${newSlot}`);
+  get(taskRef).then((snapshot) => {
+    const task = snapshot.val();
+    push(newTaskRef, task);
+    remove(taskRef);
+  });
+}
