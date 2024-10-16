@@ -70,15 +70,20 @@ export function editContact(id, name, email, phone, userColor) {
   });
 }
 
-export function returnBoard(slot) {
+export async function returnBoard(slot) {
   const db = getFirebaseDatabase();
-  get(ref(db, "board/")).then((snapshot) => {
+
+  try {
+    const snapshot = await get(ref(db, "board/"));
     const board = snapshot.val();
+
     if (slot === undefined) {
       return board;
     }
     return board[slot];
-  });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export function addTask(slot, title, description, type, priority, dueDate, subTasks, assignee) {
