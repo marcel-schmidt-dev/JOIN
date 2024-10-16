@@ -1,4 +1,5 @@
 import { returnBoard } from "../firebase.js";
+import { returnTaskTemplate } from "./task-card/task-card.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   await renderBoard();
@@ -70,10 +71,9 @@ async function renderTasks() {
   };
   const boardData = await returnBoard();
   for (let status in boardData) {
-    boardData[status].forEach((task) => {
-      let taskElement = document.createElement("div");
-      taskElement.textContent = task.title;
-      slots[status].appendChild(taskElement);
-    });
+    for (let task of boardData[status]) {
+      const taskTemplate = await returnTaskTemplate(task);
+      slots[status].innerHTML += taskTemplate;
+    }
   }
 }
