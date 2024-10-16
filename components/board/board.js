@@ -3,7 +3,6 @@ import { returnBoard } from "../firebase.js";
 document.addEventListener("DOMContentLoaded", async () => {
   await renderBoard();
   await getBoardTemplate();
-  await renderTasks();
 });
 
 async function renderBoard() {
@@ -61,7 +60,7 @@ async function getBoardTemplate() {
       </div>
     </section>
     `;
-  await renderTasks();
+  renderTasks();
 }
 
 async function renderTasks() {
@@ -69,6 +68,6 @@ async function renderTasks() {
   const inProgressSlot = document.querySelector("#inProgress-tasks");
   const awaitFeedbackSlot = document.querySelector("#awaitFeedback-tasks");
   const doneSlot = document.querySelector("#done-tasks");
-  const boardData = returnBoard();
-  console.log(await boardData);
+  const boardData = await returnBoard();
+  console.log(boardData);
 }
