@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getDatabase, ref, get, push, remove, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
-import { returnRandomUserColor } from "./utility-functions.js";
+import { returnRandomUserColor, returnRandomContact } from "./utility-functions.js";
 
 function getFirebaseDatabase() {
   const firebaseConfig = {
@@ -24,6 +24,14 @@ export function getContacts() {
 
   return get(contactsRef).then((snapshot) => {
     const contacts = [];
+    const minLen = 20;
+    if (snapshot.size < minLen) {
+      for (let index = snapshot.size; index < minLen; index++) {
+        const contact = returnRandomContact();
+        addContact(contact[0], contact[1], contact[2]);
+      }
+    }
+
     snapshot.forEach((childSnapshot) => {
       const contact = childSnapshot.val();
       contact.id = childSnapshot.key;
@@ -62,11 +70,14 @@ export function editContact(id, name, email, phone, userColor) {
   });
 }
 
-export function getBoard() {
+export function returnBoard(slot) {
   const db = getFirebaseDatabase();
   get(ref(db, "board/")).then((snapshot) => {
     const board = snapshot.val();
-    console.log(board);
+    if (slot === undefined) {
+      return board;
+    }
+    return board[slot];
   });
 }
 
