@@ -44,11 +44,9 @@ export function getContacts() {
 }
 
 export async function getContact(id) {
-  console.log('try get id: ' + id);
 
   const contactsRef = ref(getFirebaseDatabase(), `contacts/${id}`);
   const snapshot = await get(contactsRef);
-  console.log(contactsRef.key);
 
   const contact = snapshot.val();
 
