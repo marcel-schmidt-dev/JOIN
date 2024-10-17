@@ -23,16 +23,16 @@ async function getAddTaskTemplate() {
                         <h2>Title
                             <span>*</span>
                         </h2>
-                        <input type="text" name="title" placeholder="Enter a title"/>
+                        <input type="text" name="title" class="title-container" placeholder="Enter a title"/>
                     </div>
                     <div class="description-input">
                         <h2>Description</h2>
-                        <textarea type="text" name="description" placeholder="Enter a description" rows="5"></textarea>
+                        <textarea type="text" name="description" class="description-container" placeholder="Enter a description" rows="5"></textarea>
                     </div>
                     <div class="assigned-input">
                         <h2>Assigned to</h2>
-                        <div class="assigned-input">
-                         <input type="text" name="assigned" id="selected-contact" placeholder="Select contacts to assign" readonly />
+                        <div class="assigned">
+                         <input type="text" name="assigned" class="assigned-container" id="selected-contact" placeholder="Select contacts to assign" readonly />
                          ${returnIcon("arrow-dropdown")}
                         </div>
                     </div>
@@ -45,7 +45,7 @@ async function getAddTaskTemplate() {
                             <span>*</span>
                         </h2>
                         <div class="date">
-                         <input type="text" name="date" placeholder="dd/mm/yyyy"/>
+                         <input type="text" name="date" class="date-container" placeholder="dd/mm/yyyy"/>
                          ${returnIcon("calendar")}
                         </div>
                     </div>
@@ -62,14 +62,14 @@ async function getAddTaskTemplate() {
                             <span>*</span>
                         </h2>
                         <div class="category-input">
-                         <input type="text" name="category" id="category" placeholder="Select task category" readonly />
+                         <input type="text" name="category" class="category-container" id="category" placeholder="Select task category" readonly />
                          ${returnIcon("arrow-dropdown")}
                         </div>
                     </div>
                     <div class="subtasks">
                         <h2>Subtasks</h2>
                         <div class="subtasks-input">
-                         <input type="text" name="subtasks" id="subtasks" placeholder="Add new subtask"/>
+                         <input type="text" name="subtasks" class="subtasks-container" id="subtasks" placeholder="Add new subtask"/>
                          ${returnIcon("plus")}
                         </div>
                     </div>
