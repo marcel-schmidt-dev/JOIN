@@ -38,6 +38,7 @@ async function getAddTaskTemplate() {
                     </div>
                     
                 </div>
+                <div class="separator"></div>
                 <div class="input-right">
                     <div class="date-input">
                         <h2>Due date
