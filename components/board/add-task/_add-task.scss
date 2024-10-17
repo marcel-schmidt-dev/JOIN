@@ -1,3 +1,9 @@
+h1 {
+  font-size: 61px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
 .content {
   display: flex;
   justify-content: center;
@@ -9,6 +15,13 @@
 
     .input-left {
       .title-input {
+        .title-container {
+          padding: 12px 21px 12px 21px;
+          border-radius: 10px;
+          border: 1px solid #d1d1d1;
+          width: 300px;
+          margin-bottom: 12px;
+        }
         h2 {
           font-size: 20px;
           font-weight: 400;
@@ -19,6 +32,12 @@
         }
       }
       .description-input {
+        .description-container {
+          border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          width: 300px;
+          margin-bottom: 12px;
+        }
         h2 {
           font-size: 20px;
           font-weight: 400;
@@ -30,9 +49,19 @@
           font-size: 20px;
           font-weight: 400;
         }
-        .assigned-input {
+        .assigned {
           display: flex;
+          justify-content: space-between;
+          align-items: center;
           border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          background-color: white;
+          padding: 12px 21px 12px 21px;
+          margin-bottom: 12px;
+
+          .assigned-container {
+            border: none;
+          }
         }
       }
     }
@@ -55,11 +84,22 @@
         }
         .date {
           display: flex;
+          justify-content: space-between;
+          align-items: center;
           border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          background-color: white;
+          padding: 12px 21px 12px 21px;
+          width: 300px;
+          margin-bottom: 12px;
+
+          .date-container {
+            border: none;
+          }
 
           svg {
-            width: 24px;
-            height: 24px;
+            width: 18px;
+            height: 20px;
           }
         }
       }
@@ -69,9 +109,20 @@
           font-weight: 400;
         }
         .priority-buttons {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 12px;
+          width: 100%;
+          justify-content: space-between;
+
           .button-urgent {
             font-size: 20px;
             font-weight: 400;
+            display: flex;
+            align-items: center;
+            border: 1px solid #d1d1d1;
+            border-radius: 10px;
+            gap: 8px;
 
             svg {
               width: 20px;
@@ -81,6 +132,12 @@
           .button-medium {
             font-size: 20px;
             font-weight: 400;
+            display: flex;
+            align-items: center;
+            border: 1px solid #d1d1d1;
+            border-radius: 10px;
+            padding: 16px 10px 16px 10px;
+            gap: 8px;
 
             svg {
               width: 20px;
@@ -90,6 +147,12 @@
           .button-low {
             font-size: 20px;
             font-weight: 400;
+            display: flex;
+            align-items: center;
+            border: 1px solid #d1d1d1;
+            border-radius: 10px;
+            padding: 16px 10px 16px 10px;
+            gap: 8px;
 
             svg {
               width: 20px;
@@ -109,7 +172,17 @@
         }
         .category-input {
           display: flex;
+          justify-content: space-between;
+          align-items: center;
           border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          background-color: white;
+          padding: 12px 21px 12px 21px;
+          margin-bottom: 12px;
+
+          .category-container {
+            border: none;
+          }
         }
       }
       .subtasks {
@@ -119,11 +192,21 @@
         }
         .subtasks-input {
           display: flex;
+          justify-content: space-between;
+          align-items: center;
           border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          background-color: white;
+          padding: 12px 21px 12px 21px;
+          margin-bottom: 120px;
+
+          .subtasks-container {
+            border: none;
+          }
 
           svg {
-            width: 24px;
-            height: 24px;
+            width: 14px;
+            height: 14px;
           }
         }
       }
@@ -131,7 +214,9 @@
   }
   .container-bottom {
     display: flex;
+    justify-content: space-between;
     .span-content {
+      margin-top: 40px;
       .span-container {
         color: red;
       }
@@ -141,9 +226,19 @@
       }
     }
     .add-task-button-container {
+      display: flex;
+      gap: 16px;
+
       .clear {
         font-size: 20px;
         font-weight: 400;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+        border-color: $navy-blue;
+        border-radius: 10px;
+        gap: 4px;
 
         svg {
           width: 24px;
@@ -153,10 +248,20 @@
       .create {
         font-size: 20px;
         font-weight: 400;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+        border-color: $navy-blue;
+        border-radius: 10px;
+        color: white;
+        background-color: $navy-blue;
+        gap: 4px;
 
         svg {
           width: 24px;
           height: 24px;
+          fill: white;
         }
       }
     }
