@@ -6,9 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function renderTaskTemplate() {
-  const contactSectionRef = document.querySelector(".content");
-
-  contactSectionRef.innerHTML = /*html*/ `
+  const taskSectionRef = document.querySelector(".content");
+  taskSectionRef.innerHTML = /*html*/ `
         <div class="task-content"></div>
     `;
 }
