@@ -1,36 +1,158 @@
 @import "../../scss/vars";
 
-.slot-section {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  justify-content: space-between;
-  height: 100%;
-  display: flex;
-  flex-grow: 1;
-  gap: 25px;
+.board-container {
+  padding-top: 80px;
+  padding-left: 25px;
+  padding-right: 25px;
 
-  .slots {
-    width: 100%;
-
-    height: 100%;
-  }
-  .slots-header {
+  .board-heading {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+
+    h2 {
+      font-size: 3.75rem;
+      font-weight: bold;
+    }
+
+    &>div {
+      display: flex;
+      gap: 32px;
+
+      .search {
+        padding: 8px 16px;
+        background-color: #fff;
+        border-radius: 10px;
+        border: 1px solid #A8A8A8;
+        display: flex;
+
+        input {
+          border: none;
+          font-size: 1.25rem;
+          line-height: 120%;
+          flex: 1;
+          border-right: 1px solid #D1D1D1;
+
+          &:focus {
+            outline: none;
+          }
+
+          &::placeholder {
+            color: #D1D1D1;
+            font-size: 1.25rem;
+            line-height: 120%;
+          }
+        }
+
+        button {
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+          margin-left: 16px;
+          display: flex;
+          align-items: center;
+
+          svg {
+            width: auto;
+            height: 18px;
+            fill: $navy-blue;
+          }
+        }
+      }
+
+      >button {
+        padding: 12px 16px;
+        background-color: $navy-blue;
+        color: #fff;
+        font-size: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        border: none;
+        line-height: 120%;
+        transition: all 300ms ease-in-out;
+
+        &:hover {
+          background-color: $light-blue;
+          box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        }
+
+        svg {
+          height: 20px;
+          width: auto;
+          fill: #FFF;
+        }
+      }
+    }
+  }
+
+  .board {
     width: 100%;
-  }
-  .btn {
-    border-radius: 5px;
-    background-color: transparent;
-    height: 24px;
-    width: 24px;
-    font-size: 16px;
-    text-align: center;
-  }
-  .slot-content {
-    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: space-between;
     height: 100%;
-    width: 100%;
+    display: flex;
+    flex-grow: 1;
+    gap: 25px;
+
+    .slots {
+      width: 100%;
+      height: 100%;
+    }
+
+    .slots-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+
+      h2 {
+        font-weight: bold;
+        font-size: 1.25rem;
+        line-height: 120%;
+        color: #42526E;
+      }
+    }
+
+    .btn {
+      border-radius: 8px;
+      background-color: transparent;
+      padding: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid $navy-blue;
+      transition: all 300ms ease-in-out;
+
+      &:hover {
+        background-color: $light-blue;
+        border-color: $light-blue;
+
+        svg {
+          fill: #FFF;
+        }
+      }
+
+      svg {
+        fill: $navy-blue;
+        width: 100%;
+        height: auto;
+        width: 12px;
+        height: 12px;
+        transition: all 300ms ease-in-out;
+      }
+    }
+
+    .slot-content {
+      margin-top: 10px;
+      height: 100%;
+      width: 100%;
+    }
   }
 }

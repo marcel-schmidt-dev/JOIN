@@ -8,6 +8,7 @@ let contactList;
 
 document.addEventListener("DOMContentLoaded", async () => {
   await renderContacts();
+  renderContactHeader();
 });
 
 export function showContactDetails(id) {
@@ -51,4 +52,21 @@ export async function renderContacts() {
   contactList = await getContacts();
 
   contentRef.innerHTML += returnContactListTemplate(contactList);
+}
+
+function renderContactHeader() {
+  const contentRef = document.querySelector(".content");
+
+  contentRef.innerHTML += /*html*/`
+      <div class="contact-details-container">
+        <div class="header-container">
+            <div class="contact-header">
+            <h1>Contacts</h1>
+            <div class="separator"></div>
+            <p>Better with team</p>
+            <div class="second-separator"></div>
+          </div>
+        </div>
+      </div>
+  `;
 }

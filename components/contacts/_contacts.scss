@@ -1,0 +1,48 @@
+.contact-details-container {
+    padding-top: 110px;
+    padding-left: 50px;
+
+    .separator {
+        border-radius: 5px;
+        width: 3px;
+        height: 50px;
+        background-color: #29abe2;
+        margin: 0 30px;
+    }
+
+    .contact-header {
+        font-size: 36px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 32px;
+
+        h1 {
+            font-size: 3.75rem;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 1.6875rem;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .second-separator {
+            border-radius: 5px;
+            width: 120px;
+            height: 2px;
+            background-color: #29abe2;
+            margin-top: 16px;
+        }
+
+        .separator {
+            display: none;
+        }
+
+        .contact-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+}

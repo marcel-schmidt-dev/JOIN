@@ -1,8 +1,6 @@
 @import "../../../scss/vars.scss";
 
 .contact-section {
-  padding-top: 110px;
-  padding-left: 50px;
   overflow-y: auto;
 
   @media (max-width: 1023px) {
@@ -10,7 +8,7 @@
     left: 0;
     top: 0;
     width: 100%;
-    background-color: #F6F7F8;
+    background-color: #f6f7f8;
     padding: 25px;
     height: 100%;
   }
@@ -22,6 +20,7 @@
 
     .arrow-left {
       display: none;
+      cursor: pointer;
 
       svg {
         fill: $light-blue;
@@ -106,7 +105,6 @@
 
     @media (max-width: 1023px) {
       display: none;
-
     }
   }
 
@@ -223,7 +221,7 @@
         position: absolute;
         bottom: 66px;
         right: 0;
-        background-color: #FFF;
+        background-color: #fff;
         padding: 10px;
         width: 100%;
         min-width: 120px;
@@ -258,6 +256,5 @@
         }
       }
     }
-
   }
 }
