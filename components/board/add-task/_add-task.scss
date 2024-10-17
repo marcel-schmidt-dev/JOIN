@@ -25,6 +25,7 @@
         }
       }
       .assigned-input {
+        border: none;
         h2 {
           font-size: 20px;
           font-weight: 400;
@@ -34,6 +35,13 @@
           border: 1px solid #d1d1d1;
         }
       }
+    }
+    .separator {
+      width: 2px;
+      height: 300px;
+      color: black;
+      margin-left: 25px;
+      margin-right: 25px;
     }
     .input-right {
       .date-input {
