@@ -1,8 +1,6 @@
 @import "../../../scss/vars.scss";
 
 .contact-section {
-  padding-top: 110px;
-  padding-left: 50px;
   overflow-y: auto;
 
   @media (max-width: 1023px) {
@@ -160,7 +158,7 @@
     margin-bottom: 20px;
   }
 
-  .contact-information > span {
+  .contact-information>span {
     margin-bottom: 15px;
     font-size: 1.25rem;
   }
