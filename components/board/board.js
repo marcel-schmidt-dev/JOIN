@@ -6,6 +6,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   await renderBoardTemplate();
 });
 
+let currentTaskId;
+
+window.allowDrop = function (event) {
+  event.preventDefault();
+};
+
+window.moveTo = function (newStatus) {
+  const taskElement = document.querySelector(`[data-task-id="${currentTaskId}"]`);
+  document.getElementById(newStatus).appendChild(taskElement);
+};
+
+window.startDragging = function (taskId) {
+  currentTaskId = taskId;
+  console.log(taskId);
+};
+
 async function renderBoardTemplate() {
   const contactSectionRef = document.querySelector(".content");
 
@@ -14,7 +30,7 @@ async function renderBoardTemplate() {
             <div class="board-heading">
                 <h2>Board</h2>
                 <div>
-                  <div class="search"><input type="text" placeholder="Find Task"><button>${returnIcon('search')}</button></div>
+                  <div class="search"><input type="text" placeholder="Find Task"><button>${returnIcon("search")}</button></div>
                   <button>Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
@@ -24,7 +40,7 @@ async function renderBoardTemplate() {
                   <h2>To do</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="todo-tasks"></div>
+                <div class="slot-content" id="todo-tasks"  ondrop="moveTo('todo-tasks')" ondragover="allowDrop(event)"></div>
               </div>
 
               <div class="slots">
@@ -32,7 +48,7 @@ async function renderBoardTemplate() {
                   <h2>In Progress</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="inProgress-tasks"></div>
+                <div class="slot-content" id="inProgress-tasks" ondrop="moveTo('inProgress-tasks')" ondragover="allowDrop(event)" ></div>
               </div>
 
               <div class="slots">
@@ -40,12 +56,12 @@ async function renderBoardTemplate() {
                   <h2>Await feedback</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="awaitFeedback-tasks"></div>
+                <div class="slot-content" id="awaitFeedback-tasks" ondrop="moveTo('awaitFeedback-tasks')" ondragover="allowDrop(event)"></div>
               </div>
 
               <div class="slots">
                 <div class="slots-header"><h2>Done</h2></div>
-                <div class="slot-content" id="done-tasks"></div>
+                <div class="slot-content" id="done-tasks" ondrop="moveTo('done-tasks')" ondragover="allowDrop(event)" ></div>
               </div>
             </div>
         </div>
