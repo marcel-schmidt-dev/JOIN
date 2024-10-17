@@ -4,7 +4,6 @@ import { getInitialsFromName } from "../../utility-functions.js";
 
 export async function returnTaskTemplate(task) {
   let assigneeList = await returnContacts(task.assignee);
-  console.log(task);
 
   return /*html*/ `
         <div class="task" draggable="true" 

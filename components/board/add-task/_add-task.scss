@@ -1,163 +1,178 @@
-.content {
+.input-container {
+  max-width: 975px;
+  width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  .input-container {
-    max-width: 975px;
-    width: 100%;
-    display: flex;
 
-    .input-left {
-      .title-input {
-        h2 {
-          font-size: 20px;
-          font-weight: 400;
+  .input-left {
+    .title-input {
+      h2 {
+        font-size: 20px;
+        font-weight: 400;
 
-          span {
-            color: red;
-          }
+        span {
+          color: red;
         }
       }
-      .description-input {
-        h2 {
-          font-size: 20px;
-          font-weight: 400;
-        }
+    }
+
+    .description-input {
+      h2 {
+        font-size: 20px;
+        font-weight: 400;
       }
+    }
+
+    .assigned-input {
+      border: none;
+
+      h2 {
+        font-size: 20px;
+        font-weight: 400;
+      }
+
       .assigned-input {
-        border: none;
-        h2 {
-          font-size: 20px;
-          font-weight: 400;
+        display: flex;
+        border: 1px solid #d1d1d1;
+      }
+    }
+  }
+
+  .separator {
+    width: 2px;
+    height: 300px;
+    color: black;
+    margin-left: 25px;
+    margin-right: 25px;
+  }
+
+  .input-right {
+    .date-input {
+      h2 {
+        font-size: 20px;
+        font-weight: 400;
+
+        span {
+          color: red;
         }
-        .assigned-input {
-          display: flex;
-          border: 1px solid #d1d1d1;
+      }
+
+      .date {
+        display: flex;
+        border: 1px solid #d1d1d1;
+
+        svg {
+          width: 24px;
+          height: 24px;
         }
       }
     }
-    .separator {
-      width: 2px;
-      height: 300px;
-      color: black;
-      margin-left: 25px;
-      margin-right: 25px;
+
+    .priority {
+      h2 {
+        font-size: 20px;
+        font-weight: 400;
+      }
+
+      .priority-buttons {
+        .button-urgent {
+          font-size: 20px;
+          font-weight: 400;
+
+          svg {
+            width: 20px;
+            height: 14.5px;
+          }
+        }
+
+        .button-medium {
+          font-size: 20px;
+          font-weight: 400;
+
+          svg {
+            width: 20px;
+            height: 7.5px;
+          }
+        }
+
+        .button-low {
+          font-size: 20px;
+          font-weight: 400;
+
+          svg {
+            width: 20px;
+            height: 14.5px;
+          }
+        }
+      }
     }
-    .input-right {
-      .date-input {
-        h2 {
-          font-size: 20px;
-          font-weight: 400;
 
-          span {
-            color: red;
-          }
-        }
-        .date {
-          display: flex;
-          border: 1px solid #d1d1d1;
+    .category {
+      h2 {
+        font-size: 20px;
+        font-weight: 400;
 
-          svg {
-            width: 24px;
-            height: 24px;
-          }
+        span {
+          color: red;
         }
       }
-      .priority {
-        h2 {
-          font-size: 20px;
-          font-weight: 400;
-        }
-        .priority-buttons {
-          .button-urgent {
-            font-size: 20px;
-            font-weight: 400;
 
-            svg {
-              width: 20px;
-              height: 14.5px;
-            }
-          }
-          .button-medium {
-            font-size: 20px;
-            font-weight: 400;
-
-            svg {
-              width: 20px;
-              height: 7.5px;
-            }
-          }
-          .button-low {
-            font-size: 20px;
-            font-weight: 400;
-
-            svg {
-              width: 20px;
-              height: 14.5px;
-            }
-          }
-        }
+      .category-input {
+        display: flex;
+        border: 1px solid #d1d1d1;
       }
-      .category {
-        h2 {
-          font-size: 20px;
-          font-weight: 400;
+    }
 
-          span {
-            color: red;
-          }
-        }
-        .category-input {
-          display: flex;
-          border: 1px solid #d1d1d1;
-        }
+    .subtasks {
+      h2 {
+        font-size: 20px;
+        font-weight: 400;
       }
-      .subtasks {
-        h2 {
-          font-size: 20px;
-          font-weight: 400;
-        }
-        .subtasks-input {
-          display: flex;
-          border: 1px solid #d1d1d1;
 
-          svg {
-            width: 24px;
-            height: 24px;
-          }
+      .subtasks-input {
+        display: flex;
+        border: 1px solid #d1d1d1;
+
+        svg {
+          width: 24px;
+          height: 24px;
         }
       }
     }
   }
-  .container-bottom {
-    display: flex;
-    .span-content {
-      .span-container {
-        color: red;
-      }
-      span {
-        font-size: 20px;
-        font-weight: 400;
+}
+
+.container-bottom {
+  display: flex;
+
+  .span-content {
+    .span-container {
+      color: red;
+    }
+
+    span {
+      font-size: 20px;
+      font-weight: 400;
+    }
+  }
+
+  .add-task-button-container {
+    .clear {
+      font-size: 20px;
+      font-weight: 400;
+
+      svg {
+        width: 24px;
+        height: 24px;
       }
     }
-    .add-task-button-container {
-      .clear {
-        font-size: 20px;
-        font-weight: 400;
 
-        svg {
-          width: 24px;
-          height: 24px;
-        }
-      }
-      .create {
-        font-size: 20px;
-        font-weight: 400;
+    .create {
+      font-size: 20px;
+      font-weight: 400;
 
-        svg {
-          width: 24px;
-          height: 24px;
-        }
+      svg {
+        width: 24px;
+        height: 24px;
       }
     }
   }
