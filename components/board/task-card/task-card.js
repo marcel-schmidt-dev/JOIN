@@ -9,7 +9,7 @@ export async function returnTaskTemplate(task) {
   return /*html*/ `
         <div class="task" draggable="true" 
          ondragstart="startDragging('${task.id}')" 
-         data-task-id="${task.id}"> >
+         data-task-id="${task.id}">
             <div class="type ${task.type === "Technical Task" ? "technical" : "story"}" >${task.type}</div>
             <div class="heading">
                 <span>${task.title}</span>
@@ -22,8 +22,8 @@ export async function returnTaskTemplate(task) {
             <div class="assignee-priority">
                 <div class="assignee">
                     ${assigneeList
-                      .map((assignee) => `<div class="assignee-icon" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}</div>`)
-                      .join("")}
+      .map((assignee) => `<div class="assignee-icon" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}</div>`)
+      .join("")}
                 </div>
                 <div class="priority ${task.priority}">
                     ${returnIcon(task.priority)}
