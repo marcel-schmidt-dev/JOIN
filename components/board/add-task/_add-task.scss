@@ -1,178 +1,292 @@
-.input-container {
-  max-width: 975px;
-  width: 100%;
+h1 {
+  font-size: 61px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.content {
   display: flex;
+  justify-content: center;
+  align-items: center;
 
-  .input-left {
-    .title-input {
-      h2 {
-        font-size: 20px;
-        font-weight: 400;
+  .input-container {
+    max-width: 975px;
+    width: 100%;
+    display: flex;
 
-        span {
-          color: red;
+    .input-left {
+      .title-input {
+        .title-container {
+          padding: 12px 21px 12px 21px;
+          border-radius: 10px;
+          border: 1px solid #d1d1d1;
+          width: 300px;
+          margin-bottom: 12px;
+        }
+
+        h2 {
+          font-size: 20px;
+          font-weight: 400;
+
+          span {
+            color: red;
+          }
         }
       }
-    }
 
-    .description-input {
-      h2 {
-        font-size: 20px;
-        font-weight: 400;
-      }
-    }
+      .description-input {
+        .description-container {
+          border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          width: 300px;
+          margin-bottom: 12px;
+        }
 
-    .assigned-input {
-      border: none;
-
-      h2 {
-        font-size: 20px;
-        font-weight: 400;
+        h2 {
+          font-size: 20px;
+          font-weight: 400;
+        }
       }
 
       .assigned-input {
-        display: flex;
-        border: 1px solid #d1d1d1;
+        border: none;
+
+        h2 {
+          font-size: 20px;
+          font-weight: 400;
+        }
+
+        .assigned {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          background-color: white;
+          padding: 12px 21px 12px 21px;
+          margin-bottom: 12px;
+
+          .assigned-container {
+            border: none;
+          }
+        }
+      }
+    }
+
+    .separator {
+      width: 2px;
+      height: 300px;
+      color: black;
+      margin-left: 25px;
+      margin-right: 25px;
+    }
+
+    .input-right {
+      .date-input {
+        h2 {
+          font-size: 20px;
+          font-weight: 400;
+
+          span {
+            color: red;
+          }
+        }
+
+        .date {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          background-color: white;
+          padding: 12px 21px 12px 21px;
+          width: 300px;
+          margin-bottom: 12px;
+
+          .date-container {
+            border: none;
+          }
+
+          svg {
+            width: 18px;
+            height: 20px;
+          }
+        }
+      }
+
+      .priority {
+        h2 {
+          font-size: 20px;
+          font-weight: 400;
+        }
+
+        .priority-buttons {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 12px;
+          width: 100%;
+          justify-content: space-between;
+
+          .button-urgent {
+            font-size: 20px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            border: 1px solid #d1d1d1;
+            border-radius: 10px;
+            gap: 8px;
+
+            svg {
+              width: 20px;
+              height: 14.5px;
+            }
+          }
+
+          .button-medium {
+            font-size: 20px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            border: 1px solid #d1d1d1;
+            border-radius: 10px;
+            padding: 16px 10px 16px 10px;
+            gap: 8px;
+
+            svg {
+              width: 20px;
+              height: 7.5px;
+            }
+          }
+
+          .button-low {
+            font-size: 20px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            border: 1px solid #d1d1d1;
+            border-radius: 10px;
+            padding: 16px 10px 16px 10px;
+            gap: 8px;
+
+            svg {
+              width: 20px;
+              height: 14.5px;
+            }
+          }
+        }
+      }
+
+      .category {
+        h2 {
+          font-size: 20px;
+          font-weight: 400;
+
+          span {
+            color: red;
+          }
+        }
+
+        .category-input {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          background-color: white;
+          padding: 12px 21px 12px 21px;
+          margin-bottom: 12px;
+
+          .category-container {
+            border: none;
+          }
+        }
+      }
+
+      .subtasks {
+        h2 {
+          font-size: 20px;
+          font-weight: 400;
+        }
+
+        .subtasks-input {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: 1px solid #d1d1d1;
+          border-radius: 10px;
+          background-color: white;
+          padding: 12px 21px 12px 21px;
+          margin-bottom: 120px;
+
+          .subtasks-container {
+            border: none;
+          }
+
+          svg {
+            width: 14px;
+            height: 14px;
+          }
+        }
       }
     }
   }
 
-  .separator {
-    width: 2px;
-    height: 300px;
-    color: black;
-    margin-left: 25px;
-    margin-right: 25px;
-  }
+  .container-bottom {
+    display: flex;
+    justify-content: space-between;
 
-  .input-right {
-    .date-input {
-      h2 {
-        font-size: 20px;
-        font-weight: 400;
+    .span-content {
+      margin-top: 40px;
 
-        span {
-          color: red;
-        }
+      .span-container {
+        color: red;
       }
 
-      .date {
+      span {
+        font-size: 20px;
+        font-weight: 400;
+      }
+    }
+
+    .add-task-button-container {
+      display: flex;
+      gap: 16px;
+
+      .clear {
+        font-size: 20px;
+        font-weight: 400;
         display: flex;
-        border: 1px solid #d1d1d1;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+        border-color: $navy-blue;
+        border-radius: 10px;
+        gap: 4px;
 
         svg {
           width: 24px;
           height: 24px;
         }
       }
-    }
 
-    .priority {
-      h2 {
+      .create {
         font-size: 20px;
         font-weight: 400;
-      }
-
-      .priority-buttons {
-        .button-urgent {
-          font-size: 20px;
-          font-weight: 400;
-
-          svg {
-            width: 20px;
-            height: 14.5px;
-          }
-        }
-
-        .button-medium {
-          font-size: 20px;
-          font-weight: 400;
-
-          svg {
-            width: 20px;
-            height: 7.5px;
-          }
-        }
-
-        .button-low {
-          font-size: 20px;
-          font-weight: 400;
-
-          svg {
-            width: 20px;
-            height: 14.5px;
-          }
-        }
-      }
-    }
-
-    .category {
-      h2 {
-        font-size: 20px;
-        font-weight: 400;
-
-        span {
-          color: red;
-        }
-      }
-
-      .category-input {
         display: flex;
-        border: 1px solid #d1d1d1;
-      }
-    }
-
-    .subtasks {
-      h2 {
-        font-size: 20px;
-        font-weight: 400;
-      }
-
-      .subtasks-input {
-        display: flex;
-        border: 1px solid #d1d1d1;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+        border-color: $navy-blue;
+        border-radius: 10px;
+        color: white;
+        background-color: $navy-blue;
+        gap: 4px;
 
         svg {
           width: 24px;
           height: 24px;
+          fill: white;
         }
-      }
-    }
-  }
-}
-
-.container-bottom {
-  display: flex;
-
-  .span-content {
-    .span-container {
-      color: red;
-    }
-
-    span {
-      font-size: 20px;
-      font-weight: 400;
-    }
-  }
-
-  .add-task-button-container {
-    .clear {
-      font-size: 20px;
-      font-weight: 400;
-
-      svg {
-        width: 24px;
-        height: 24px;
-      }
-    }
-
-    .create {
-      font-size: 20px;
-      font-weight: 400;
-
-      svg {
-        width: 24px;
-        height: 24px;
       }
     }
   }
