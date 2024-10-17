@@ -20,8 +20,7 @@ async function getAddTaskTemplate() {
             <div class="input-container">
                 <div class="input-left">
                     <div class="title-input">
-                        <h2>Title
-                            <span>*</span>
+                        <h2>Title<span>*</span>
                         </h2>
                         <input type="text" name="title" class="title-container" placeholder="Enter a title"/>
                     </div>
@@ -41,8 +40,7 @@ async function getAddTaskTemplate() {
                 <div class="separator"></div>
                 <div class="input-right">
                     <div class="date-input">
-                        <h2>Due date
-                            <span>*</span>
+                        <h2>Due date<span>*</span>
                         </h2>
                         <div class="date">
                          <input type="text" name="date" class="date-container" placeholder="dd/mm/yyyy"/>
@@ -58,8 +56,7 @@ async function getAddTaskTemplate() {
                         </div>
                     </div>
                     <div class="category">
-                        <h2>Category
-                            <span>*</span>
+                        <h2>Category<span>*</span>
                         </h2>
                         <div class="category-input">
                          <input type="text" name="category" class="category-container" id="category" placeholder="Select task category" readonly />
