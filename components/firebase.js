@@ -44,12 +44,16 @@ export function getContacts() {
 }
 
 export async function getContact(id) {
+  console.log('try get id: ' + id);
+
   const contactsRef = ref(getFirebaseDatabase(), `contacts/${id}`);
-  const snapshot = await get(contactsRef); {
-    const contact = snapshot.val();
-    contact.id = snapshot.key;
-    return contact;
-  };
+  const snapshot = await get(contactsRef);
+  console.log(contactsRef.key);
+
+  const contact = snapshot.val();
+
+  contact.id = snapshot.key;
+  return contact;
 }
 
 export function addContact(fullName, email, phone) {
@@ -86,6 +90,15 @@ export async function returnBoard(slot) {
   try {
     const snapshot = await get(ref(db, "board/"));
     const board = snapshot.val();
+
+    if (snapshot) {
+      for (let slot in board) {
+        board[slot] = Object.entries(board[slot]).map(([key, task]) => {
+          task.id = key;
+          return task;
+        });
+      }
+    }
 
     if (slot === undefined) {
       return board;
@@ -152,4 +165,75 @@ export function moveTaskToSlot(oldSlot, newSlot, id) {
     push(newTaskRef, task);
     remove(taskRef);
   });
+}
+
+async function createRandomTasks() {
+  const db = getDatabase();
+  const contactsRef = ref(db, 'contacts/');
+
+  const exampleTitles = [
+    "Implement new feature",
+    "Fix bug in application",
+    "Write documentation",
+    "Design UI for new project",
+    "Conduct code review"
+  ];
+
+  const exampleDescriptions = [
+    "This task involves implementing a new feature for the application.",
+    "This task is about fixing a bug that has been reported.",
+    "Document the code and create user manuals.",
+    "Design the user interface for the new project based on the requirements.",
+    "Review the code submitted by team members for quality assurance."
+  ];
+
+  const examplePriorities = ["low", "medium", "urgent"];
+  const exampleDueDates = [
+    "2024-11-01",
+    "2024-11-15",
+    "2024-11-30",
+    "2024-12-15",
+    "2025-01-01"
+  ];
+
+  try {
+    const contactsSnapshot = await get(contactsRef);
+    const contacts = contactsSnapshot.val();
+    const contactKeys = Object.keys(contacts);
+
+    for (let i = 0; i < 5; i++) {
+      const randomTitle = exampleTitles[Math.floor(Math.random() * exampleTitles.length)];
+      const randomDescription = exampleDescriptions[Math.floor(Math.random() * exampleDescriptions.length)];
+      const randomPriority = examplePriorities[Math.floor(Math.random() * examplePriorities.length)];
+      const randomDueDate = exampleDueDates[Math.floor(Math.random() * exampleDueDates.length)];
+
+      const randomAssignees = [];
+      for (let j = 0; j < 2; j++) {
+        const randomIndex = Math.floor(Math.random() * contactKeys.length);
+        randomAssignees.push(contactKeys[randomIndex]);
+      }
+
+      const newTask = {
+        title: randomTitle,
+        description: randomDescription,
+        position: i + 1,
+        type: "Technical Task",
+        priority: randomPriority,
+        dueDate: randomDueDate,
+        subTasks: [
+          { title: "Initial setup", checked: false },
+          { title: "Create documentation", checked: false }
+        ],
+        assignee: randomAssignees
+      };
+
+      await push(ref(db, 'board/inProgress/'), newTask);
+      await push(ref(db, 'board/done/'), newTask);
+      await push(ref(db, 'board/awaitFeedback/'), newTask);
+    }
+
+    console.log("Zufällige Tasks erfolgreich erstellt!");
+  } catch (error) {
+    console.error("Fehler beim Erstellen der Tasks:", error);
+  }
 }
