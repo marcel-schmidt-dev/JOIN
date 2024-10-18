@@ -20,17 +20,26 @@ window.moveTo = function (newStatus) {
 
 window.startDragging = function (taskId) {
   currentTaskId = taskId;
+  const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+  taskElement.classList.add("rotate-task");
   console.log(taskId);
 };
 
 window.highlight = function (taskId) {
   document.getElementById(taskId).classList.add("drag-area-highlight");
+
   console.log(taskId);
 };
 
 window.removeAllHighlights = function () {
   const allSlots = document.querySelectorAll(".slot-content");
   allSlots.forEach((slot) => slot.classList.remove("drag-area-highlight"));
+};
+
+window.endDragging = function () {
+  const taskElement = document.querySelector(`[data-task-id="${currentTaskId}"]`);
+  taskElement.classList.remove("rotate-task");
+  removeAllHighlights();
 };
 
 async function renderBoardTemplate() {
@@ -95,4 +104,8 @@ async function renderTasks() {
       slots[status].innerHTML += taskTemplate;
     }
   }
+  document.querySelectorAll(".task").forEach((taskElement) => {
+    taskElement.ondragstart = () => startDragging(taskElement.getAttribute("data-task-id"));
+    taskElement.ondragend = endDragging;
+  });
 }

@@ -159,3 +159,7 @@
 .drag-area-highlight {
   border: 2px dashed gray;
 }
+.rotate-task {
+  transform: rotate(5deg);
+  transition: transform 0.2s ease;
+}
