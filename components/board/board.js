@@ -1,4 +1,4 @@
-import { returnBoard } from "../firebase.js";
+import { returnBoard, moveTaskToSlot } from "../firebase.js";
 import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
 
@@ -16,19 +16,17 @@ window.moveTo = function (newStatus) {
   const taskElement = document.querySelector(`[data-task-id="${currentTaskId}"]`);
   document.getElementById(newStatus).appendChild(taskElement);
   removeAllHighlights();
+  moveTaskToSlot(newStatus, currentTaskId);
 };
 
 window.startDragging = function (taskId) {
   currentTaskId = taskId;
   const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
   taskElement.classList.add("rotate-task");
-  console.log(taskId);
 };
 
 window.highlight = function (taskId) {
   document.getElementById(taskId).classList.add("drag-area-highlight");
-
-  console.log(taskId);
 };
 
 window.removeAllHighlights = function () {
