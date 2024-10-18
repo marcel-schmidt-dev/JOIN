@@ -7,16 +7,16 @@
   margin-left: auto;
   margin-right: auto;
 
+  h1 {
+    font-size: 61px;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+
   .input-container {
     max-width: 975px;
     width: 100%;
     display: flex;
-
-    h1 {
-      font-size: 61px;
-      font-weight: 700;
-      margin-bottom: 24px;
-    }
 
     .input-left {
       .title-input {
@@ -387,6 +387,8 @@
     h1 {
       max-width: 1023px;
       width: 100%;
+      font-size: 47px;
+      margin-bottom: 24px;
     }
     .input-container {
       max-width: 396px;
@@ -395,7 +397,7 @@
       .input-left {
         .title-input {
           .title-container {
-            margin-bottom: 6px;
+            margin-bottom: 12px;
             max-width: 396px;
             width: 100%;
           }
@@ -408,7 +410,7 @@
             font-size: 16px;
           }
           .description-container {
-            margin-bottom: 6px;
+            margin-bottom: 12px;
             max-width: 396px;
             width: 100%;
           }
@@ -419,7 +421,7 @@
           font-size: 16px;
         }
         .assigned {
-          margin-bottom: 6px;
+          margin-bottom: 12px;
         }
       }
       .separator {
@@ -431,7 +433,7 @@
             font-size: 16px;
           }
           .date {
-            margin-bottom: 6px;
+            margin-bottom: 12px;
           }
         }
         .priority {
@@ -439,7 +441,7 @@
             font-size: 16px;
           }
           .priority-buttons {
-            margin-bottom: 6px;
+            margin-bottom: 12px;
             .button-urgent {
               font-size: 16px;
               height: 41px;
@@ -455,19 +457,21 @@
           }
         }
         .category {
+          display: none;
           h2 {
             font-size: 16px;
           }
           .category-input {
-            margin-bottom: 6px;
+            margin-bottom: 12px;
           }
         }
         .subtasks {
+          display: none;
           h2 {
             font-size: 16px;
           }
           .subtasks-input {
-            margin-bottom: 6px;
+            margin-bottom: 12px;
           }
         }
       }
