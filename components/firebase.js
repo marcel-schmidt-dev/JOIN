@@ -44,10 +44,8 @@ export function getContacts() {
 }
 
 export async function getContact(id) {
-
   const contactsRef = ref(getFirebaseDatabase(), `contacts/${id}`);
   const snapshot = await get(contactsRef);
-
   const contact = snapshot.val();
 
   contact.id = snapshot.key;
@@ -83,6 +81,7 @@ export function editContact(id, name, email, phone, userColor) {
 }
 
 export async function returnBoard(slot) {
+  //await createRandomTasks();
   const db = getFirebaseDatabase();
 
   try {
@@ -154,19 +153,50 @@ export function editTask(slot, id, title, description, type, priority, dueDate, 
   });
 }
 
-export function moveTaskToSlot(oldSlot, newSlot, id) {
-  const db = getFirebaseDatabase();
-  const taskRef = ref(db, `board/${oldSlot}/${id}`);
-  const newTaskRef = ref(db, `board/${newSlot}`);
-  get(taskRef).then((snapshot) => {
-    const task = snapshot.val();
-    push(newTaskRef, task);
-    remove(taskRef);
-  });
+export async function moveTaskToSlot(newSlot, id) {
+  try {
+    newSlot = newSlot.replace("-tasks", "");
+
+    const db = getFirebaseDatabase();
+    let taskRef = null;
+    let taskData = null;
+
+    const boardRef = ref(db, "board/");
+    const boardSnapshot = await get(boardRef);
+
+    if (!boardSnapshot.exists()) {
+      throw new Error("Board does not exist!");
+    }
+
+    const board = boardSnapshot.val();
+
+    for (const slot in board) {
+      if (board[slot] && board[slot][id]) {
+        taskRef = ref(db, `board/${slot}/${id}`);
+        const taskSnapshot = await get(taskRef);
+        if (taskSnapshot.exists()) {
+          taskData = taskSnapshot.val();
+          break;
+        }
+      }
+    }
+
+    if (!taskData) {
+      throw new Error("Task does not exist!");
+    }
+
+    const newTaskRef = ref(db, `board/${newSlot}/${id}`);
+    await set(newTaskRef, taskData);
+
+    await remove(taskRef);
+
+  } catch (error) {
+    console.error("Error moving task to slot:", error);
+  }
 }
 
 async function createRandomTasks() {
-  const db = getDatabase();
+  const db = getFirebaseDatabase();
   const contactsRef = ref(db, 'contacts/');
 
   const exampleTitles = [
@@ -199,7 +229,7 @@ async function createRandomTasks() {
     const contacts = contactsSnapshot.val();
     const contactKeys = Object.keys(contacts);
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 2; i++) {
       const randomTitle = exampleTitles[Math.floor(Math.random() * exampleTitles.length)];
       const randomDescription = exampleDescriptions[Math.floor(Math.random() * exampleDescriptions.length)];
       const randomPriority = examplePriorities[Math.floor(Math.random() * examplePriorities.length)];
@@ -228,6 +258,7 @@ async function createRandomTasks() {
       await push(ref(db, 'board/inProgress/'), newTask);
       await push(ref(db, 'board/done/'), newTask);
       await push(ref(db, 'board/awaitFeedback/'), newTask);
+      await push(ref(db, 'board/todo/'), newTask);
     }
 
     console.log("Zufällige Tasks erfolgreich erstellt!");
