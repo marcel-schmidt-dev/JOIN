@@ -15,11 +15,22 @@ window.allowDrop = function (event) {
 window.moveTo = function (newStatus) {
   const taskElement = document.querySelector(`[data-task-id="${currentTaskId}"]`);
   document.getElementById(newStatus).appendChild(taskElement);
+  removeAllHighlights();
 };
 
 window.startDragging = function (taskId) {
   currentTaskId = taskId;
   console.log(taskId);
+};
+
+window.highlight = function (taskId) {
+  document.getElementById(taskId).classList.add("drag-area-highlight");
+  console.log(taskId);
+};
+
+window.removeAllHighlights = function () {
+  const allSlots = document.querySelectorAll(".slot-content");
+  allSlots.forEach((slot) => slot.classList.remove("drag-area-highlight"));
 };
 
 async function renderBoardTemplate() {
@@ -40,7 +51,7 @@ async function renderBoardTemplate() {
                   <h2>To do</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="todo-tasks"  ondrop="moveTo('todo-tasks')" ondragover="allowDrop(event)"></div>
+                <div class="slot-content" id="todo-tasks"  ondrop="moveTo('todo-tasks')"  ondragover="allowDrop(event); highlight('todo-tasks')"></div>
               </div>
 
               <div class="slots">
@@ -48,7 +59,7 @@ async function renderBoardTemplate() {
                   <h2>In Progress</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="inProgress-tasks" ondrop="moveTo('inProgress-tasks')" ondragover="allowDrop(event)" ></div>
+                <div class="slot-content" id="inProgress-tasks" ondrop="moveTo('inProgress-tasks')"  ondragover="allowDrop(event); highlight('inProgress-tasks')" ></div>
               </div>
 
               <div class="slots">
@@ -56,12 +67,12 @@ async function renderBoardTemplate() {
                   <h2>Await feedback</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="awaitFeedback-tasks" ondrop="moveTo('awaitFeedback-tasks')" ondragover="allowDrop(event)"></div>
+                <div class="slot-content" id="awaitFeedback-tasks" ondrop="moveTo('awaitFeedback-tasks')"  ondragover="allowDrop(event); highlight('awaitFeedback-tasks')"></div>
               </div>
 
               <div class="slots">
                 <div class="slots-header"><h2>Done</h2></div>
-                <div class="slot-content" id="done-tasks" ondrop="moveTo('done-tasks')" ondragover="allowDrop(event)" ></div>
+                <div class="slot-content" id="done-tasks" ondrop="moveTo('done-tasks')" ondragover="allowDrop(event); highlight('done-tasks')"></div>
               </div>
             </div>
         </div>
