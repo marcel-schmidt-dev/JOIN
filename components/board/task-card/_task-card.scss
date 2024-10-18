@@ -1,113 +1,121 @@
 .task {
-    background-color: #FFF;
-    padding: 16px;
-    border-radius: 24px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 24px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  cursor: pointer;
+  width: 100%;
+
+  .type {
+    font-size: 1rem;
+    line-height: 120%;
+    color: #fff;
+    padding: 4px 16px;
+    display: inline-block;
+    border-radius: 8px;
+
+    &.technical {
+      background-color: #1fd7c1;
+    }
+
+    &.story {
+      background-color: #0038ff;
+    }
+  }
+
+  .heading {
+    font-size: 1rem;
+
+    span {
+      font-weight: bold;
+    }
+
+    p {
+      color: #a8a8a8;
+      overflow: hidden;
+      line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+  }
+
+  .sub-tasks {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 24px;
-    cursor: pointer;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
 
-    .type {
-        font-size: 1rem;
-        line-height: 120%;
-        color: #FFF;
-        padding: 4px 16px;
-        display: inline-block;
-        border-radius: 8px;
+    progress {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      flex: 1;
+      width: 100%;
 
-        &.technical {
-            background-color: #1FD7C1;
-        }
+      &::-webkit-progress-bar {
+        border-radius: 100vw;
+        overflow: hidden;
+        background-color: #f4f4f4;
+      }
 
-        &.story {
-            background-color: #0038FF;
-        }
+      &::-webkit-progress-value {
+        border-radius: 100vw;
+        background-color: #4589ff;
+      }
     }
 
-    .heading {
-        font-size: 1rem;
-
-        span {
-            font-weight: bold;
-        }
-
-        p {
-            color: #A8A8A8;
-        }
+    span {
+      white-space: nowrap;
+      font-size: 0.75rem;
+      line-height: 120%;
     }
+  }
 
-    .sub-tasks {
+  .assignee-priority {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .assignee {
+      display: flex;
+
+      .assignee-icon {
+        width: 32px;
+        height: 32px;
         display: flex;
-        gap: 12px;
+        justify-content: center;
         align-items: center;
+        color: #fff;
+        border-radius: 50%;
+        border: 1px solid #fff;
+        font-size: 12px;
+        line-height: 100%;
 
-        progress {
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px;
-
-            &::-webkit-progress-bar {
-                border-radius: 100vw;
-                overflow: hidden;
-                background-color: #F4F4F4;
-            }
-
-            &::-webkit-progress-value {
-                border-radius: 100vw;
-                background-color: #4589FF;
-            }
+        &:not(:first-child) {
+          margin-left: -8px;
         }
-
-        span {
-            flex: 1;
-            white-space: nowrap;
-            font-size: .75rem;
-            line-height: 120%;
-        }
+      }
     }
 
-    .assignee-priority {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
+    .priority {
+      width: 20px;
 
-        .assignee {
-            display: flex;
+      &.low svg {
+        fill: #7ae229;
+      }
 
-            .assignee-icon {
-                width: 32px;
-                height: 32px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: #FFF;
-                border-radius: 50%;
-                border: 1px solid #FFF;
-                font-size: 12px;
-                line-height: 120%;
+      &.medium svg {
+        fill: #ffa800;
+      }
 
-                &:not(:first-child) {
-                    margin-left: -8px;
-                }
-            }
-        }
-
-        .priority {
-            width: 20px;
-
-            &.low svg {
-                fill: #7AE229;
-            }
-
-            &.medium svg {
-                fill: #FFA800;
-            }
-
-            &.urgent svg {
-                fill: #FF3D00;
-            }
-        }
+      &.urgent svg {
+        fill: #ff3d00;
+      }
     }
+  }
 }

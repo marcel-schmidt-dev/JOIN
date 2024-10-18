@@ -3,9 +3,9 @@ import { getContact } from "../../firebase.js";
 import { getInitialsFromName } from "../../utility-functions.js";
 
 export async function returnTaskTemplate(task) {
-  let assigneeList = await returnContacts(task.assignee);
+    let assigneeList = await returnContacts(task.assignee);
 
-  return /*html*/ `
+    return /*html*/ `
         <div class="task" draggable="true" 
          ondragstart="startDragging('${task.id}')" 
          data-task-id="${task.id}">
@@ -21,8 +21,8 @@ export async function returnTaskTemplate(task) {
             <div class="assignee-priority">
                 <div class="assignee">
                     ${assigneeList
-      .map((assignee) => `<div class="assignee-icon" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}</div>`)
-      .join("")}
+            .map((assignee) => `<div class="assignee-icon" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}</div>`)
+            .join("")}
                 </div>
                 <div class="priority ${task.priority}">
                     ${returnIcon(task.priority)}
@@ -33,12 +33,12 @@ export async function returnTaskTemplate(task) {
 }
 
 async function returnContacts(ids) {
-  let contactPromises = ids.map((id) => getContact(id));
-  let contacts = await Promise.all(contactPromises);
-  return contacts;
+    let contactPromises = ids.map((id) => getContact(id));
+    let contacts = await Promise.all(contactPromises);
+    return contacts;
 }
 
 function returnCheckedSubtasks(subtasks) {
-  let checkedSubtasks = subtasks.filter((subtask) => subtask.checked);
-  return checkedSubtasks.length;
+    let checkedSubtasks = subtasks.filter((subtask) => subtask.checked);
+    return checkedSubtasks.length;
 }
