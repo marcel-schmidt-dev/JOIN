@@ -25,8 +25,9 @@ window.startDragging = function (taskId) {
   taskElement.classList.add("rotate-task");
 };
 
-window.highlight = function (taskId) {
-  document.getElementById(taskId).classList.add("drag-area-highlight");
+window.addAllHighlights = function () {
+  const allSlots = document.querySelectorAll(".slot-content");
+  allSlots.forEach((slot) => slot.classList.add("drag-area-highlight"));
 };
 
 window.removeAllHighlights = function () {
@@ -41,13 +42,17 @@ window.endDragging = function () {
   removeAllHighlights();
 };
 
-window.updatePlaceholder = function (slot) {
-  const placeholder = slot.querySelector(".placeholder");
-  if (slot.children.length > 1) {
-    placeholder.classList.add("d-none");
-  } else {
-    placeholder.classList.remove("d-none");
-  }
+window.updatePlaceholder = function () {
+  console.log("updatePlaceholder");
+
+  const allSlots = document.querySelectorAll(".slot-content");
+  allSlots.forEach((slot) => {
+    if (slot.children.length > 1) {
+      slot.querySelector(".placeholder").classList.add("d-none");
+    } else {
+      slot.querySelector(".placeholder").classList.remove("d-none");
+    }
+  });
 };
 
 async function renderBoardTemplate() {
@@ -68,7 +73,7 @@ async function renderBoardTemplate() {
                   <h2>To do</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="todo-tasks"  ondrop="moveTo('todo-tasks')"  ondragover="allowDrop(event); highlight('todo-tasks')"><div class="placeholder"><p>No tasks To do</p></div></div>
+                <div class="slot-content" id="todo-tasks" ondrop="moveTo('todo-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()"><div class="placeholder d-none"><p>No tasks To do</p></div></div>
               </div>
 
               <div class="slots">
@@ -76,7 +81,7 @@ async function renderBoardTemplate() {
                   <h2>In Progress</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="inProgress-tasks" ondrop="moveTo('inProgress-tasks')"  ondragover="allowDrop(event); highlight('inProgress-tasks')" ><div class="placeholder"><p>No tasks To do</p></div></div>
+                <div class="slot-content" id="inProgress-tasks" ondrop="moveTo('inProgress-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()"><div class="placeholder d-none"><p>No tasks To do</p></div></div>
               </div>
 
               <div class="slots">
@@ -84,14 +89,14 @@ async function renderBoardTemplate() {
                   <h2>Await feedback</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="awaitFeedback-tasks" ondrop="moveTo('awaitFeedback-tasks')"  ondragover="allowDrop(event); highlight('awaitFeedback-tasks')">
-                  <div class="placeholder"><p>No tasks To do</p></div>
+                <div class="slot-content" id="awaitFeedback-tasks" ondrop="moveTo('awaitFeedback-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()">
+                  <div class="placeholder d-none"><p>No tasks To do</p></div>
                 </div>
               </div>
 
               <div class="slots">
                 <div class="slots-header"><h2>Done</h2></div>
-                <div class="slot-content" id="done-tasks" ondrop="moveTo('done-tasks')" ondragover="allowDrop(event); highlight('done-tasks')"><div class="placeholder"><p>No tasks To do</p></div></div>
+                <div class="slot-content" id="done-tasks" ondrop="moveTo('done-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()"><div class="placeholder d-none"><p>No tasks To do</p></div></div>
               </div>
             </div>
         </div>
@@ -117,5 +122,11 @@ async function renderTasks() {
   document.querySelectorAll(".task").forEach((taskElement) => {
     taskElement.ondragstart = () => startDragging(taskElement.getAttribute("data-task-id"));
     taskElement.ondragend = endDragging;
+  });
+
+  document.querySelectorAll(".slot-content").forEach((slot) => {
+    if (slot.children.length <= 1) {
+      slot.querySelector(".placeholder").classList.remove("d-none");
+    }
   });
 }
