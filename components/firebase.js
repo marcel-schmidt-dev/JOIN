@@ -160,6 +160,7 @@ export async function moveTaskToSlot(newSlot, id) {
     const db = getFirebaseDatabase();
     let taskRef = null;
     let taskData = null;
+    let currentSlot = null;
 
     const boardRef = ref(db, "board/");
     const boardSnapshot = await get(boardRef);
@@ -172,6 +173,7 @@ export async function moveTaskToSlot(newSlot, id) {
 
     for (const slot in board) {
       if (board[slot] && board[slot][id]) {
+        currentSlot = slot;
         taskRef = ref(db, `board/${slot}/${id}`);
         const taskSnapshot = await get(taskRef);
         if (taskSnapshot.exists()) {
@@ -185,6 +187,10 @@ export async function moveTaskToSlot(newSlot, id) {
       throw new Error("Task does not exist!");
     }
 
+    if (currentSlot === newSlot) {
+      return;
+    }
+
     const newTaskRef = ref(db, `board/${newSlot}/${id}`);
     await set(newTaskRef, taskData);
 
@@ -192,6 +198,7 @@ export async function moveTaskToSlot(newSlot, id) {
 
   } catch (error) {
     console.error("Error moving task to slot:", error);
+    throw error;
   }
 }
 
