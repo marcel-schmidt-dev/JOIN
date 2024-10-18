@@ -1,4 +1,6 @@
 import returnIcon from "../../icons.js";
+import { addTask } from "../../firebase.js";
+import { deleteTask } from "../../firebase.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   await renderTaskTemplate();
@@ -12,7 +14,7 @@ async function renderTaskTemplate() {
     `;
 }
 
-async function getAddTaskTemplate() {
+async function getAddTaskTemplate(taskInfos) {
   const addTaskRef = document.querySelector(".task-content");
   addTaskRef.innerHTML += /*html*/ `
         <div class="main-content">
@@ -78,8 +80,8 @@ async function getAddTaskTemplate() {
                     <span>This field is required</span>
              </div>
              <div class="add-task-button-container">
-                    <button class="clear">Clear ${returnIcon("x")}</button>
-                    <button class="create">Create task ${returnIcon("check")}</button>
+                    <button onclick="deleteTask()" class="clear">Clear ${returnIcon("x")}</button>
+                    <button onclick="addTask()" class="create">Create task ${returnIcon("check")}</button>
              </div>
             </div>
         </div>
