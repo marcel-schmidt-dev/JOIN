@@ -1,12 +1,18 @@
 import { returnBoard, moveTaskToSlot } from "../firebase.js";
 import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
+import showTaskDetails from "./task-details/task-details.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   await renderBoardTemplate();
 });
 
 let currentTaskId;
+
+window.showTaskDetails = showTaskDetails;
+window.closeTaskDetails = () => {
+  document.querySelector(".task-details-container").remove();
+};
 
 window.allowDrop = function (event) {
   event.preventDefault();
@@ -115,7 +121,7 @@ async function renderTasks() {
   const boardData = await returnBoard();
   for (let status in boardData) {
     for (let task of boardData[status]) {
-      const taskTemplate = await returnTaskTemplate(task);
+      const taskTemplate = await returnTaskTemplate(task, status);
       slots[status].innerHTML += taskTemplate;
     }
   }
