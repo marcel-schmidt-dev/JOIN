@@ -106,6 +106,37 @@ export async function returnBoard(slot) {
   }
 }
 
+export async function returnTaskById(id) {
+  const db = getFirebaseDatabase();
+  const boardRef = ref(db, `board/`);
+
+  const boardSnapshot = await get(boardRef);
+  const board = boardSnapshot.val();
+
+  for (const slot in board) {
+    if (board[slot] && board[slot][id]) {
+      return board[slot][id];
+    }
+  }
+
+  return null;
+}
+
+export async function returnSubTasks(id, slot) {
+  const db = getFirebaseDatabase();
+  const taskRef = ref(db, `board/${slot}/${id}/subTasks`);
+  const snapshot = await get(taskRef);
+  const subTaskArray = [];
+
+  snapshot.forEach((childSnapshot) => {
+    const subTask = childSnapshot.val();
+    subTask.id = childSnapshot.key;
+    subTaskArray.push(subTask);
+  });
+
+  return subTaskArray;
+}
+
 export function addTask(slot, title, description, type, priority, dueDate, subTasks, assignee) {
   const db = getFirebaseDatabase();
   const taskRef = ref(db, `board/${slot}`);
