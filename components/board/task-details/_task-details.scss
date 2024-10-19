@@ -1,0 +1,170 @@
+@import "../../../scss/vars.scss";
+
+.task-details-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+
+  .task-details {
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .type {
+        font-size: 1.5rem;
+        color: #fff;
+        padding: 4px 24px;
+        border-radius: 8px;
+      }
+
+      .close {
+        cursor: pointer;
+        &:hover {
+          color: $light-blue;
+        }
+      }
+    }
+
+    h2 {
+      font-weight: bold;
+      font-size: 60px;
+    }
+
+    .description {
+      font-size: 1.25rem;
+    }
+
+    table {
+      tr {
+        td {
+          font-size: 1.25rem;
+          span {
+            text-transform: capitalize;
+          }
+
+          svg {
+            height: 12px;
+            width: auto;
+          }
+          &:first-child {
+            color: $navy-blue;
+            max-width: 25px;
+          }
+
+          &:last-child {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+
+          &.urgent svg {
+            fill: #ff0000;
+          }
+
+          &.medium svg {
+            fill: #ffa800;
+          }
+
+          &.low svg {
+            fill: #7ae229;
+          }
+        }
+
+        &:not(:last-child) td {
+          padding-bottom: 24px;
+        }
+      }
+    }
+
+    .assignee-list {
+      p {
+        font-size: 1.25rem;
+        color: $navy-blue;
+        margin-bottom: 1rem;
+      }
+
+      .assignee {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 16px;
+        padding-left: 16px;
+
+        &:not(:last-child) {
+          margin-bottom: 12px;
+        }
+
+        .bubble {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.75rem;
+          color: #fff;
+        }
+      }
+    }
+
+    .subtask-list {
+      p {
+        font-size: 1.25rem;
+        color: $navy-blue;
+        margin-bottom: 8px;
+      }
+
+      .subtask {
+        display: flex;
+        gap: 20px;
+
+        span {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+
+      button {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+
+        svg {
+          height: 20px;
+          width: auto;
+          fill: $navy-blue;
+        }
+
+        &:hover {
+          color: $light-blue;
+          svg {
+            fill: $light-blue;
+          }
+        }
+      }
+    }
+  }
+}

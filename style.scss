@@ -9,6 +9,7 @@
 @import "./components/board/board.scss";
 @import "./components/board/add-task/add-task.scss";
 @import "./components/board/task-card/task-card.scss";
+@import "./components/board/task-details/task-details.scss";
 
 @font-face {
   font-family: "Inter";
@@ -32,7 +33,7 @@ body {
   height: 100vh;
   display: flex;
 
-  >div {
+  > div {
     flex: 1;
   }
 }
