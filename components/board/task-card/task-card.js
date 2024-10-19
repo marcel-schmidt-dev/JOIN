@@ -2,13 +2,13 @@ import returnIcon from "../../icons.js";
 import { getContact } from "../../firebase.js";
 import { getInitialsFromName } from "../../utility-functions.js";
 
-export async function returnTaskTemplate(task) {
+export async function returnTaskTemplate(task, slot) {
     let assigneeList = await returnContacts(task.assignee);
 
     return /*html*/ `
         <div class="task" draggable="true" 
          ondragstart="startDragging('${task.id}')" 
-         data-task-id="${task.id}">
+         data-task-id="${task.id}" onclick="showTaskDetails('${task.id}', '${slot}')">
             <div class="type ${task.type === "Technical Task" ? "technical" : "story"}" >${task.type}</div>
             <div class="heading">
                 <span>${task.title}</span>
