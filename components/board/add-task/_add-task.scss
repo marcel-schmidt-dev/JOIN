@@ -25,8 +25,8 @@
           border-radius: 10px;
           border: 1px solid #d1d1d1;
           width: 300px;
-          margin-bottom: 12px;
           cursor: pointer;
+          height: 48px;
         }
 
         h2 {
@@ -35,6 +35,13 @@
 
           span {
             color: red;
+          }
+        }
+        .request-container {
+          margin-bottom: 12px;
+
+          #title-requested {
+            display: none;
           }
         }
       }
@@ -71,6 +78,7 @@
           background-color: white;
           padding: 12px 21px 12px 21px;
           margin-bottom: 12px;
+          height: 48px;
 
           .assigned-container {
             border: none;
@@ -115,8 +123,8 @@
           border-radius: 10px;
           background-color: white;
           padding: 12px 21px 12px 21px;
-          margin-bottom: 12px;
           cursor: pointer;
+          height: 48px;
 
           .date-container {
             border: none;
@@ -129,6 +137,13 @@
           svg {
             width: 18px;
             height: 20px;
+          }
+        }
+        .request-container {
+          margin-bottom: 12px;
+
+          #date-requested {
+            display: none;
           }
         }
       }
@@ -248,6 +263,7 @@
           background-color: white;
           padding: 12px 21px 12px 21px;
           margin-bottom: 12px;
+          height: 48px;
 
           .category-container {
             border: none;
@@ -278,6 +294,7 @@
           padding: 12px 21px 12px 21px;
           margin-bottom: 120px;
           cursor: pointer;
+          height: 48px;
 
           .subtasks-container {
             border: none;
