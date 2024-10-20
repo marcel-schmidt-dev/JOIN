@@ -24,7 +24,10 @@ async function getAddTaskTemplate(taskInfos) {
                     <div class="title-input">
                         <h2>Title<span>*</span>
                         </h2>
-                        <input type="text" name="title" class="title-container" placeholder="Enter a title"/>
+                        <input type="text" name="title" class="title-container" id="input-container-title" placeholder="Enter a title"/>
+                        <div class="request-container">
+                            <p id="title-requested" >Dieses Feld muss ausgefüllt werden</p>
+                        </div>
                     </div>
                     <div class="description-input">
                         <h2>Description</h2>
@@ -45,8 +48,11 @@ async function getAddTaskTemplate(taskInfos) {
                         <h2>Due date<span>*</span>
                         </h2>
                         <div class="date">
-                         <input type="text" name="date" class="date-container" placeholder="dd/mm/yyyy"/>
+                         <input type="text" name="date" class="date-container" id="input-container-date" placeholder="dd/mm/yyyy"/>
                          ${returnIcon("calendar")}
+                        </div>
+                        <div class="request-container">
+                            <p id="date-requested">Dieses Feld muss ausgefüllt sein</p>
                         </div>
                     </div>
                     <div class="priority">
@@ -86,4 +92,30 @@ async function getAddTaskTemplate(taskInfos) {
             </div>
         </div>
     `;
+}
+
+function validateAddTask(title, dueDate, category) {
+  const titleRequest = document.getElementById("title-requested");
+  const inputTitleRequest = document.getElementById("input-container-title");
+  let titleValidation = /^[a-zA-ZäöüÄÖÜß\s-]+$/;
+  if (!titleValidation.test(title) || title.length < 10) {
+    titleRequest.style.display = "block";
+    inputTitleRequest.style.borderColor = "red";
+    return false;
+  } else {
+    titleRequest.style.display = "none";
+    inputTitleRequest.style.borderColor = "#d1d1d1";
+  }
+
+  const dateRequest = document.getElementById("date-requested");
+  const inputDateRequest = document.getElementById("input-container-date");
+  let dateValidation = /^[0-9]+$/;
+  if (!dateValidation.test(dueDate) || dueDate.length < 10 || dueDate.length > 10) {
+    dateRequest.style.display = "block";
+    inputDateRequest.style.borderColor = "red";
+    return false;
+  } else {
+    dateRequest.style.display = "none";
+    inputDateRequest.style.borderColor = "#d1d1d1";
+  }
 }
