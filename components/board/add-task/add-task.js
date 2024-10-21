@@ -1,6 +1,7 @@
 import returnIcon from "../../icons.js";
 import { addTask } from "../../firebase.js";
 import { deleteTask } from "../../firebase.js";
+import { returnTaskTemplate } from "../task-card/task-card.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   await renderTaskTemplate();
@@ -108,7 +109,7 @@ async function getAddTaskTemplate() {
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      priorityButtons.forEach((btn) => btn.classList.remove("active"));
+      priorityButtons.forEach((button) => button.classList.remove("active"));
       button.classList.add("active");
     });
   });
@@ -118,6 +119,7 @@ async function getAddTaskTemplate() {
     const id = `board/${id}`;
     deleteTask(slot, id);
   });
+
   document.getElementById("create-task-button").addEventListener("click", handleAddTask);
 }
 
@@ -138,6 +140,19 @@ async function handleAddTask() {
   if (!validateAddTask(title, dueDate)) return;
 
   addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
+
+  clearAddTaskForm();
+}
+
+function clearAddTaskForm() {
+  document.getElementById("input-container-title").value = "";
+  document.querySelector(".description-container").value = "";
+  document.getElementById("input-container-date").value = "";
+  document.getElementById("selected-contact").value = "";
+  document.getElementById("subtasks").value = "";
+
+  const priorityButtons = document.querySelectorAll(".priority-buttons button");
+  priorityButtons.forEach((button) => button.classList.remove("active"));
 }
 
 function validateAddTask(title, dueDate) {
