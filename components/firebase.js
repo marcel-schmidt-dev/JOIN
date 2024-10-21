@@ -196,10 +196,6 @@ export async function moveTaskToSlot(newSlot, id) {
     const boardRef = ref(db, "board/");
     const boardSnapshot = await get(boardRef);
 
-    if (!boardSnapshot.exists()) {
-      throw new Error("Board does not exist!");
-    }
-
     const board = boardSnapshot.val();
 
     for (const slot in board) {
@@ -214,10 +210,6 @@ export async function moveTaskToSlot(newSlot, id) {
       }
     }
 
-    if (!taskData) {
-      throw new Error("Task does not exist!");
-    }
-
     if (currentSlot === newSlot) {
       return;
     }
@@ -228,11 +220,24 @@ export async function moveTaskToSlot(newSlot, id) {
     await remove(taskRef);
 
   } catch (error) {
-    console.error("Error moving task to slot:", error);
+    console.error("Error moving Task to slot:", error);
     throw error;
   }
 }
 
+export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked) {
+  const db = getFirebaseDatabase();
+  const subTaskRef = ref(db, `board/${slot}/${taskId}/subTasks/${subTaskId}`);
+
+  try {
+    await set(subTaskRef, { checked: isChecked });
+  } catch (error) {
+    console.error("Error updating subtask status:", error);
+    throw error;
+  }
+}
+
+// Copyright by ChatGPT for creating dummy data in Database faster
 async function createRandomTasks() {
   const db = getFirebaseDatabase();
   const contactsRef = ref(db, 'contacts/');
@@ -299,8 +304,8 @@ async function createRandomTasks() {
       await push(ref(db, 'board/todo/'), newTask);
     }
 
-    console.log("Zufällige Tasks erfolgreich erstellt!");
+    console.log("random tasks created");
   } catch (error) {
-    console.error("Fehler beim Erstellen der Tasks:", error);
+    console.error("error creating tasks: ", error);
   }
 }

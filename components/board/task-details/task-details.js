@@ -10,7 +10,7 @@ export default async function showTaskDetails(taskId, slot) {
 
     contentRef.innerHTML += /*html*/ `
         <div class="task-details-container">
-            <div class="task-details">
+            <div class="task-details" data-task-id=${taskId} data-task-slot=${slot}>
                 <div class="top">
                     <div class="type" style="background-color: ${task.type === 'Technical Task' ? '#1FD7C1' : '#0038FF'}">${task.type}</div>
                     <div class="close" onclick="closeTaskDetails()">X</div>
