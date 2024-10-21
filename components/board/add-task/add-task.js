@@ -109,6 +109,29 @@ async function getAddTaskTemplate(taskRef) {
   document.getElementById("create-task-button").addEventListener("click", handleAddTask);
 }
 
+async function handleAddTask() {
+  const title = document.getElementById("input-container-title").value;
+  const description = document.querySelector(".description-container").value;
+  const dueDate = document.getElementById("input-container-date").value;
+  const assignee = document.getElementById("selected-contact").value;
+  const subTasks = document.getElementById("subtasks").value.split(",");
+  const priority = document.querySelector(".priority-buttons .button-urgent.active")
+    ? "urgent"
+    : document.querySelector(".priority-buttons .button-medium.active")
+    ? "medium"
+    : "low";
+  const type = "type";
+  const slot = "slot";
+
+  if (!validateAddTask(title, dueDate)) return;
+
+  try {
+    await addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
+  } catch (error) {
+    console.error("Error");
+  }
+}
+
 function validateAddTask(title, dueDate, category) {
   const titleRequest = document.getElementById("title-requested");
   const inputTitleRequest = document.getElementById("input-container-title");
