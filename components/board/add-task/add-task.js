@@ -38,9 +38,15 @@ async function getAddTaskTemplate() {
                         <div class="assigned">
                          <input type="text" name="assigned" class="assigned-container" id="selected-contact" placeholder="Select contacts to assign" readonly />
                          ${returnIcon("arrow-dropdown")}
+                          <div class="dropdown" id="user-dropdown">
+                              <ul>
+                                  <li data-user="Hans">Hans</li>
+                                  <li data-user="Fritz">Fritz</li>
+                                  <li data-user="Karl">Karl</li>
+                              </ul>
+                          </div>
                         </div>
                     </div>
-                    
                 </div>
                 <div class="separator"></div>
                 <div class="input-right">
@@ -69,6 +75,12 @@ async function getAddTaskTemplate() {
                         <div class="category-input">
                          <input type="text" name="category" class="category-container" id="category" placeholder="Select task category" readonly />
                          ${returnIcon("arrow-dropdown")}
+                          <div class="dropdown" id="category-dropdown">
+                            <ul>
+                                <li  data-category="Technical task">Technical task</li>
+                                <li  data-category="Userstory">Userstory</li>
+                            </ul>
+                         </div>
                         </div>
                     </div>
                     <div class="subtasks">
@@ -114,7 +126,7 @@ async function handleAddTask() {
   const description = document.querySelector(".description-container").value;
   const dueDate = document.getElementById("input-container-date").value;
   const assignee = document.getElementById("selected-contact").value;
-  const subTasks = document.getElementById("subtasks").value.split(",");
+  const subTasks = document.getElementById("subtasks").value;
   const priority = document.querySelector(".priority-buttons .button-urgent.active")
     ? "urgent"
     : document.querySelector(".priority-buttons .button-medium.active")
@@ -125,7 +137,7 @@ async function handleAddTask() {
 
   if (!validateAddTask(title, dueDate)) return;
 
-  await addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
+  addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
 }
 
 function validateAddTask(title, dueDate) {
@@ -155,3 +167,19 @@ function validateAddTask(title, dueDate) {
     inputDateRequest.style.borderColor = "#d1d1d1";
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const assignedContainer = document.querySelector(".assigned");
+  const userDropdown = document.getElementById("user-dropdown");
+  const selectedContact = document.getElementById("selected-contact");
+
+  assignedContainer.addEventListener("click", () => {
+    userDropdown.style.display = userDropdown.style.display === "block" ? "none" : "block";
+  });
+
+  userDropdown.querySelectorAll("li").forEach((item) => {
+    item.addEventListener("click", () => {
+      selectedContact.value = item.getAttribute("data-user");
+    });
+  });
+});
