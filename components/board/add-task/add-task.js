@@ -14,7 +14,7 @@ async function renderTaskTemplate() {
     `;
 }
 
-async function getAddTaskTemplate(taskRef) {
+async function getAddTaskTemplate() {
   const addTaskRef = document.querySelector(".task-content");
   addTaskRef.innerHTML += /*html*/ `
         <div class="main-content">
@@ -125,14 +125,10 @@ async function handleAddTask() {
 
   if (!validateAddTask(title, dueDate)) return;
 
-  try {
-    await addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
-  } catch (error) {
-    console.error("Error");
-  }
+  await addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
 }
 
-function validateAddTask(title, dueDate, category) {
+function validateAddTask(title, dueDate) {
   const titleRequest = document.getElementById("title-requested");
   const inputTitleRequest = document.getElementById("input-container-title");
   let titleValidation = /^[a-zA-ZäöüÄÖÜß\s-]+$/;

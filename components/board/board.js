@@ -21,7 +21,7 @@ window.filterTasks = function () {
       task.classList.add("d-none");
     }
   });
-}
+};
 
 window.showTaskDetails = showTaskDetails;
 window.closeTaskDetails = () => {
@@ -92,7 +92,7 @@ async function renderBoardTemplate() {
                 <h2>Board</h2>
                 <div>
                   <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon("search")}</span></div>
-                  <button>Add task${returnIcon("plus")}</button>
+                  <button onclick="getAddTaskTemplate()">Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
             <div class="board">
