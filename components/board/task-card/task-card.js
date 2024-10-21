@@ -14,16 +14,16 @@ export async function returnTaskTemplate(task, slot) {
                 <span>${task.title}</span>
                 <p>${task.description}</p>
             </div>
-            <div class="sub-tasks">
+            ${task.subTasks ? `<div class="sub-tasks">
                 <progress value=${returnCheckedSubtasks(task.subTasks)} max=${task.subTasks.length}></progress>
                 <span>${returnCheckedSubtasks(task.subTasks)}/${task.subTasks.length} Subtasks</span>
-            </div>
-            <div class="assignee-priority">
-                <div class="assignee">
+            </div>` : ''}
+            <div class="assignee-priority" style="justify-content: ${task.assignee ? 'space-between' : 'flex-end'}">
+                ${assigneeList ? `<div class="assignee">
                     ${assigneeList
-            .map((assignee) => `<div class="assignee-icon" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}</div>`)
-            .join("")}
-                </div>
+                .map((assignee) => `<div class="assignee-icon" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}</div>`)
+                .join("")}
+                </div>` : ''}
                 <div class="priority ${task.priority}">
                     ${returnIcon(task.priority)}
                 </div>
@@ -33,6 +33,7 @@ export async function returnTaskTemplate(task, slot) {
 }
 
 async function returnContacts(ids) {
+    if (!ids) return null;
     let contactPromises = ids.map((id) => getContact(id));
     let contacts = await Promise.all(contactPromises);
     return contacts;
