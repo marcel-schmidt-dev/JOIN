@@ -1,4 +1,4 @@
-import { returnBoard, moveTaskToSlot } from "../firebase.js";
+import { returnBoard, moveTaskToSlot, updateSubTaskStatus } from "../firebase.js";
 import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
 import showTaskDetails from "./task-details/task-details.js";
@@ -25,7 +25,17 @@ window.filterTasks = function () {
 
 window.showTaskDetails = showTaskDetails;
 window.closeTaskDetails = () => {
-  document.querySelector(".task-details-container").remove();
+  const subTasks = document.querySelectorAll(".subtask");
+  const taskId = document.querySelector(".task-details").getAttribute("data-task-id");
+  const slot = document.querySelector(".task-details").getAttribute("data-task-slot");
+
+  subTasks.forEach(async (subTask) => {
+    const subTaskId = subTask.querySelector("input").id;
+    const isChecked = subTask.querySelector("input").checked;
+    await updateSubTaskStatus(slot, taskId, subTaskId, isChecked);
+  });
+
+  renderBoardTemplate();
 };
 
 window.allowDrop = function (event) {
