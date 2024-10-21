@@ -89,7 +89,10 @@ async function renderBoardTemplate() {
   contactSectionRef.innerHTML = /*html*/ `
         <div class="board-container">
             <div class="board-heading">
+            <div>
                 <h2>Board</h2>
+                <button class="covered-btn">${returnIcon("plus")}</button>
+                </div>
                 <div>
                   <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon("search")}</span></div>
                   <button onclick="getAddTaskTemplate()">Add task${returnIcon("plus")}</button>
