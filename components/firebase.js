@@ -196,10 +196,6 @@ export async function moveTaskToSlot(newSlot, id) {
     const boardRef = ref(db, "board/");
     const boardSnapshot = await get(boardRef);
 
-    if (!boardSnapshot.exists()) {
-      throw new Error("Board does not exist!");
-    }
-
     const board = boardSnapshot.val();
 
     for (const slot in board) {
@@ -214,10 +210,6 @@ export async function moveTaskToSlot(newSlot, id) {
       }
     }
 
-    if (!taskData) {
-      throw new Error("Task does not exist!");
-    }
-
     if (currentSlot === newSlot) {
       return;
     }
@@ -226,41 +218,41 @@ export async function moveTaskToSlot(newSlot, id) {
     await set(newTaskRef, taskData);
 
     await remove(taskRef);
-
   } catch (error) {
-    console.error("Error moving task to slot:", error);
+    console.error("Error moving Task to slot:", error);
     throw error;
   }
 }
 
+export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked) {
+  const db = getFirebaseDatabase();
+  const subTaskRef = ref(db, `board/${slot}/${taskId}/subTasks/${subTaskId}`);
+
+  try {
+    await set(subTaskRef, { checked: isChecked });
+  } catch (error) {
+    console.error("Error updating subtask status:", error);
+    throw error;
+  }
+}
+
+// Copyright by ChatGPT for creating dummy data in Database faster
 async function createRandomTasks() {
   const db = getFirebaseDatabase();
-  const contactsRef = ref(db, 'contacts/');
+  const contactsRef = ref(db, "contacts/");
 
-  const exampleTitles = [
-    "Implement new feature",
-    "Fix bug in application",
-    "Write documentation",
-    "Design UI for new project",
-    "Conduct code review"
-  ];
+  const exampleTitles = ["Implement new feature", "Fix bug in application", "Write documentation", "Design UI for new project", "Conduct code review"];
 
   const exampleDescriptions = [
     "This task involves implementing a new feature for the application.",
     "This task is about fixing a bug that has been reported.",
     "Document the code and create user manuals.",
     "Design the user interface for the new project based on the requirements.",
-    "Review the code submitted by team members for quality assurance."
+    "Review the code submitted by team members for quality assurance.",
   ];
 
   const examplePriorities = ["low", "medium", "urgent"];
-  const exampleDueDates = [
-    "2024-11-01",
-    "2024-11-15",
-    "2024-11-30",
-    "2024-12-15",
-    "2025-01-01"
-  ];
+  const exampleDueDates = ["2024-11-01", "2024-11-15", "2024-11-30", "2024-12-15", "2025-01-01"];
 
   try {
     const contactsSnapshot = await get(contactsRef);
@@ -288,19 +280,19 @@ async function createRandomTasks() {
         dueDate: randomDueDate,
         subTasks: [
           { title: "Initial setup", checked: false },
-          { title: "Create documentation", checked: false }
+          { title: "Create documentation", checked: false },
         ],
-        assignee: randomAssignees
+        assignee: randomAssignees,
       };
 
-      await push(ref(db, 'board/inProgress/'), newTask);
-      await push(ref(db, 'board/done/'), newTask);
-      await push(ref(db, 'board/awaitFeedback/'), newTask);
-      await push(ref(db, 'board/todo/'), newTask);
+      await push(ref(db, "board/inProgress/"), newTask);
+      await push(ref(db, "board/done/"), newTask);
+      await push(ref(db, "board/awaitFeedback/"), newTask);
+      await push(ref(db, "board/todo/"), newTask);
     }
 
-    console.log("Zufällige Tasks erfolgreich erstellt!");
+    console.log("random tasks created");
   } catch (error) {
-    console.error("Fehler beim Erstellen der Tasks:", error);
+    console.error("error creating tasks: ", error);
   }
 }

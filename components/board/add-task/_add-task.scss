@@ -181,6 +181,22 @@
               }
             }
 
+            &:active {
+              background-color: #ff3d00;
+
+              svg {
+                fill: white;
+              }
+            }
+            &.active {
+              background-color: #ff3d00;
+              color: white;
+
+              svg {
+                fill: white;
+              }
+            }
+
             svg {
               width: 20px;
               height: 14.5px;
@@ -208,6 +224,22 @@
               }
             }
 
+            &:active {
+              background-color: #ffa800;
+
+              svg {
+                fill: white;
+              }
+            }
+            &.active {
+              background-color: #ffa800;
+              color: white;
+
+              svg {
+                fill: white;
+              }
+            }
+
             svg {
               width: 20px;
               height: 7.5px;
@@ -229,6 +261,22 @@
 
             &:hover {
               background-color: #7ae229;
+
+              svg {
+                fill: white;
+              }
+            }
+
+            &:active {
+              background-color: #7ae229;
+
+              svg {
+                fill: white;
+              }
+            }
+            &.active {
+              background-color: #7ae229;
+              color: white;
 
               svg {
                 fill: white;
