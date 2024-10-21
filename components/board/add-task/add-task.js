@@ -14,7 +14,7 @@ async function renderTaskTemplate() {
     `;
 }
 
-async function getAddTaskTemplate(taskInfos) {
+async function getAddTaskTemplate(taskRef) {
   const addTaskRef = document.querySelector(".task-content");
   addTaskRef.innerHTML += /*html*/ `
         <div class="main-content">
@@ -86,12 +86,27 @@ async function getAddTaskTemplate(taskInfos) {
                     <span>This field is required</span>
              </div>
              <div class="add-task-button-container">
-                    <button onclick="deleteTask()" class="clear">Clear ${returnIcon("x")}</button>
-                    <button onclick="addTask()" class="create">Create task ${returnIcon("check")}</button>
+                    <button id="delete-task-button" class="clear">Clear ${returnIcon("x")}</button>
+                    <button id="create-task-button" class="create">Create task ${returnIcon("check")}</button>
              </div>
             </div>
         </div>
     `;
+
+  const priorityButtons = document.querySelectorAll(".priority-buttons button");
+  priorityButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      priorityButtons.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+    });
+  });
+
+  document.getElementById("delete-task-button").addEventListener("click", () => {
+    const slot = `board/${slot}`;
+    const id = `board/${id}`;
+    deleteTask(slot, id);
+  });
+  document.getElementById("create-task-button").addEventListener("click", handleAddTask);
 }
 
 function validateAddTask(title, dueDate, category) {
@@ -100,6 +115,7 @@ function validateAddTask(title, dueDate, category) {
   let titleValidation = /^[a-zA-ZäöüÄÖÜß\s-]+$/;
   if (!titleValidation.test(title) || title.length < 10) {
     titleRequest.style.display = "block";
+    titleRequest.style.color = "red";
     inputTitleRequest.style.borderColor = "red";
     return false;
   } else {
@@ -109,9 +125,10 @@ function validateAddTask(title, dueDate, category) {
 
   const dateRequest = document.getElementById("date-requested");
   const inputDateRequest = document.getElementById("input-container-date");
-  let dateValidation = /^[0-9]+$/;
+  let dateValidation = /^\d{2}\/\d{2}\/\d{4}$/;
   if (!dateValidation.test(dueDate) || dueDate.length < 10 || dueDate.length > 10) {
     dateRequest.style.display = "block";
+    dateRequest.style.color = "red";
     inputDateRequest.style.borderColor = "red";
     return false;
   } else {
