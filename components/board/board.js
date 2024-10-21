@@ -9,6 +9,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 let currentTaskId;
 
+window.filterTasks = function () {
+  const searchInput = document.querySelector(".search input");
+  const allTasks = document.querySelectorAll(".task");
+  allTasks.forEach((task) => {
+    const taskTitle = task.querySelector(".heading span").textContent;
+    const taskDescription = task.querySelector(".heading p").textContent;
+    if (taskTitle.toLowerCase().includes(searchInput.value.toLowerCase()) || taskDescription.toLowerCase().includes(searchInput.value.toLowerCase())) {
+      task.classList.remove("d-none");
+    } else {
+      task.classList.add("d-none");
+    }
+  });
+}
+
 window.showTaskDetails = showTaskDetails;
 window.closeTaskDetails = () => {
   document.querySelector(".task-details-container").remove();
@@ -49,8 +63,6 @@ window.endDragging = function () {
 };
 
 window.updatePlaceholder = function () {
-  console.log("updatePlaceholder");
-
   const allSlots = document.querySelectorAll(".slot-content");
   allSlots.forEach((slot) => {
     if (slot.children.length > 1) {
@@ -69,7 +81,7 @@ async function renderBoardTemplate() {
             <div class="board-heading">
                 <h2>Board</h2>
                 <div>
-                  <div class="search"><input type="text" placeholder="Find Task"><button>${returnIcon("search")}</button></div>
+                  <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon("search")}</span></div>
                   <button>Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
