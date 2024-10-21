@@ -24,7 +24,7 @@
           padding: 12px 21px 12px 21px;
           border-radius: 10px;
           border: 1px solid #d1d1d1;
-          width: 300px;
+          width: 333px;
           cursor: pointer;
           height: 48px;
         }
@@ -50,7 +50,7 @@
         .description-container {
           border: 1px solid #d1d1d1;
           border-radius: 10px;
-          width: 300px;
+          width: 333px;
           margin-bottom: 12px;
           cursor: pointer;
         }
@@ -89,6 +89,30 @@
           }
           svg {
             cursor: pointer;
+          }
+          .dropdown {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #d1d1d1;
+            border-radius: 10px;
+            z-index: 100;
+            max-width: 280px;
+            width: 100%;
+          }
+
+          .dropdown ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+          }
+
+          .dropdown li {
+            padding: 10px;
+            cursor: pointer;
+          }
+          .dropdown li:hover {
+            background-color: #d1d1d1;
           }
         }
       }
@@ -322,6 +346,31 @@
           }
           svg {
             cursor: pointer;
+          }
+          .dropdown {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #d1d1d1;
+            border-radius: 10px;
+            z-index: 100;
+            max-width: 280px;
+            width: 100%;
+          }
+
+          .dropdown ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+          }
+
+          .dropdown li {
+            padding: 10px;
+            cursor: pointer;
+          }
+
+          .dropdown li:hover {
+            background-color: #d1d1d1;
           }
         }
       }
