@@ -10,6 +10,10 @@
   cursor: pointer;
   width: 100%;
 
+  &.d-none {
+    display: none;
+  }
+
   .type {
     font-size: 1rem;
     line-height: 120%;
