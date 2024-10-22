@@ -196,6 +196,8 @@ function clearAddTaskForm() {
   document.getElementById("selected-contact").value = "";
   document.getElementById("category").value = "";
   document.getElementById("subtasks").value = "";
+  const subtasksOverview = document.getElementById("subtasks-overview");
+  subtasksOverview.style.display = "none";
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => button.classList.remove("active"));
