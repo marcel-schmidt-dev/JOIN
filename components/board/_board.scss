@@ -10,7 +10,7 @@
   .board-heading {
     display: flex;
     justify-content: space-between;
-    
+    align-items: center;
     margin-bottom: 48px;
 
     h2 {
@@ -77,12 +77,8 @@
         line-height: 120%;
         transition: all 300ms ease-in-out;
 
-
         @media (max-width: 710px) {
-          
-            display: none;
-          
-          
+          display: none;
         }
 
         &:hover {
@@ -184,11 +180,8 @@
   display: none;
 }
 
-
-
-
-.board-heading{
-  > div{
+.board-heading {
+  > div {
     > button.covered-btn {
       display: none;
     }
@@ -196,23 +189,19 @@
 }
 
 @media (max-width: 710px) {
-   .board-heading{
-    
+  .board-heading {
     flex-direction: column;
-    gap: 32px
-    ;
-    > div{
+    gap: 32px;
+    > div {
       display: flex;
       justify-content: space-between;
-      .search{
+      .search {
         width: 100%;
       }
       align-items: center;
       > button.covered-btn {
         display: block;
-
       }
     }
-   }
+  }
 }
-
