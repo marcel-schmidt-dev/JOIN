@@ -111,14 +111,12 @@ async function getAddTaskTemplate() {
 
   dropdownIcon.addEventListener("click", async () => {
     const users = await getContact();
-    console.log(users);
 
     userListRef.innerHTML = "";
 
     users.forEach((user) => {
       const li = document.createElement("li");
       li.textContent = user.name;
-      li.user = user.name;
       userListRef.appendChild(li);
     });
 
