@@ -199,6 +199,7 @@ function clearAddTaskForm() {
   document.getElementById("input-container-date").value = "";
   document.getElementById("selected-contact").value = "";
   document.getElementById("subtasks").value = "";
+  document.getElementById("category").value = "";
   const subtasksOverview = document.getElementById("subtasks-overview");
   subtasksOverview.style.display = "none";
 
