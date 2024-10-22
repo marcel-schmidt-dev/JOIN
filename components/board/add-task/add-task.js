@@ -172,6 +172,7 @@ function clearAddTaskForm() {
   document.querySelector(".description-container").value = "";
   document.getElementById("input-container-date").value = "";
   document.getElementById("selected-contact").value = "";
+  document.getElementById("category").value = "";
   document.getElementById("subtasks").value = "";
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
