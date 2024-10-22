@@ -85,12 +85,18 @@ async function getAddTaskTemplate() {
                     </div>
                     <div class="subtasks">
                         <h2>Subtasks</h2>
-                        <div class="subtasks-input">
-                         <input type="text" name="subtasks" class="subtasks-container" id="subtasks" placeholder="Add new subtask"/>
-                         ${returnIcon("plus")}
+                          <div class="subtasks-input">
+                            <input type="text" name="subtasks" class="subtasks-container" id="subtasks" placeholder="Add new subtask"/>
+                            ${returnIcon("plus")}
+                          </div>
+                          <div class="subtasks-overview" >
+                            <div id="subtasks-overview">
+                              <p id="subtasks-text"></p>
+                              <div class="subtasks-icons">${returnIcon("pen")} ${returnIcon("trash-outline")}</div>
+                            </div>
                         </div>
+                     </div>
                     </div>
-                </div>
             </div>
             <div class="container-bottom">
              <div class="span-content">
@@ -140,6 +146,22 @@ async function getAddTaskTemplate() {
   document.getElementById("delete-task-button").addEventListener("click", () => {
     clearAddTaskForm();
   });
+
+  const subtasksInput = document.getElementById("subtasks");
+  const subtasksOverview = document.getElementById("subtasks-overview");
+  const addButton = subtasksInput.nextElementSibling;
+
+  addButton.addEventListener("click", () => {
+    const subtaskText = subtasksInput.value.trim();
+
+    const newSubtask = document.getElementById("subtasks-text");
+    newSubtask.textContent = subtaskText;
+
+    subtasksOverview.style.display = "flex";
+    subtasksOverview.appendChild(newSubtask);
+
+    subtasksInput.value = "";
+  });
 }
 
 async function handleAddTask() {
@@ -173,6 +195,8 @@ function clearAddTaskForm() {
   document.getElementById("input-container-date").value = "";
   document.getElementById("selected-contact").value = "";
   document.getElementById("subtasks").value = "";
+  const subtasksOverview = document.getElementById("subtasks-overview");
+  subtasksOverview.style.display = "none";
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => button.classList.remove("active"));
