@@ -99,7 +99,7 @@ async function getAddTaskTemplate() {
                     <span>This field is required</span>
              </div>
              <div class="add-task-button-container">
-                    <button id="delete-task-button" class="clear">Clear ${returnIcon("x")}</button>
+                    <button id="delete-task-button"  class="clear">Clear ${returnIcon("x")}</button>
                     <button id="create-task-button" class="create">Create task ${returnIcon("check")}</button>
              </div>
             </div>
@@ -120,7 +120,9 @@ async function getAddTaskTemplate() {
     deleteTask(slot, id);
   });
 
-  document.getElementById("create-task-button").addEventListener("click", handleAddTask);
+  document.getElementById("delete-task-button").addEventListener("click", () => {
+    clearAddTaskForm();
+  });
 }
 
 async function handleAddTask() {
