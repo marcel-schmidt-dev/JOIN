@@ -224,12 +224,12 @@ export async function moveTaskToSlot(newSlot, id) {
   }
 }
 
-export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked) {
+export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked, title) {
   const db = getFirebaseDatabase();
   const subTaskRef = ref(db, `board/${slot}/${taskId}/subTasks/${subTaskId}`);
 
   try {
-    await set(subTaskRef, { checked: isChecked });
+    await set(subTaskRef, { checked: isChecked, title: title });
   } catch (error) {
     console.error("Error updating subtask status:", error);
     throw error;

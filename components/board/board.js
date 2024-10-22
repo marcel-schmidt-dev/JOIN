@@ -32,7 +32,8 @@ window.closeTaskDetails = () => {
   subTasks.forEach(async (subTask) => {
     const subTaskId = subTask.querySelector("input").id;
     const isChecked = subTask.querySelector("input").checked;
-    await updateSubTaskStatus(slot, taskId, subTaskId, isChecked);
+    const title = subTask.querySelector("span").textContent;
+    await updateSubTaskStatus(slot, taskId, subTaskId, isChecked, title);
   });
 
   renderBoardTemplate();
