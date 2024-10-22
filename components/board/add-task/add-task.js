@@ -41,7 +41,7 @@ async function getAddTaskTemplate() {
                          <input type="text" name="assigned" class="assigned-container" id="selected-contact" placeholder="Select contacts to assign" readonly />
                          <span id="dropdown-icon">${returnIcon("arrow-dropdown")}</span>
                           <div class="dropdown" id="user-dropdown">
-                              <ul>
+                              <ul id="user-list">
                                   
                               </ul>
                           </div>
