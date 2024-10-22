@@ -137,11 +137,7 @@ async function getAddTaskTemplate() {
     });
   });
 
-  document.getElementById("delete-task-button").addEventListener("click", () => {
-    const slot = `board/${slot}`;
-    const id = `board/${id}`;
-    deleteTask(slot, id);
-  });
+  document.getElementById("create-task-button").addEventListener("click", handleAddTask);
 
   document.getElementById("delete-task-button").addEventListener("click", () => {
     clearAddTaskForm();
