@@ -41,7 +41,7 @@ async function getAddTaskTemplate() {
                          <input type="text" name="assigned" class="assigned-container" id="selected-contact" placeholder="Select contacts to assign" readonly />
                          <span id="dropdown-icon">${returnIcon("arrow-dropdown")}</span>
                           <div class="dropdown" id="user-dropdown">
-                              <ul id="user-list">
+                              <ul>
                                   
                               </ul>
                           </div>
@@ -54,8 +54,8 @@ async function getAddTaskTemplate() {
                         <h2>Due date<span>*</span>
                         </h2>
                         <div class="date">
-                         <input type="text" name="date" class="date-container" id="input-container-date" placeholder="dd/mm/yyyy"/>
-                         ${returnIcon("calendar")}
+                        <input type="date" id="input-container-date" name="Date" value=""  class="date-container"/>
+                         
                         </div>
                         <div class="request-container">
                             <p id="date-requested">Dieses Feld muss ausgefüllt sein</p>
@@ -111,12 +111,14 @@ async function getAddTaskTemplate() {
 
   dropdownIcon.addEventListener("click", async () => {
     const users = await getContact();
+    console.log(users);
 
     userListRef.innerHTML = "";
 
     users.forEach((user) => {
       const li = document.createElement("li");
       li.textContent = user.name;
+      li.user = user.name;
       userListRef.appendChild(li);
     });
 
@@ -134,8 +136,6 @@ async function getAddTaskTemplate() {
       button.classList.add("active");
     });
   });
-
-  document.getElementById("create-task-button").addEventListener("click", handleAddTask);
 
   document.getElementById("delete-task-button").addEventListener("click", () => {
     clearAddTaskForm();
@@ -172,7 +172,6 @@ function clearAddTaskForm() {
   document.querySelector(".description-container").value = "";
   document.getElementById("input-container-date").value = "";
   document.getElementById("selected-contact").value = "";
-  document.getElementById("category").value = "";
   document.getElementById("subtasks").value = "";
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
@@ -221,6 +220,9 @@ document.addEventListener("DOMContentLoaded", () => {
       selectedContact.value = item.getAttribute("data-user");
     });
   });
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("input-container-date").value = "YY";
+  document.getElementById("input-container-date").min = today;
 });
 
 document.addEventListener("DOMContentLoaded", () => {
