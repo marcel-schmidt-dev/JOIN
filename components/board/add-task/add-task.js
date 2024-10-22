@@ -2,6 +2,7 @@ import returnIcon from "../../icons.js";
 import { addTask } from "../../firebase.js";
 import { deleteTask } from "../../firebase.js";
 import { returnTaskTemplate } from "../task-card/task-card.js";
+import { getContact } from "../../firebase.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   await renderTaskTemplate();
@@ -38,12 +39,10 @@ async function getAddTaskTemplate() {
                         <h2>Assigned to</h2>
                         <div class="assigned">
                          <input type="text" name="assigned" class="assigned-container" id="selected-contact" placeholder="Select contacts to assign" readonly />
-                         ${returnIcon("arrow-dropdown")}
+                         <span id="dropdown-icon">${returnIcon("arrow-dropdown")}</span>
                           <div class="dropdown" id="user-dropdown">
                               <ul>
-                                  <li data-user="Hans">Hans</li>
-                                  <li data-user="Fritz">Fritz</li>
-                                  <li data-user="Karl">Karl</li>
+                                  
                               </ul>
                           </div>
                         </div>
@@ -106,6 +105,30 @@ async function getAddTaskTemplate() {
         </div>
     `;
 
+  const dropdownIcon = document.querySelector("#dropdown-icon");
+  const dropdownMenu = document.querySelector("#user-dropdown");
+  const userListRef = document.querySelector("#user-list");
+
+  dropdownIcon.addEventListener("click", async () => {
+    const users = await getContact();
+    console.log(users);
+
+    userListRef.innerHTML = "";
+
+    users.forEach((user) => {
+      const li = document.createElement("li");
+      li.textContent = user.name;
+      li.user = user.name;
+      userListRef.appendChild(li);
+    });
+
+    if (dropdownMenu.style.display === "none") {
+      dropdownMenu.style.display = "block";
+    } else {
+      dropdownMenu.style.display = "none";
+    }
+  });
+
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -137,7 +160,11 @@ async function handleAddTask() {
   const type = "type";
   const slot = "slot";
 
-  if (!validateAddTask(title, dueDate)) return;
+  if (!validateAddTask(title, dueDate)) {
+    console.error(" validierung fehlgeschlagen");
+  } else {
+    return;
+  }
 
   addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
 
