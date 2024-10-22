@@ -143,6 +143,10 @@ async function getAddTaskTemplate() {
     });
   });
 
+  document.getElementById("create-task-button").addEventListener("click", () => {
+    handleAddTask();
+  });
+
   document.getElementById("delete-task-button").addEventListener("click", () => {
     clearAddTaskForm();
   });
