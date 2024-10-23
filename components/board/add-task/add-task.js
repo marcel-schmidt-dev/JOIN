@@ -163,7 +163,21 @@ async function getAddTaskTemplate() {
 
       const subtaskIcons = document.createElement("div");
       subtaskIcons.classList.add("subtasks-icons");
-      subtaskIcons.innerHTML = `${returnIcon("check")} ${returnIcon("trash-outline")}`;
+
+      const checkIcon = document.createElement("span");
+      checkIcon.innerHTML = returnIcon("check");
+      checkIcon.addEventListener("click", () => {
+        newSubtask.style.textDecoration = "line-through";
+      });
+
+      const trashIcon = document.createElement("span");
+      trashIcon.innerHTML = returnIcon("trash-outline");
+      trashIcon.addEventListener("click", () => {
+        subtasksOverview.removeChild(subtaskContainer);
+      });
+
+      subtaskIcons.appendChild(checkIcon);
+      subtaskIcons.appendChild(trashIcon);
 
       subtaskContainer.appendChild(newSubtask);
       subtaskContainer.appendChild(subtaskIcons);
@@ -207,8 +221,6 @@ function clearAddTaskForm() {
   document.getElementById("selected-contact").value = "";
   document.getElementById("subtasks").value = "";
   document.getElementById("category").value = "";
-  const subtasksOverview = document.getElementById("subtasks-overview");
-  subtasksOverview.style.display = "none";
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => button.classList.remove("active"));
