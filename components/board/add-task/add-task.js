@@ -1,7 +1,5 @@
 import returnIcon from "../../icons.js";
 import { addTask } from "../../firebase.js";
-import { deleteTask } from "../../firebase.js";
-import { returnTaskTemplate } from "../task-card/task-card.js";
 import { getContact } from "../../firebase.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
