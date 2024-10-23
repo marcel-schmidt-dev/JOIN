@@ -10,12 +10,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   await getAddTaskTemplate();
 
   // Kontaktliste anzeigen
-  const assignedContainer = document.querySelector(".assigned");
+  const assignedContainer = document.querySelector(".assigned-container");
   const userDropdown = document.getElementById("user-dropdown");
   const selectedContact = document.getElementById("selected-contact");
 
   assignedContainer.addEventListener("click", () => {
     userDropdown.style.display = userDropdown.style.display === "block" ? "none" : "block";
+    userDropdown.style.display = userDropdown.style.display === "none" ? "block" : "none";
   });
 
   userDropdown.querySelectorAll("li").forEach((item) => {
@@ -87,8 +88,8 @@ async function getAddTaskTemplate() {
                     <div class="date-input">
                         <h2>Due date<span>*</span>
                         </h2>
-                        <div class="date">
-                        <input type="date" id="input-container-date" name="Date" value=""  class="date-container"/>
+                        <div class="date" id="date-data">
+                        <input type="date" id="input-container-date" name="Date" class="date-container"/>
                         </div>
                         <div class="request-container">
                             <p id="date-requested">Dieses Feld muss ausgefüllt sein</p>
@@ -181,6 +182,9 @@ async function getAddTaskTemplate() {
 
   addButton.addEventListener("click", () => {
     const subtaskText = subtasksInput.value.trim();
+    let subtasksArray = [];
+
+    subtasksArray.push("subtask-text");
 
     if (subtaskText !== "") {
       const subtaskContainer = document.createElement("div");
@@ -235,12 +239,10 @@ async function handleAddTask() {
   if (!validateAddTask(title, dueDate)) {
     console.error(" validierung fehlgeschlagen");
   } else {
-    return;
+    addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
+
+    clearAddTaskForm();
   }
-
-  addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
-
-  clearAddTaskForm();
 }
 
 function clearAddTaskForm() {
@@ -259,7 +261,7 @@ function validateAddTask(title, dueDate) {
   const titleRequest = document.getElementById("title-requested");
   const inputTitleRequest = document.getElementById("input-container-title");
   let titleValidation = /^[a-zA-ZäöüÄÖÜß\s-]+$/;
-  if (!titleValidation.test(title) || title.length < 10) {
+  if (!titleValidation.test(title) || title.length < 5) {
     titleRequest.style.display = "block";
     titleRequest.style.color = "red";
     inputTitleRequest.style.borderColor = "red";
@@ -271,7 +273,8 @@ function validateAddTask(title, dueDate) {
 
   const dateRequest = document.getElementById("date-requested");
   const inputDateRequest = document.getElementById("input-container-date");
-  let dateValidation = /^\d{2}\.\d{2}\.\d{4}$/;
+  let dateValidation = /^\d{4}\-\d{2}\-\d{2}$/;
+
   if (!dateValidation.test(dueDate)) {
     dateRequest.style.display = "block";
     dateRequest.style.color = "red";
@@ -281,4 +284,6 @@ function validateAddTask(title, dueDate) {
     dateRequest.style.display = "none";
     inputDateRequest.style.borderColor = "#d1d1d1";
   }
+
+  return true;
 }
