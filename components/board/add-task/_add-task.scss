@@ -407,13 +407,19 @@
           }
         }
         .subtasks-overview {
-          margin-bottom: 120px;
-
           .subtasks-icons {
             svg {
               height: 20px;
               width: 20px;
             }
+          }
+          .subtasks-flex {
+            display: none;
+            justify-content: space-between;
+            padding: 5px;
+            border: 1px solid #d1d1d1;
+            border-radius: 10px;
+            background-color: white;
           }
 
           #subtasks-overview {
@@ -433,6 +439,7 @@
   .container-bottom {
     display: flex;
     justify-content: space-between;
+    margin-top: 120px;
 
     .span-content {
       margin-top: 40px;
