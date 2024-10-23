@@ -1,12 +1,48 @@
 import returnIcon from "../../icons.js";
 import { addTask } from "../../firebase.js";
-import { getContact } from "../../firebase.js";
+import { getContacts } from "../../firebase.js";
+
+let users;
 
 document.addEventListener("DOMContentLoaded", async () => {
+  users = await getContacts();
   await renderTaskTemplate();
   await getAddTaskTemplate();
-});
 
+  // Kontaktliste anzeigen
+  const assignedContainer = document.querySelector(".assigned");
+  const userDropdown = document.getElementById("user-dropdown");
+  const selectedContact = document.getElementById("selected-contact");
+
+  assignedContainer.addEventListener("click", () => {
+    userDropdown.style.display = userDropdown.style.display === "block" ? "none" : "block";
+  });
+
+  userDropdown.querySelectorAll("li").forEach((item) => {
+    item.addEventListener("click", () => {
+      selectedContact.value = item.getAttribute("data-user");
+    });
+  });
+
+  // Datum anzeigen
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("input-container-date").value = "YY";
+  document.getElementById("input-container-date").min = today;
+
+  const categoryContainer = document.querySelector(".category-input");
+  const categoryDropdown = document.getElementById("category-dropdown");
+  const categoryInput = document.getElementById("category");
+
+  categoryContainer.addEventListener("click", () => {
+    categoryDropdown.style.display = categoryDropdown.style.display === "block" ? "none" : "block";
+  });
+
+  categoryDropdown.querySelectorAll("li").forEach((item) => {
+    item.addEventListener("click", () => {
+      categoryInput.value = item.getAttribute("data-category");
+    });
+  });
+});
 async function renderTaskTemplate() {
   const taskSectionRef = document.querySelector(".content");
   taskSectionRef.innerHTML = /*html*/ `
@@ -39,8 +75,8 @@ async function getAddTaskTemplate() {
                          <input type="text" name="assigned" class="assigned-container" id="selected-contact" placeholder="Select contacts to assign" readonly />
                          <span id="dropdown-icon">${returnIcon("arrow-dropdown")}</span>
                           <div class="dropdown" id="user-dropdown">
-                              <ul>
-                                  
+                              <ul id="user-list" data-user="user">
+                                 
                               </ul>
                           </div>
                         </div>
@@ -109,15 +145,10 @@ async function getAddTaskTemplate() {
   const userListRef = document.querySelector("#user-list");
 
   dropdownIcon.addEventListener("click", async () => {
-    const users = await getContact();
-    console.log(users);
-
-    userListRef.innerHTML = "";
-
     users.forEach((user) => {
+      console.log(user);
       const li = document.createElement("li");
-      li.textContent = user.name;
-      li.user = user.name;
+      li.textContent = user.fullName;
       userListRef.appendChild(li);
     });
 
@@ -240,8 +271,8 @@ function validateAddTask(title, dueDate) {
 
   const dateRequest = document.getElementById("date-requested");
   const inputDateRequest = document.getElementById("input-container-date");
-  let dateValidation = /^\d{2}\/\d{2}\/\d{4}$/;
-  if (!dateValidation.test(dueDate) || dueDate.length < 10 || dueDate.length > 10) {
+  let dateValidation = /^\d{2}\.\d{2}\.\d{4}$/;
+  if (!dateValidation.test(dueDate)) {
     dateRequest.style.display = "block";
     dateRequest.style.color = "red";
     inputDateRequest.style.borderColor = "red";
@@ -251,38 +282,3 @@ function validateAddTask(title, dueDate) {
     inputDateRequest.style.borderColor = "#d1d1d1";
   }
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  const assignedContainer = document.querySelector(".assigned");
-  const userDropdown = document.getElementById("user-dropdown");
-  const selectedContact = document.getElementById("selected-contact");
-
-  assignedContainer.addEventListener("click", () => {
-    userDropdown.style.display = userDropdown.style.display === "block" ? "none" : "block";
-  });
-
-  userDropdown.querySelectorAll("li").forEach((item) => {
-    item.addEventListener("click", () => {
-      selectedContact.value = item.getAttribute("data-user");
-    });
-  });
-  const today = new Date().toISOString().split("T")[0];
-  document.getElementById("input-container-date").value = "YY";
-  document.getElementById("input-container-date").min = today;
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const categoryContainer = document.querySelector(".category-input");
-  const categoryDropdown = document.getElementById("category-dropdown");
-  const categoryInput = document.getElementById("category");
-
-  categoryContainer.addEventListener("click", () => {
-    categoryDropdown.style.display = categoryDropdown.style.display === "block" ? "none" : "block";
-  });
-
-  categoryDropdown.querySelectorAll("li").forEach((item) => {
-    item.addEventListener("click", () => {
-      categoryInput.value = item.getAttribute("data-category");
-    });
-  });
-});

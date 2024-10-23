@@ -20,7 +20,7 @@ function getFirebaseDatabase() {
 }
 
 //TODO: Refactor to Async/Await
-export function getContacts() {
+export async function getContacts() {
   const contactsRef = ref(getFirebaseDatabase(), "contacts");
 
   return get(contactsRef).then((snapshot) => {
