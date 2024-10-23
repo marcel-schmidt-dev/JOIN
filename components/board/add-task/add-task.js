@@ -55,7 +55,6 @@ async function getAddTaskTemplate() {
                         </h2>
                         <div class="date">
                         <input type="date" id="input-container-date" name="Date" value=""  class="date-container"/>
-                         
                         </div>
                         <div class="request-container">
                             <p id="date-requested">Dieses Feld muss ausgefüllt sein</p>
@@ -89,14 +88,10 @@ async function getAddTaskTemplate() {
                             <input type="text" name="subtasks" class="subtasks-container" id="subtasks" placeholder="Add new subtask"/>
                             ${returnIcon("plus")}
                           </div>
-                          <div class="subtasks-overview" >
-                            <div id="subtasks-overview">
-                              <p id="subtasks-text"></p>
-                              <div class="subtasks-icons">${returnIcon("pen")} ${returnIcon("trash-outline")}</div>
-                            </div>
+                          <div class="subtasks-overview" id="subtasks-overview">
                         </div>
-                     </div>
                     </div>
+                  </div>
             </div>
             <div class="container-bottom">
              <div class="span-content">
@@ -158,13 +153,25 @@ async function getAddTaskTemplate() {
   addButton.addEventListener("click", () => {
     const subtaskText = subtasksInput.value.trim();
 
-    const newSubtask = document.getElementById("subtasks-text");
-    newSubtask.textContent = subtaskText;
+    if (subtaskText !== "") {
+      const subtaskContainer = document.createElement("div");
+      subtaskContainer.classList.add("subtasks-flex");
+      subtaskContainer.style.display = "flex";
 
-    subtasksOverview.style.display = "flex";
-    subtasksOverview.appendChild(newSubtask);
+      const newSubtask = document.createElement("p");
+      newSubtask.textContent = subtaskText;
 
-    subtasksInput.value = "";
+      const subtaskIcons = document.createElement("div");
+      subtaskIcons.classList.add("subtasks-icons");
+      subtaskIcons.innerHTML = `${returnIcon("check")} ${returnIcon("trash-outline")}`;
+
+      subtaskContainer.appendChild(newSubtask);
+      subtaskContainer.appendChild(subtaskIcons);
+
+      subtasksOverview.appendChild(subtaskContainer);
+
+      subtasksInput.value = "";
+    }
   });
 }
 
