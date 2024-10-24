@@ -383,6 +383,13 @@
           font-weight: 400;
         }
 
+        .edit-subtask {
+          &:focus {
+            outline: none;
+            border: none;
+          }
+        }
+
         .subtasks-input {
           display: flex;
           justify-content: space-between;
@@ -391,12 +398,11 @@
           border-radius: 10px;
           background-color: white;
           padding: 12px 21px 12px 21px;
-
-          cursor: pointer;
           height: 48px;
 
           .subtasks-container {
             border: none;
+            cursor: pointer;
 
             &:focus {
               outline: none;
