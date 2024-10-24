@@ -197,9 +197,9 @@ async function getAddTaskTemplate() {
       const subtaskIcons = document.createElement("div");
       subtaskIcons.classList.add("subtasks-icons");
 
-      const checkIcon = document.createElement("span");
-      checkIcon.innerHTML = returnIcon("check");
-      checkIcon.addEventListener("click", () => {
+      const penIcon = document.createElement("span");
+      penIcon.innerHTML = returnIcon("pen-outline");
+      penIcon.addEventListener("click", () => {
         newSubtask.style.textDecoration = "line-through";
       });
 
@@ -209,7 +209,7 @@ async function getAddTaskTemplate() {
         subtasksOverview.removeChild(subtaskContainer);
       });
 
-      subtaskIcons.appendChild(checkIcon);
+      subtaskIcons.appendChild(penIcon);
       subtaskIcons.appendChild(trashIcon);
 
       subtaskContainer.appendChild(newSubtask);
