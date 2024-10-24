@@ -1,7 +1,7 @@
 import returnIcon from "../../icons.js";
 import { addTask } from "../../firebase.js";
 import { getContacts } from "../../firebase.js";
-
+import { getInitialsFromName } from "../../utility-functions.js";
 let users;
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -77,7 +77,8 @@ async function getAddTaskTemplate() {
                          <span id="dropdown-icon">${returnIcon("arrow-dropdown")}</span>
                           <div class="dropdown" id="user-dropdown">
                               <ul id="user-list" data-user="user">
-                                 
+                              
+                        
                               </ul>
                           </div>
                         </div>
@@ -146,10 +147,16 @@ async function getAddTaskTemplate() {
   const userListRef = document.querySelector("#user-list");
 
   dropdownIcon.addEventListener("click", async () => {
+    userListRef.innerHTML = ""; 
     users.forEach((user) => {
       console.log(user);
       const li = document.createElement("li");
-      li.textContent = user.fullName;
+      li.innerHTML = `
+      <label>
+        <input type="checkbox" data-user="${user.fullName}">
+       <div style="background-color: #${user.userColor}" >  ${getInitialsFromName(user.fullName)}</div> - ${user.fullName} 
+      </label>
+    `;
       userListRef.appendChild(li);
     });
 
