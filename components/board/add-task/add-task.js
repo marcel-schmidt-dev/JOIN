@@ -147,7 +147,7 @@ async function getAddTaskTemplate() {
   const userListRef = document.querySelector("#user-list");
 
   dropdownIcon.addEventListener("click", async () => {
-    userListRef.innerHTML = ""; 
+    userListRef.innerHTML = "";
     users.forEach((user) => {
       console.log(user);
       const li = document.createElement("li");
@@ -196,6 +196,7 @@ async function getAddTaskTemplate() {
     if (subtaskText !== "") {
       const subtaskContainer = document.createElement("div");
       subtaskContainer.classList.add("subtasks-flex");
+      subtaskContainer.id = "subtasks-flex";
       subtaskContainer.style.display = "flex";
 
       const newSubtask = document.createElement("p");
@@ -207,7 +208,25 @@ async function getAddTaskTemplate() {
       const penIcon = document.createElement("span");
       penIcon.innerHTML = returnIcon("pen-outline");
       penIcon.addEventListener("click", () => {
-        newSubtask.style.textDecoration = "line-through";
+        const inputField = document.createElement("input");
+        inputField.type = "text";
+        inputField.value = newSubtask.textContent;
+        inputField.classList.add("edit-subtask");
+
+        newSubtask.textContent = "";
+        newSubtask.appendChild(inputField);
+
+        inputField.focus();
+
+        inputField.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            newSubtask.textContent = inputField.value;
+          }
+        });
+
+        inputField.addEventListener("blur", () => {
+          newSubtask.textContent = inputField.value;
+        });
       });
 
       const trashIcon = document.createElement("span");
@@ -259,6 +278,9 @@ function clearAddTaskForm() {
   document.getElementById("selected-contact").value = "";
   document.getElementById("subtasks").value = "";
   document.getElementById("category").value = "";
+  document.querySelector(".subtasks-flex").innerHTML = "";
+  const subtasksClearRef = document.getElementById("subtasks-flex");
+  subtasksClearRef.style.display = "none";
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => button.classList.remove("active"));
