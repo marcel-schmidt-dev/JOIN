@@ -4,14 +4,13 @@ import returnSidebar from "./components/sidebar/sidebar.js";
 document.addEventListener('DOMContentLoaded', function () {
     const urlPath = window.location.pathname;
 
-    if (urlPath !== '/' && urlPath !== '/index.html') {
-        document.body.innerHTML += /*html*/`
+
+    document.body.innerHTML += /*html*/`
         <div class="app">
-            ${returnSidebar()}
+            ${urlPath !== '/' && urlPath !== '/index.html' ? returnSidebar() : ''}
             <div class="content-container">
-                ${returnHeader()}
-                <div class="content"></div>
+            ${urlPath !== '/' && urlPath !== '/index.html' ? returnHeader() : ''}
+                <div class="content ${!urlPath !== '/' && !urlPath !== '/index.html' ? 'home-content' : ''}"></div>
             </div>
-        </div>`
-    }
+        </div>`;
 });
