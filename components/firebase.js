@@ -1,27 +1,30 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getDatabase, ref, get, push, remove, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 import { returnRandomUserColor, returnRandomContact } from "./utility-functions.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
-function getFirebaseDatabase() {
+function getFirebase() {
   const firebaseConfig = {
     apiKey: "AIzaSyBDHRtmOAgzYOtLRS0haC7KvV_AQO-HodA",
     authDomain: "join-d177e.firebaseapp.com",
+    databaseURL: "https://join-d177e-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "join-d177e",
     storageBucket: "join-d177e.appspot.com",
     messagingSenderId: "224091284746",
-    appId: "1:224091284746:web:22cd033dcc6f13c23146f3",
-    databaseURL: "https://join-d177e-default-rtdb.europe-west1.firebasedatabase.app",
+    appId: "1:224091284746:web:22cd033dcc6f13c23146f3"
   };
 
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
+  const auth = getAuth(app);
 
-  return database;
+  return { database, auth };
 }
 
 //TODO: Refactor to Async/Await
 export async function getContacts() {
-  const contactsRef = ref(getFirebaseDatabase(), "contacts");
+  const { database } = getFirebase();
+  const contactsRef = ref(database, "contacts");
 
   return get(contactsRef).then((snapshot) => {
     const contacts = [];
@@ -44,7 +47,8 @@ export async function getContacts() {
 }
 
 export async function getContact(id) {
-  const contactsRef = ref(getFirebaseDatabase(), `contacts/${id}`);
+  const { database } = getFirebase();
+  const contactsRef = ref(database, `contacts/${id}`);
   const snapshot = await get(contactsRef);
   const contact = snapshot.val();
 
@@ -60,19 +64,21 @@ export function addContact(fullName, email, phone) {
     userColor: returnRandomUserColor(),
   };
 
-  const contactsRef = ref(getFirebaseDatabase(), "contacts");
+  const { database } = getFirebase();
+  const contactsRef = ref(database, "contacts");
 
   push(contactsRef, userObject);
 }
 
 export function deleteContact(id) {
-  const contactsRef = ref(getFirebaseDatabase(), `contacts/${id}`);
+  const { database } = getFirebase();
+  const contactsRef = ref(database, `contacts/${id}`);
   remove(contactsRef);
 }
 
 export function editContact(id, name, email, phone, userColor) {
-  const db = getDatabase();
-  set(ref(db, `contacts/${id}`), {
+  const { database } = getDatabase();
+  set(ref(database, `contacts/${id}`), {
     fullName: name,
     email: email,
     phone: phone,
@@ -82,10 +88,10 @@ export function editContact(id, name, email, phone, userColor) {
 
 export async function returnBoard(slot) {
   //await createRandomTasks();
-  const db = getFirebaseDatabase();
+  const { database } = getFirebase();
 
   try {
-    const snapshot = await get(ref(db, "board/"));
+    const snapshot = await get(ref(database, "board/"));
     const board = snapshot.val();
 
     if (snapshot) {
@@ -107,8 +113,8 @@ export async function returnBoard(slot) {
 }
 
 export async function returnTaskById(id) {
-  const db = getFirebaseDatabase();
-  const boardRef = ref(db, `board/`);
+  const { database } = getFirebase();
+  const boardRef = ref(database, `board/`);
 
   const boardSnapshot = await get(boardRef);
   const board = boardSnapshot.val();
@@ -123,8 +129,8 @@ export async function returnTaskById(id) {
 }
 
 export async function returnSubTasks(id, slot) {
-  const db = getFirebaseDatabase();
-  const taskRef = ref(db, `board/${slot}/${id}/subTasks`);
+  const { database } = getFirebase();
+  const taskRef = ref(database, `board/${slot}/${id}/subTasks`);
   const snapshot = await get(taskRef);
   const subTaskArray = [];
 
@@ -138,8 +144,8 @@ export async function returnSubTasks(id, slot) {
 }
 
 export function addTask(slot, title, description, type, priority, dueDate, subTasks, assignee) {
-  const db = getFirebaseDatabase();
-  const taskRef = ref(db, `board/${slot}`);
+  const { database } = getFirebase();
+  const taskRef = ref(database, `board/${slot}`);
   push(taskRef, {
     title: title,
     description: description,
@@ -165,14 +171,14 @@ function returnSubtaskArray(subTasks) {
 }
 
 export function deleteTask(slot, id) {
-  const db = getFirebaseDatabase();
-  const taskRef = ref(db, `board/${slot}/${id}`);
+  const { database } = getFirebase();
+  const taskRef = ref(database, `board/${slot}/${id}`);
   remove(taskRef);
 }
 
 export function editTask(slot, id, title, description, type, priority, dueDate, subTasks, assignee) {
-  const db = getFirebaseDatabase();
-  const taskRef = ref(db, `board/${slot}/${id}`);
+  const { database } = getFirebase();
+  const taskRef = ref(database, `board/${slot}/${id}`);
   set(taskRef, {
     title: title,
     description: description,
@@ -188,12 +194,12 @@ export async function moveTaskToSlot(newSlot, id) {
   try {
     newSlot = newSlot.replace("-tasks", "");
 
-    const db = getFirebaseDatabase();
+    const { database } = getFirebase();
     let taskRef = null;
     let taskData = null;
     let currentSlot = null;
 
-    const boardRef = ref(db, "board/");
+    const boardRef = ref(database, "board/");
     const boardSnapshot = await get(boardRef);
 
     const board = boardSnapshot.val();
@@ -201,7 +207,7 @@ export async function moveTaskToSlot(newSlot, id) {
     for (const slot in board) {
       if (board[slot] && board[slot][id]) {
         currentSlot = slot;
-        taskRef = ref(db, `board/${slot}/${id}`);
+        taskRef = ref(database, `board/${slot}/${id}`);
         const taskSnapshot = await get(taskRef);
         if (taskSnapshot.exists()) {
           taskData = taskSnapshot.val();
@@ -214,7 +220,7 @@ export async function moveTaskToSlot(newSlot, id) {
       return;
     }
 
-    const newTaskRef = ref(db, `board/${newSlot}/${id}`);
+    const newTaskRef = ref(database, `board/${newSlot}/${id}`);
     await set(newTaskRef, taskData);
 
     await remove(taskRef);
@@ -225,8 +231,8 @@ export async function moveTaskToSlot(newSlot, id) {
 }
 
 export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked, title) {
-  const db = getFirebaseDatabase();
-  const subTaskRef = ref(db, `board/${slot}/${taskId}/subTasks/${subTaskId}`);
+  const { database } = getFirebase();
+  const subTaskRef = ref(database, `board/${slot}/${taskId}/subTasks/${subTaskId}`);
 
   try {
     await set(subTaskRef, { checked: isChecked, title: title });
@@ -238,8 +244,8 @@ export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked, ti
 
 // Copyright by ChatGPT for creating dummy data in Database faster
 async function createRandomTasks() {
-  const db = getFirebaseDatabase();
-  const contactsRef = ref(db, "contacts/");
+  const { database } = getFirebase();
+  const contactsRef = ref(database, "contacts/");
 
   const exampleTitles = ["Implement new feature", "Fix bug in application", "Write documentation", "Design UI for new project", "Conduct code review"];
 
@@ -296,3 +302,61 @@ async function createRandomTasks() {
     console.error("error creating tasks: ", error);
   }
 }
+
+export function checkAuthStatus(callback) {
+  const { auth } = getFirebase();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
+}
+
+export async function signIn(email, password) {
+  const { auth } = getFirebase();
+
+  if (!email || !password) return false;
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (error) {
+    return false;
+  }
+};
+
+export async function signOutUser() {
+  const { auth } = getFirebase();
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Error signing out:", error);
+    throw error;
+  }
+};
+
+export async function signInAnonymouslyUser() {
+  const { auth } = getFirebase();
+  try {
+    const userCredential = await signInAnonymously(auth);
+    return userCredential.user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export async function signUp(fullName, email, password) {
+  const { auth } = getFirebase();
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    await updateProfile(user, {
+      fullName: fullName
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
