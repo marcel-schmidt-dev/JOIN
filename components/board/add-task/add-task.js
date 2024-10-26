@@ -151,59 +151,50 @@ async function getAddTaskTemplate() {
   let selectedContactsArray = [];
 
   dropdownIcon.addEventListener("click", async () => {
-    
     if (dropdownMenu.style.display === "block") {
       dropdownMenu.style.display = "none";
-      return; 
+      return;
     }
-  
-    
+
     dropdownMenu.style.display = "block";
-    userListRef.innerHTML = ""; 
-  
+    userListRef.innerHTML = "";
+
     users.forEach((user) => {
       const li = document.createElement("li");
       li.innerHTML = `
         <label class="label">
          
-          <div class="inials-bg" style="background-color: #${user.userColor}">${getInitialsFromName(user.fullName)}</div>  ${user.fullName}
+          <div class="initials-bg" style="background-color: #${user.userColor}">${getInitialsFromName(user.fullName)}</div>  ${user.fullName}
            <input type="checkbox" data-user="${user.fullName}">
         </label>
       `;
       userListRef.appendChild(li);
-  
-      
+
       const checkbox = li.querySelector("input[type='checkbox']");
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
-          
           selectedContactsArray.push({
             name: user.fullName,
             initials: getInitialsFromName(user.fullName),
             color: user.userColor,
           });
         } else {
-         
-          selectedContactsArray = selectedContactsArray.filter(
-            (contact) => contact.name !== user.fullName
-          );
+          selectedContactsArray = selectedContactsArray.filter((contact) => contact.name !== user.fullName);
         }
-        
-        console.log(selectedContactsArray); 
-        updateSelectedContactsDisplay(); 
+
+        console.log(selectedContactsArray);
+        updateSelectedContactsDisplay();
       });
     });
   });
-  
- 
+
   function updateSelectedContactsDisplay() {
     const selectedContactsContainer = document.getElementById("selected-contacts-display");
     selectedContactsContainer.innerHTML = selectedContactsArray
-      .map((contact) => `<span  class="inials-bg"style="background-color: #${contact.color}; ">${contact.initials}</span>`)
+      .map((contact) => `<span  class="initials-bg"style="background-color: #${contact.color}; ">${contact.initials}</span>`)
       .join(" ");
   }
-  
-  
+
   document.addEventListener("click", (event) => {
     if (!dropdownIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
       dropdownMenu.style.display = "none";
@@ -289,7 +280,7 @@ async function getAddTaskTemplate() {
       subtasksInput.value = "";
     }
   });
-};
+}
 
 async function handleAddTask() {
   const title = document.getElementById("input-container-title").value;
@@ -358,4 +349,4 @@ function validateAddTask(title, dueDate) {
   }
 
   return true;
-};
+}
