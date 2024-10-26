@@ -105,6 +105,11 @@
             list-style-type: none;
             padding: 0;
             margin: 0;
+            position: absolute;
+            border: 1px solid black;
+            background-color: white;
+            max-width: 333px;
+            width: 100%;
           }
 
           .dropdown li {
