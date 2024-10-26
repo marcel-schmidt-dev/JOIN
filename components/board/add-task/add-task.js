@@ -82,6 +82,9 @@ async function getAddTaskTemplate() {
                               </ul>
                           </div>
                         </div>
+                        <div id="selected-contacts-display" class="initials-display">
+ 
+</div>
                     </div>
                 </div>
                 <div class="separator"></div>
@@ -145,24 +148,64 @@ async function getAddTaskTemplate() {
   const dropdownIcon = document.querySelector("#dropdown-icon");
   const dropdownMenu = document.querySelector("#user-dropdown");
   const userListRef = document.querySelector("#user-list");
+  let selectedContactsArray = [];
 
   dropdownIcon.addEventListener("click", async () => {
-    userListRef.innerHTML = "";
+    
+    if (dropdownMenu.style.display === "block") {
+      dropdownMenu.style.display = "none";
+      return; 
+    }
+  
+    
+    dropdownMenu.style.display = "block";
+    userListRef.innerHTML = ""; 
+  
     users.forEach((user) => {
-      console.log(user);
       const li = document.createElement("li");
       li.innerHTML = `
-      <label>
-        <input type="checkbox" data-user="${user.fullName}">
-       <div style="background-color: #${user.userColor}" >  ${getInitialsFromName(user.fullName)}</div> - ${user.fullName} 
-      </label>
-    `;
+        <label class="label">
+         
+          <div class="inials-bg" style="background-color: #${user.userColor}">${getInitialsFromName(user.fullName)}</div>  ${user.fullName}
+           <input type="checkbox" data-user="${user.fullName}">
+        </label>
+      `;
       userListRef.appendChild(li);
+  
+      
+      const checkbox = li.querySelector("input[type='checkbox']");
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+          
+          selectedContactsArray.push({
+            name: user.fullName,
+            initials: getInitialsFromName(user.fullName),
+            color: user.userColor,
+          });
+        } else {
+         
+          selectedContactsArray = selectedContactsArray.filter(
+            (contact) => contact.name !== user.fullName
+          );
+        }
+        
+        console.log(selectedContactsArray); 
+        updateSelectedContactsDisplay(); 
+      });
     });
-
-    if (dropdownMenu.style.display === "none") {
-      dropdownMenu.style.display = "block";
-    } else {
+  });
+  
+ 
+  function updateSelectedContactsDisplay() {
+    const selectedContactsContainer = document.getElementById("selected-contacts-display");
+    selectedContactsContainer.innerHTML = selectedContactsArray
+      .map((contact) => `<span  class="inials-bg"style="background-color: #${contact.color}; ">${contact.initials}</span>`)
+      .join(" ");
+  }
+  
+  
+  document.addEventListener("click", (event) => {
+    if (!dropdownIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
       dropdownMenu.style.display = "none";
     }
   });
@@ -246,7 +289,7 @@ async function getAddTaskTemplate() {
       subtasksInput.value = "";
     }
   });
-}
+};
 
 async function handleAddTask() {
   const title = document.getElementById("input-container-title").value;
@@ -315,4 +358,4 @@ function validateAddTask(title, dueDate) {
   }
 
   return true;
-}
+};

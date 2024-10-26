@@ -652,6 +652,36 @@
     }
   }
 }
+.inials-bg{
+  width: 32px;
+  height: 32px;
+ display: flex;
+ 
+ justify-content: center;
+ align-items: center;
+
+  
+  color: #fff;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  font-size: 12px;
+  line-height: 100%
+  
+
+  
+}
+.initials-display{
+  display: flex;
+  gap: 8px;
+}
+.label{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+  
+
 @media (max-width: 360px) {
   .task-content {
     .container-bottom {
