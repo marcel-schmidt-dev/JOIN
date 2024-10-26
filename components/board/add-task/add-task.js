@@ -221,13 +221,16 @@ async function getAddTaskTemplate() {
   const subtasksOverview = document.getElementById("subtasks-overview");
   const addButton = subtasksInput.nextElementSibling;
 
+  let subtasksArray = [];
+
   addButton.addEventListener("click", () => {
     const subtaskText = subtasksInput.value.trim();
-    let subtasksArray = [];
-
-    subtasksArray.push("subtask-text");
 
     if (subtaskText !== "") {
+      const subtasksObject = { title: subtaskText, checked: false };
+      subtasksArray.push(subtasksObject);
+      console.log(subtasksArray);
+
       const subtaskContainer = document.createElement("div");
       subtaskContainer.classList.add("subtasks-flex");
       subtaskContainer.id = "subtasks-flex";
@@ -255,6 +258,8 @@ async function getAddTaskTemplate() {
         inputField.addEventListener("keypress", (e) => {
           if (e.key === "Enter") {
             newSubtask.textContent = inputField.value;
+            subtasksObject.title = inputField.value;
+            console.log(subtasksArray);
           }
         });
 
@@ -266,6 +271,11 @@ async function getAddTaskTemplate() {
       const trashIcon = document.createElement("span");
       trashIcon.innerHTML = returnIcon("trash-outline");
       trashIcon.addEventListener("click", () => {
+        const index = subtasksArray.indexOf(subtasksObject);
+        if (index !== -1) {
+          subtasksArray.splice(index, 1);
+          console.log(subtasksArray);
+        }
         subtasksOverview.removeChild(subtaskContainer);
       });
 
