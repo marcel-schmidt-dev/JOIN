@@ -2,20 +2,20 @@ import returnContactListTemplate from "./contact-list/contact-list.js";
 import { getContacts } from "../firebase.js";
 import getContactDetailsTemplate from "./contact-details/contact-details.js";
 import getContactOverlayTemplate from "./contact-overlay/contact-overlay.js";
-import { checkAuthStatus } from "../firebase.js";
+import { getAuthUser } from "../firebase.js";
 window.showContactDetails = showContactDetails;
 
 let contactList;
 
-document.addEventListener("DOMContentLoaded", async () => {
-  checkAuthStatus(async (isAuthenticated) => {
-    if (!isAuthenticated) {
-      window.location.href = '/';
-    } else {
-      await renderContacts();
-      renderContactHeader();
-    }
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  const user = getAuthUser();
+
+  if (!user) {
+    window.location.href = "/index.html";
+  } else {
+    renderContactHeader();
+    renderContacts();
+  }
 });
 
 export function showContactDetails(id) {
@@ -53,7 +53,10 @@ export function handleContactOverlayTemplate(id = false) {
 }
 
 export async function renderContacts() {
-  const contentRef = document.querySelector(".content");
+  let contentRef;
+  while ((contentRef = document.querySelector(".content")) === null) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 
   contentRef.innerHTML = "";
   contactList = await getContacts();
@@ -61,8 +64,11 @@ export async function renderContacts() {
   contentRef.innerHTML += returnContactListTemplate(contactList);
 }
 
-function renderContactHeader() {
-  const contentRef = document.querySelector(".content");
+async function renderContactHeader() {
+  let contentRef;
+  while ((contentRef = document.querySelector(".content")) === null) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 
   contentRef.innerHTML += /*html*/`
       <div class="contact-details-container">
