@@ -175,6 +175,7 @@ async function getAddTaskTemplate() {
             name: user.fullName,
             initials: getInitialsFromName(user.fullName),
             color: user.userColor,
+            id: user.id,
           });
         } else {
           selectedContactsArray = selectedContactsArray.filter((contact) => contact.name !== user.fullName);
