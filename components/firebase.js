@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getDatabase, ref, get, push, remove, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 import { returnRandomUserColor, returnRandomContact } from "./utility-functions.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, createUserWithEmailAndPassword, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
 function getFirebase() {
   const firebaseConfig = {
@@ -304,17 +304,6 @@ async function createRandomTasks() {
 }
 
 // TODO: FIX AUTHENTICATION
-export function checkAuthStatus() {
-  const { auth } = getFirebase();
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      return user;
-    } else {
-      return null;
-    }
-  });
-}
 
 export async function getAuthUser() {
   const { auth } = getFirebase();
@@ -360,6 +349,8 @@ export async function signInAnonymouslyUser() {
   const { auth } = getFirebase();
   try {
     const userCredential = await signInAnonymously(auth);
+    userCredential.user.displayName = "Guest";
+
     return userCredential.user;
   } catch (error) {
     throw error;
