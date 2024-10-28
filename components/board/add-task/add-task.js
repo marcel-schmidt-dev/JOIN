@@ -2,6 +2,7 @@ import returnIcon from "../../icons.js";
 import { addTask } from "../../firebase.js";
 import { getContacts } from "../../firebase.js";
 import { getInitialsFromName } from "../../utility-functions.js";
+
 let users;
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -66,26 +67,23 @@ async function getAddTaskTemplate() {
                             <p id="title-requested" >Dieses Feld muss ausgefüllt werden</p>
                         </div>
                     </div>
-                    <div class="description-input">
+                      <div class="description-input">
                         <h2>Description</h2>
                         <textarea type="text" name="description" class="description-container" placeholder="Enter a description" rows="5"></textarea>
-                    </div>
-                    <div class="assigned-input">
+                      </div>
+                      <div class="assigned-input">
                         <h2>Assigned to</h2>
                         <div class="assigned">
                          <input type="text" name="assigned" class="assigned-container" id="selected-contact" placeholder="Select contacts to assign" readonly />
                          <span id="dropdown-icon">${returnIcon("arrow-dropdown")}</span>
-                          <div class="dropdown" id="user-dropdown">
+                           <div class="dropdown" id="user-dropdown">
                               <ul id="user-list" data-user="user">
-                              
-                        
                               </ul>
-                          </div>
+                           </div>
                         </div>
                         <div id="selected-contacts-display" class="initials-display">
- 
-</div>
                     </div>
+                </div>
                 </div>
                 <div class="separator"></div>
                 <div class="input-right">
@@ -190,9 +188,24 @@ async function getAddTaskTemplate() {
 
   function updateSelectedContactsDisplay() {
     const selectedContactsContainer = document.getElementById("selected-contacts-display");
-    selectedContactsContainer.innerHTML = selectedContactsArray
-      .map((contact) => `<span  class="initials-bg"style="background-color: #${contact.color}; ">${contact.initials}</span>`)
-      .join(" ");
+    selectedContactsContainer.innerHTML = "";
+
+    const displayContacts = selectedContactsArray.slice(0, 3);
+    const additionalCount = selectedContactsArray.length - displayContacts.length;
+
+    displayContacts.forEach((contact) => {
+      selectedContactsContainer.innerHTML += `
+      <span class="initials-bg" style="background-color: #${contact.color};">${contact.initials}</span>
+    `;
+    });
+
+    if (additionalCount > 0) {
+      selectedContactsContainer.innerHTML += `
+      <span class="additional-users">
+        +${additionalCount}
+      </span>
+    `;
+    }
   }
 
   document.addEventListener("click", (event) => {
