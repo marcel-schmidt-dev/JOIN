@@ -85,9 +85,12 @@ window.updatePlaceholder = function () {
 };
 
 async function renderBoardTemplate() {
-  const contactSectionRef = document.querySelector(".content");
+  let contentRef;
+  while ((contentRef = document.querySelector(".content")) === null) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 
-  contactSectionRef.innerHTML = /*html*/ `
+  contentRef.innerHTML = /*html*/ `
         <div class="board-container">
             <div class="board-heading">
             <div>
