@@ -130,7 +130,7 @@ async function handleLogin(e) {
 
     if (user) window.location.href = '/summary.html';
     else {
-        const formRef = document.querySelector('.login-form');
+        const formRef = document.querySelector('.form');
         formRef.classList.add('error');
     }
 }
@@ -152,16 +152,20 @@ async function handleRegister(e) {
     const confirmPassword = document.getElementById('confirm-password').value;
     const checkPrivacy = document.getElementById('check-privacy').checked;
     const errorRef = document.querySelector('.form .error-message');
+    const formRef = document.querySelector('.form');
     errorRef.innerText = '';
 
+    if (!name || !email || !password || !confirmPassword) {
+        errorRef.innerHTML += 'Please fill all the fields.<br>';
+        formRef.classList.add('error');
+    }
+
     if (password !== confirmPassword) {
-        const formRef = document.querySelector('.form');
-        errorRef.innerText += 'Passwords do not match. Please try again.';
+        errorRef.innerHTML += 'Passwords do not match.<br>';
         formRef.classList.add('error');
     }
     if (!checkPrivacy) {
-        const formRef = document.querySelector('.form');
-        formRef.innerText += 'Please accept the privacy policy.';
+        errorRef.innerHTML += 'Please accept the privacy policy.<br>';
         formRef.classList.add('error');
     }
     try {
