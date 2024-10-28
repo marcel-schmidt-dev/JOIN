@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getDatabase, ref, get, push, remove, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 import { returnRandomUserColor, returnRandomContact } from "./utility-functions.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
 function getFirebase() {
   const firebaseConfig = {
@@ -303,15 +303,31 @@ async function createRandomTasks() {
   }
 }
 
-export function checkAuthStatus(callback) {
+// TODO: FIX AUTHENTICATION
+export function checkAuthStatus() {
   const { auth } = getFirebase();
+
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      callback(true);
+      return user;
     } else {
-      callback(false);
+      return null;
     }
   });
+}
+
+export async function getAuthUser() {
+  const { auth } = getFirebase();
+  const user = await new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        resolve(user);
+      } else {
+        resolve(null);
+      }
+    }, reject);
+  });
+  return user;
 }
 
 export async function signIn(email, password) {
@@ -321,6 +337,8 @@ export async function signIn(email, password) {
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    console.log(userCredential.user);
+
     return userCredential.user;
   } catch (error) {
     return false;
@@ -331,6 +349,7 @@ export async function signOutUser() {
   const { auth } = getFirebase();
   try {
     await signOut(auth);
+    window.location.href = "/";
   } catch (error) {
     console.error("Error signing out:", error);
     throw error;
@@ -353,7 +372,7 @@ export async function signUp(fullName, email, password) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     await updateProfile(user, {
-      fullName: fullName
+      displayName: fullName
     });
     return user;
   } catch (error) {
