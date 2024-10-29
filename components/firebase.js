@@ -248,7 +248,6 @@ async function createRandomTasks() {
   const contactsRef = ref(database, "contacts/");
 
   const exampleTitles = ["Implement new feature", "Fix bug in application", "Write documentation", "Design UI for new project", "Conduct code review"];
-
   const exampleDescriptions = [
     "This task involves implementing a new feature for the application.",
     "This task is about fixing a bug that has been reported.",
@@ -256,52 +255,55 @@ async function createRandomTasks() {
     "Design the user interface for the new project based on the requirements.",
     "Review the code submitted by team members for quality assurance.",
   ];
-
   const examplePriorities = ["low", "medium", "urgent"];
   const exampleDueDates = ["2024-11-01", "2024-11-15", "2024-11-30", "2024-12-15", "2025-01-01"];
+  const exampleTypes = ["Technical Task", "User Story"];
 
   try {
     const contactsSnapshot = await get(contactsRef);
     const contacts = contactsSnapshot.val();
     const contactKeys = Object.keys(contacts);
 
-    for (let i = 0; i < 2; i++) {
-      const randomTitle = exampleTitles[Math.floor(Math.random() * exampleTitles.length)];
-      const randomDescription = exampleDescriptions[Math.floor(Math.random() * exampleDescriptions.length)];
-      const randomPriority = examplePriorities[Math.floor(Math.random() * examplePriorities.length)];
-      const randomDueDate = exampleDueDates[Math.floor(Math.random() * exampleDueDates.length)];
+    const boardSlots = ["inProgress", "done", "awaitFeedback", "todo"];
 
-      const randomAssignees = [];
-      for (let j = 0; j < 2; j++) {
-        const randomIndex = Math.floor(Math.random() * contactKeys.length);
-        randomAssignees.push(contactKeys[randomIndex]);
+    for (const slot of boardSlots) {
+      for (let i = 0; i < 2; i++) {
+        const randomTitle = exampleTitles[Math.floor(Math.random() * exampleTitles.length)];
+        const randomDescription = exampleDescriptions[Math.floor(Math.random() * exampleDescriptions.length)];
+        const randomPriority = examplePriorities[Math.floor(Math.random() * examplePriorities.length)];
+        const randomDueDate = exampleDueDates[Math.floor(Math.random() * exampleDueDates.length)];
+        const randomType = exampleTypes[Math.floor(Math.random() * exampleTypes.length)];
+
+        const randomAssignees = [];
+        for (let j = 0; j < 2; j++) {
+          const randomIndex = Math.floor(Math.random() * contactKeys.length);
+          randomAssignees.push(contactKeys[randomIndex]);
+        }
+
+        const newTask = {
+          title: randomTitle,
+          description: randomDescription,
+          position: i + 1,
+          type: randomType,
+          priority: randomPriority,
+          dueDate: randomDueDate,
+          subTasks: [
+            { title: "Initial setup", checked: false },
+            { title: "Create documentation", checked: false },
+          ],
+          assignee: randomAssignees,
+        };
+
+        await push(ref(database, `board/${slot}/`), newTask);
       }
-
-      const newTask = {
-        title: randomTitle,
-        description: randomDescription,
-        position: i + 1,
-        type: "Technical Task",
-        priority: randomPriority,
-        dueDate: randomDueDate,
-        subTasks: [
-          { title: "Initial setup", checked: false },
-          { title: "Create documentation", checked: false },
-        ],
-        assignee: randomAssignees,
-      };
-
-      await push(ref(db, "board/inProgress/"), newTask);
-      await push(ref(db, "board/done/"), newTask);
-      await push(ref(db, "board/awaitFeedback/"), newTask);
-      await push(ref(db, "board/todo/"), newTask);
     }
 
-    console.log("random tasks created");
+    console.log("Random tasks created in each slot");
   } catch (error) {
-    console.error("error creating tasks: ", error);
+    console.error("Error creating tasks: ", error);
   }
 }
+
 
 // TODO: FIX AUTHENTICATION
 
