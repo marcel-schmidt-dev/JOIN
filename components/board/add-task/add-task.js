@@ -113,7 +113,7 @@ async function getAddTaskTemplate() {
                          ${returnIcon("arrow-dropdown")}
                           <div class="dropdown" id="category-dropdown">
                             <ul>
-                                <li  data-category="Technical task">Technical task</li>
+                                <li  data-category="Technical task">Technical Task</li>
                                 <li  data-category="Userstory">Userstory</li>
                             </ul>
                          </div>
@@ -235,16 +235,10 @@ async function getAddTaskTemplate() {
   const subtasksOverview = document.getElementById("subtasks-overview");
   const addButton = subtasksInput.nextElementSibling;
 
-  let subtasksArray = [];
-
   addButton.addEventListener("click", () => {
     const subtaskText = subtasksInput.value.trim();
 
     if (subtaskText !== "") {
-      const subtasksObject = { title: subtaskText, checked: false };
-      subtasksArray.push(subtasksObject);
-      console.log(subtasksArray);
-
       const subtaskContainer = document.createElement("div");
       subtaskContainer.classList.add("subtasks-flex");
       subtaskContainer.id = "subtasks-flex";
@@ -284,13 +278,14 @@ async function getAddTaskTemplate() {
 
       const trashIcon = document.createElement("span");
       trashIcon.innerHTML = returnIcon("trash-outline");
-      trashIcon.addEventListener("click", () => {
-        const index = subtasksArray.indexOf(subtasksObject);
-        if (index !== -1) {
-          subtasksArray.splice(index, 1);
-          console.log(subtasksArray);
+      trashIcon.addEventListener("click", (event) => {
+        let subtaskElement = event.target;
+
+        while (subtaskElement.classList.contains("subtasks-flex") === false) {
+          subtaskElement = subtaskElement.parentElement;
         }
-        subtasksOverview.removeChild(subtaskContainer);
+
+        subtaskElement.remove();
       });
 
       subtaskIcons.appendChild(penIcon);
@@ -311,14 +306,21 @@ async function handleAddTask() {
   const description = document.querySelector(".description-container").value;
   const dueDate = document.getElementById("input-container-date").value;
   const assignee = document.getElementById("selected-contact").value;
-  const subTasks = document.getElementById("subtasks").value;
+  let subTasks = [];
+
+  const subTasksRefs = document.querySelectorAll(".subtasks-flex p");
+
+  subTasksRefs.forEach((subtask) => {
+    subTasks.push(subtask.textContent);
+  });
+
   const priority = document.querySelector(".priority-buttons .button-urgent.active")
     ? "urgent"
     : document.querySelector(".priority-buttons .button-medium.active")
     ? "medium"
     : "low";
-  const type = "type";
-  const slot = "slot";
+  const type = document.getElementById("category").value;
+  const slot = undefined;
 
   if (!validateAddTask(title, dueDate)) {
     console.error(" validierung fehlgeschlagen");
@@ -333,12 +335,11 @@ function clearAddTaskForm() {
   document.getElementById("input-container-title").value = "";
   document.querySelector(".description-container").value = "";
   document.getElementById("input-container-date").value = "";
-  document.getElementById("selected-contact").value = "";
+  document.getElementById("selected-contacts-display").innerHTML = "";
   document.getElementById("subtasks").value = "";
   document.getElementById("category").value = "";
-  document.querySelector(".subtasks-flex").innerHTML = "";
-  const subtasksClearRef = document.getElementById("subtasks-flex");
-  subtasksClearRef.style.display = "none";
+  const subtasksClearRef = document.querySelector(".subtasks-overview");
+  subtasksClearRef.innerHTML = "";
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => button.classList.remove("active"));
