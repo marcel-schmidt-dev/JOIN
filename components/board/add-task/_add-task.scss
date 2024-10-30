@@ -105,6 +105,11 @@
             list-style-type: none;
             padding: 0;
             margin: 0;
+            position: absolute;
+            border: 1px solid black;
+            background-color: white;
+            max-width: 333px;
+            width: 100%;
           }
 
           .dropdown li {
@@ -383,6 +388,13 @@
           font-weight: 400;
         }
 
+        .edit-subtask {
+          &:focus {
+            outline: none;
+            border: none;
+          }
+        }
+
         .subtasks-input {
           display: flex;
           justify-content: space-between;
@@ -391,12 +403,11 @@
           border-radius: 10px;
           background-color: white;
           padding: 12px 21px 12px 21px;
-
-          cursor: pointer;
           height: 48px;
 
           .subtasks-container {
             border: none;
+            cursor: pointer;
 
             &:focus {
               outline: none;
@@ -406,6 +417,7 @@
           svg {
             width: 14px;
             height: 14px;
+            cursor: pointer;
           }
         }
         .subtasks-overview {
@@ -422,6 +434,9 @@
             border: 1px solid #d1d1d1;
             border-radius: 10px;
             background-color: white;
+            padding: 12px 21px 12px 21px;
+            align-items: center;
+            height: 30px;
           }
           .subtasks-icons {
             cursor: pointer;
@@ -643,6 +658,40 @@
     }
   }
 }
+.initials-bg {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  font-size: 12px;
+  line-height: 100%;
+}
+
+.initials-display {
+  display: flex;
+  gap: 4px;
+}
+.label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.additional-users {
+  border: 1px solid #d1d1d1;
+  background-color: #d1d1d1;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 32px;
+  height: 32px;
+  margin-left: 10px;
+}
+
 @media (max-width: 360px) {
   .task-content {
     .container-bottom {

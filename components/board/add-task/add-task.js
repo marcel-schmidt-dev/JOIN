@@ -1,6 +1,7 @@
 import returnIcon from "../../icons.js";
 import { addTask } from "../../firebase.js";
 import { getContacts } from "../../firebase.js";
+import { getInitialsFromName } from "../../utility-functions.js";
 
 let users;
 
@@ -66,22 +67,23 @@ async function getAddTaskTemplate() {
                             <p id="title-requested" >Dieses Feld muss ausgefüllt werden</p>
                         </div>
                     </div>
-                    <div class="description-input">
+                      <div class="description-input">
                         <h2>Description</h2>
                         <textarea type="text" name="description" class="description-container" placeholder="Enter a description" rows="5"></textarea>
-                    </div>
-                    <div class="assigned-input">
+                      </div>
+                      <div class="assigned-input">
                         <h2>Assigned to</h2>
                         <div class="assigned">
                          <input type="text" name="assigned" class="assigned-container" id="selected-contact" placeholder="Select contacts to assign" readonly />
                          <span id="dropdown-icon">${returnIcon("arrow-dropdown")}</span>
-                          <div class="dropdown" id="user-dropdown">
+                           <div class="dropdown" id="user-dropdown">
                               <ul id="user-list" data-user="user">
-                                 
                               </ul>
-                          </div>
+                           </div>
                         </div>
+                        <div id="selected-contacts-display" class="initials-display">
                     </div>
+                </div>
                 </div>
                 <div class="separator"></div>
                 <div class="input-right">
@@ -111,7 +113,7 @@ async function getAddTaskTemplate() {
                          ${returnIcon("arrow-dropdown")}
                           <div class="dropdown" id="category-dropdown">
                             <ul>
-                                <li  data-category="Technical task">Technical task</li>
+                                <li  data-category="Technical task">Technical Task</li>
                                 <li  data-category="Userstory">Userstory</li>
                             </ul>
                          </div>
@@ -144,18 +146,76 @@ async function getAddTaskTemplate() {
   const dropdownIcon = document.querySelector("#dropdown-icon");
   const dropdownMenu = document.querySelector("#user-dropdown");
   const userListRef = document.querySelector("#user-list");
+  let selectedContactsArray = [];
 
   dropdownIcon.addEventListener("click", async () => {
+    if (dropdownMenu.style.display === "block") {
+      dropdownMenu.style.display = "none";
+      return;
+    }
+
+    dropdownMenu.style.display = "block";
+    userListRef.innerHTML = "";
+
     users.forEach((user) => {
-      console.log(user);
       const li = document.createElement("li");
-      li.textContent = user.fullName;
+      li.innerHTML = `
+        <label class="label">
+         
+          <div class="initials-bg" style="background-color: #${user.userColor}">${getInitialsFromName(user.fullName)}</div>  ${user.fullName}
+           <input type="checkbox" data-user="${user.fullName}">
+        </label>
+      `;
       userListRef.appendChild(li);
+
+      const checkbox = li.querySelector("input[type='checkbox']");
+      if (selectedContactsArray.some((contact) => contact.id === user.id)) {
+        checkbox.checked = true;
+      }
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+          if (!selectedContactsArray.some((contact) => contact.id === user.id)) {
+            console.log(user.id);
+
+            selectedContactsArray.push({
+              id: user.id,
+              name: user.fullName,
+              initials: getInitialsFromName(user.fullName),
+              color: user.userColor,
+            });
+          }
+        } else {
+          selectedContactsArray = selectedContactsArray.filter((contact) => contact.id !== user.id);
+        }
+        console.log(selectedContactsArray);
+        updateSelectedContactsDisplay();
+      });
+    });
+  });
+  function updateSelectedContactsDisplay() {
+    const selectedContactsContainer = document.getElementById("selected-contacts-display");
+    selectedContactsContainer.innerHTML = "";
+
+    const displayContacts = selectedContactsArray.slice(0, 3);
+    const additionalCount = selectedContactsArray.length - displayContacts.length;
+
+    displayContacts.forEach((contact) => {
+      selectedContactsContainer.innerHTML += `
+      <span class="initials-bg" style="background-color: #${contact.color};">${contact.initials}</span>
+    `;
     });
 
-    if (dropdownMenu.style.display === "none") {
-      dropdownMenu.style.display = "block";
-    } else {
+    if (additionalCount > 0) {
+      selectedContactsContainer.innerHTML += `
+      <span class="additional-users">
+        +${additionalCount}
+      </span>
+    `;
+    }
+  }
+
+  document.addEventListener("click", (event) => {
+    if (!dropdownIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
       dropdownMenu.style.display = "none";
     }
   });
@@ -180,15 +240,19 @@ async function getAddTaskTemplate() {
   const subtasksOverview = document.getElementById("subtasks-overview");
   const addButton = subtasksInput.nextElementSibling;
 
+  let subtasksArray = [];
+
   addButton.addEventListener("click", () => {
     const subtaskText = subtasksInput.value.trim();
-    let subtasksArray = [];
-
-    subtasksArray.push("subtask-text");
 
     if (subtaskText !== "") {
+      const subtasksObject = { title: subtaskText, checked: false };
+      subtasksArray.push(subtasksObject);
+      console.log(subtasksArray);
+
       const subtaskContainer = document.createElement("div");
       subtaskContainer.classList.add("subtasks-flex");
+      subtaskContainer.id = "subtasks-flex";
       subtaskContainer.style.display = "flex";
 
       const newSubtask = document.createElement("p");
@@ -197,26 +261,48 @@ async function getAddTaskTemplate() {
       const subtaskIcons = document.createElement("div");
       subtaskIcons.classList.add("subtasks-icons");
 
-      const checkIcon = document.createElement("span");
-      checkIcon.innerHTML = returnIcon("check");
-      checkIcon.addEventListener("click", () => {
-        newSubtask.style.textDecoration = "line-through";
+      const penIcon = document.createElement("span");
+      penIcon.innerHTML = returnIcon("pen-outline");
+      penIcon.addEventListener("click", () => {
+        const inputField = document.createElement("input");
+        inputField.type = "text";
+        inputField.value = newSubtask.textContent;
+        inputField.classList.add("edit-subtask");
+
+        newSubtask.textContent = "";
+        newSubtask.appendChild(inputField);
+
+        inputField.focus();
+
+        inputField.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            newSubtask.textContent = inputField.value;
+            subtasksObject.title = inputField.value;
+            console.log(subtasksArray);
+          }
+        });
+
+        inputField.addEventListener("blur", () => {
+          newSubtask.textContent = inputField.value;
+        });
       });
 
       const trashIcon = document.createElement("span");
       trashIcon.innerHTML = returnIcon("trash-outline");
       trashIcon.addEventListener("click", () => {
+        const index = subtasksArray.indexOf(subtasksObject);
+        if (index !== -1) {
+          subtasksArray.splice(index, 1);
+          console.log(subtasksArray);
+        }
         subtasksOverview.removeChild(subtaskContainer);
       });
 
-      subtaskIcons.appendChild(checkIcon);
+      subtaskIcons.appendChild(penIcon);
       subtaskIcons.appendChild(trashIcon);
-
       subtaskContainer.appendChild(newSubtask);
       subtaskContainer.appendChild(subtaskIcons);
-
       subtasksOverview.appendChild(subtaskContainer);
-
       subtasksInput.value = "";
     }
   });
@@ -227,14 +313,22 @@ async function handleAddTask() {
   const description = document.querySelector(".description-container").value;
   const dueDate = document.getElementById("input-container-date").value;
   const assignee = document.getElementById("selected-contact").value;
-  const subTasks = document.getElementById("subtasks").value;
+
+  let subTasks = [];
+
+  const subTasksRefs = document.querySelectorAll(".subtasks-flex p");
+
+  subTasksRefs.forEach((subtask) => {
+    subTasks.push(subtask.textContent);
+  });
+
   const priority = document.querySelector(".priority-buttons .button-urgent.active")
     ? "urgent"
     : document.querySelector(".priority-buttons .button-medium.active")
     ? "medium"
     : "low";
-  const type = "type";
-  const slot = "slot";
+  const type = document.getElementById("category").value;
+  const slot = undefined;
 
   if (!validateAddTask(title, dueDate)) {
     console.error(" validierung fehlgeschlagen");
@@ -252,6 +346,9 @@ function clearAddTaskForm() {
   document.getElementById("selected-contact").value = "";
   document.getElementById("subtasks").value = "";
   document.getElementById("category").value = "";
+  document.querySelector(".subtasks-flex").innerHTML = "";
+  const subtasksClearRef = document.getElementById("subtasks-flex");
+  subtasksClearRef.style.display = "none";
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => button.classList.remove("active"));

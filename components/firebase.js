@@ -153,9 +153,10 @@ export async function returnSubTasks(id, slot) {
   return subTaskArray;
 }
 
-export function addTask(slot, title, description, type, priority, dueDate, subTasks, assignee) {
-  const { database } = getFirebase();
-  const taskRef = ref(database, `board/${slot}`);
+export function addTask(slot = "todo", title, description, type, priority, dueDate, subTasks, assignee) {
+  const db = getFirebaseDatabase();
+  const taskRef = ref(db, `board/${slot}`);
+  
   push(taskRef, {
     title: title,
     description: description,
