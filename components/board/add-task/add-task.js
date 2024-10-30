@@ -4,7 +4,6 @@ import { getContacts } from "../../firebase.js";
 import { getInitialsFromName } from "../../utility-functions.js";
 
 let users;
-let selectedContactsArray = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
   users = await getContacts();
@@ -114,8 +113,8 @@ async function getAddTaskTemplate() {
                          ${returnIcon("arrow-dropdown")}
                           <div class="dropdown" id="category-dropdown">
                             <ul>
-                                <li data-category="Technical Task">Technical Task</li>
-                                <li data-category="Userstory">Userstory</li>
+                                <li  data-category="Technical Task">Technical Task</li>
+                                <li  data-category="Userstory">Userstory</li>
                             </ul>
                          </div>
                         </div>
@@ -150,6 +149,7 @@ async function getAddTaskTemplate() {
   const dropdownIcon = document.querySelector("#dropdown-icon");
   const dropdownMenu = document.querySelector("#user-dropdown");
   const userListRef = document.querySelector("#user-list");
+  let selectedContactsArray = [];
 
   dropdownIcon.addEventListener("click", async () => {
     if (dropdownMenu.style.display === "block") {
@@ -178,6 +178,8 @@ async function getAddTaskTemplate() {
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
           if (!selectedContactsArray.some((contact) => contact.id === user.id)) {
+            console.log(user.id);
+
             selectedContactsArray.push({
               id: user.id,
               name: user.fullName,
@@ -188,6 +190,7 @@ async function getAddTaskTemplate() {
         } else {
           selectedContactsArray = selectedContactsArray.filter((contact) => contact.id !== user.id);
         }
+        console.log(selectedContactsArray);
         updateSelectedContactsDisplay();
       });
     });
@@ -248,6 +251,7 @@ async function getAddTaskTemplate() {
     if (subtaskText !== "") {
       const subtasksObject = { title: subtaskText, checked: false };
       subtasksArray.push(subtasksObject);
+      console.log(subtasksArray);
 
       const subtaskContainer = document.createElement("div");
       subtaskContainer.classList.add("subtasks-flex");
@@ -277,6 +281,7 @@ async function getAddTaskTemplate() {
           if (e.key === "Enter") {
             newSubtask.textContent = inputField.value;
             subtasksObject.title = inputField.value;
+            console.log(subtasksArray);
           }
         });
 
@@ -291,6 +296,7 @@ async function getAddTaskTemplate() {
         const index = subtasksArray.indexOf(subtasksObject);
         if (index !== -1) {
           subtasksArray.splice(index, 1);
+          console.log(subtasksArray);
         }
         subtasksOverview.removeChild(subtaskContainer);
       });
@@ -309,11 +315,7 @@ async function handleAddTask() {
   const title = document.getElementById("input-container-title").value;
   const description = document.querySelector(".description-container").value;
   const dueDate = document.getElementById("input-container-date").value;
-  let assignee = [];
-
-  selectedContactsArray.forEach((contact) => {
-    assignee.push(contact.id);
-  });
+  const assignee = document.getElementById("selected-contact").value;
 
   let subTasks = [];
 
