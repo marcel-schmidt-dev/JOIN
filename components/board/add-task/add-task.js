@@ -4,6 +4,7 @@ import { getContacts } from "../../firebase.js";
 import { getInitialsFromName } from "../../utility-functions.js";
 
 let users;
+let selectedContactsArray = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
   users = await getContacts();
@@ -149,7 +150,6 @@ async function getAddTaskTemplate() {
   const dropdownIcon = document.querySelector("#dropdown-icon");
   const dropdownMenu = document.querySelector("#user-dropdown");
   const userListRef = document.querySelector("#user-list");
-  let selectedContactsArray = [];
 
   dropdownIcon.addEventListener("click", async () => {
     if (dropdownMenu.style.display === "block") {
@@ -315,7 +315,12 @@ async function handleAddTask() {
   const title = document.getElementById("input-container-title").value;
   const description = document.querySelector(".description-container").value;
   const dueDate = document.getElementById("input-container-date").value;
-  const assignee = document.getElementById("selected-contact").value;
+
+  let assignee = [];
+
+  selectedContactsArray.forEach((contact) => {
+    assignee.push(contact.id);
+  });
 
   let subTasks = [];
 
@@ -357,7 +362,7 @@ function clearAddTaskForm() {
   priorityButtons.forEach((button) => button.classList.remove("active"));
 }
 
-function validateAddTask(title, dueDate, category) {
+function validateAddTask(title, dueDate) {
   const titleRequest = document.getElementById("title-requested");
   const inputTitleRequest = document.getElementById("input-container-title");
   let titleValidation = /^[a-zA-ZäöüÄÖÜß\s-]+$/;
