@@ -169,24 +169,30 @@ async function getAddTaskTemplate() {
       userListRef.appendChild(li);
 
       const checkbox = li.querySelector("input[type='checkbox']");
-      checkbox.addEventListener("change", () => {
-        if (checkbox.checked) {
+      if (selectedContactsArray.some((contact) => contact.id === user.id)) {
+        checkbox.checked = true;}
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        if (!selectedContactsArray.some((contact) => contact.id === user.id)) {
+          console.log(user.id);
+          
           selectedContactsArray.push({
+            id: user.id,
             name: user.fullName,
             initials: getInitialsFromName(user.fullName),
             color: user.userColor,
-            id: user.id,
           });
-        } else {
-          selectedContactsArray = selectedContactsArray.filter((contact) => contact.name !== user.fullName);
         }
-
-        console.log(selectedContactsArray);
-        updateSelectedContactsDisplay();
-      });
+      } else { 
+        selectedContactsArray = selectedContactsArray.filter(
+          (contact) => contact.id !== user.id
+        );
+      }
+      console.log(selectedContactsArray);
+      updateSelectedContactsDisplay();
     });
   });
-
+});
   function updateSelectedContactsDisplay() {
     const selectedContactsContainer = document.getElementById("selected-contacts-display");
     selectedContactsContainer.innerHTML = "";
@@ -235,10 +241,16 @@ async function getAddTaskTemplate() {
   const subtasksOverview = document.getElementById("subtasks-overview");
   const addButton = subtasksInput.nextElementSibling;
 
+  let subtasksArray = [];
+
   addButton.addEventListener("click", () => {
     const subtaskText = subtasksInput.value.trim();
 
     if (subtaskText !== "") {
+      const subtasksObject = { title: subtaskText, checked: false };
+      subtasksArray.push(subtasksObject);
+      console.log(subtasksArray);
+
       const subtaskContainer = document.createElement("div");
       subtaskContainer.classList.add("subtasks-flex");
       subtaskContainer.id = "subtasks-flex";
@@ -278,49 +290,39 @@ async function getAddTaskTemplate() {
 
       const trashIcon = document.createElement("span");
       trashIcon.innerHTML = returnIcon("trash-outline");
-      trashIcon.addEventListener("click", (event) => {
-        let subtaskElement = event.target;
-
-        while (subtaskElement.classList.contains("subtasks-flex") === false) {
-          subtaskElement = subtaskElement.parentElement;
+      trashIcon.addEventListener("click", () => {
+        const index = subtasksArray.indexOf(subtasksObject);
+        if (index !== -1) {
+          subtasksArray.splice(index, 1);
+          console.log(subtasksArray);
         }
-
-        subtaskElement.remove();
+        subtasksOverview.removeChild(subtaskContainer);
       });
 
       subtaskIcons.appendChild(penIcon);
       subtaskIcons.appendChild(trashIcon);
-
       subtaskContainer.appendChild(newSubtask);
       subtaskContainer.appendChild(subtaskIcons);
-
       subtasksOverview.appendChild(subtaskContainer);
-
       subtasksInput.value = "";
     }
   });
 }
 
 async function handleAddTask() {
+  
   const title = document.getElementById("input-container-title").value;
   const description = document.querySelector(".description-container").value;
   const dueDate = document.getElementById("input-container-date").value;
   const assignee = document.getElementById("selected-contact").value;
-  let subTasks = [];
-
-  const subTasksRefs = document.querySelectorAll(".subtasks-flex p");
-
-  subTasksRefs.forEach((subtask) => {
-    subTasks.push(subtask.textContent);
-  });
-
+  const subTasks = document.getElementById("subtasks").value;
   const priority = document.querySelector(".priority-buttons .button-urgent.active")
     ? "urgent"
     : document.querySelector(".priority-buttons .button-medium.active")
     ? "medium"
     : "low";
-  const type = document.getElementById("category").value;
-  const slot = undefined;
+  const type = "type";
+  const slot = "slot";
 
   if (!validateAddTask(title, dueDate)) {
     console.error(" validierung fehlgeschlagen");
@@ -335,11 +337,12 @@ function clearAddTaskForm() {
   document.getElementById("input-container-title").value = "";
   document.querySelector(".description-container").value = "";
   document.getElementById("input-container-date").value = "";
-  document.getElementById("selected-contacts-display").innerHTML = "";
+  document.getElementById("selected-contact").value = "";
   document.getElementById("subtasks").value = "";
   document.getElementById("category").value = "";
-  const subtasksClearRef = document.querySelector(".subtasks-overview");
-  subtasksClearRef.innerHTML = "";
+  document.querySelector(".subtasks-flex").innerHTML = "";
+  const subtasksClearRef = document.getElementById("subtasks-flex");
+  subtasksClearRef.style.display = "none";
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => button.classList.remove("active"));
@@ -375,3 +378,5 @@ function validateAddTask(title, dueDate) {
 
   return true;
 }
+
+
