@@ -181,7 +181,7 @@ async function getAddTaskTemplate() {
           selectedContactsArray = selectedContactsArray.filter((contact) => contact.name !== user.fullName);
         }
 
-        console.log(selectedContactsArray);
+        /*console.log(selectedContactsArray);*/
         updateSelectedContactsDisplay();
       });
     });
@@ -305,11 +305,16 @@ async function handleAddTask() {
   const title = document.getElementById("input-container-title").value;
   const description = document.querySelector(".description-container").value;
   const dueDate = document.getElementById("input-container-date").value;
-  const assignee = document.getElementById("selected-contact").value;
+
+  let assignee = [];
+  const assigneeRef = document.querySelectorAll(".initials-display span");
+  assigneeRef.forEach((assignees) => {
+    assignee.push(assignees.id);
+    console.log(assignee);
+  });
+
   let subTasks = [];
-
   const subTasksRefs = document.querySelectorAll(".subtasks-flex p");
-
   subTasksRefs.forEach((subtask) => {
     subTasks.push(subtask.textContent);
   });
