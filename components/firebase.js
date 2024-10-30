@@ -321,6 +321,13 @@ export async function getAuthUser() {
   return user;
 }
 
+export async function checkAuth() {
+  const user = await getAuthUser();
+  if (!user) {
+    window.location.href = "/index.html";
+  }
+}
+
 export async function signIn(email, password) {
   const { auth } = getFirebase();
 
