@@ -119,6 +119,9 @@ async function getAddTaskTemplate() {
                             </ul>
                          </div>
                         </div>
+                        <div class="request-container">
+                           <p id="category-requested">Dieses Feld muss ausgefüllt sein</p>
+                        </div>
                     </div>
                     <div class="subtasks">
                         <h2>Subtasks</h2>
@@ -323,8 +326,8 @@ async function handleAddTask() {
   const priority = document.querySelector(".priority-buttons .button-urgent.active")
     ? "urgent"
     : document.querySelector(".priority-buttons .button-medium.active")
-      ? "medium"
-      : "low";
+    ? "medium"
+    : "low";
   const type = document.getElementById("category").value;
   const slot = undefined;
 
@@ -352,7 +355,7 @@ function clearAddTaskForm() {
   priorityButtons.forEach((button) => button.classList.remove("active"));
 }
 
-function validateAddTask(title, dueDate) {
+function validateAddTask(title, dueDate, category) {
   const titleRequest = document.getElementById("title-requested");
   const inputTitleRequest = document.getElementById("input-container-title");
   let titleValidation = /^[a-zA-ZäöüÄÖÜß\s-]+$/;
@@ -378,6 +381,20 @@ function validateAddTask(title, dueDate) {
   } else {
     dateRequest.style.display = "none";
     inputDateRequest.style.borderColor = "#d1d1d1";
+  }
+
+  const categoryRequest = document.getElementById("category-requested");
+  const inputCategoryRequest = document.getElementById("category");
+  let categoryValidation = inputCategoryRequest.value.trim() !== "";
+
+  if (!categoryValidation) {
+    categoryRequest.style.display = "block";
+    categoryRequest.style.color = "red";
+    inputCategoryRequest.style.borderColor = "red";
+    return false;
+  } else {
+    categoryRequest.style.display = "none";
+    inputCategoryRequest.style.borderColor = "#d1d1d1";
   }
 
   return true;
