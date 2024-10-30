@@ -1,4 +1,4 @@
-import { returnTaskById, getContact, returnSubTasks } from "../../firebase.js";
+import { returnTaskById, getContact, returnSubTasks, deleteTask } from "../../firebase.js";
 import returnIcon from "../../icons.js";
 import { getInitialsFromName } from "../../utility-functions.js";
 
@@ -50,11 +50,17 @@ export default async function showTaskDetails(taskId, slot) {
                       .join("")}
                 </div>
                 <div class="buttons">
-                    <button>${returnIcon("trash-outline")}Delete</button>
+                    <button class="delete-btn">${returnIcon("trash-outline")}Delete</button>
                     <hr>
                     <button>${returnIcon("pen")}Edit</button>
                 </div>
             </div>
         </div>
     `;
-}
+    const deleteButton = contentRef.querySelector(".delete-btn");
+    if (deleteButton) {
+      deleteButton.addEventListener("click", async () => {deleteTask(slot, taskId);
+            document.querySelector(".task-details-container").remove(); })
+    }};
+    
+
