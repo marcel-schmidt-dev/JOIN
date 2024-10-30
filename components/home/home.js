@@ -22,14 +22,22 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
     `
     renderLogin();
+
+    setTimeout(() => {
+        document.querySelector('.logo-background').style.display = 'none';
+    }, 2000);
 });
 
 function returnHeader() {
     return /*html*/`
         <div class="head">
-            <div class="logo">
-                ${returnIcon('logo-dark')}
+            <div class="logo-container">
+                <div class="logo">
+                    ${returnIcon('logo-dark')}
+                </div>
+                <div class="logo-background"></div>
             </div>
+            
             <div class="btn-container">
                 <span>Not a Join user?</span>
                 <button onclick="renderRegister()">Sign up</button>
