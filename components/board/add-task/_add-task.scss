@@ -341,7 +341,7 @@
           border-radius: 10px;
           background-color: white;
           padding: 12px 21px 12px 21px;
-          margin-bottom: 12px;
+
           height: 48px;
 
           .category-container {
@@ -354,6 +354,10 @@
           svg {
             cursor: pointer;
           }
+          .request-container {
+            margin-bottom: 12px;
+          }
+
           .dropdown {
             display: none;
             position: absolute;
@@ -379,6 +383,10 @@
           .dropdown li:hover {
             background-color: #d1d1d1;
           }
+        }
+        #category-requested {
+          display: none;
+          margin-bottom: 12px;
         }
       }
 
@@ -550,6 +558,7 @@
       width: 100%;
       font-size: 47px;
       margin-bottom: 24px;
+      margin-top: 125px;
     }
     .input-container {
       max-width: 396px;
@@ -618,7 +627,6 @@
           }
         }
         .category {
-          display: none;
           h2 {
             font-size: 16px;
           }
@@ -627,7 +635,6 @@
           }
         }
         .subtasks {
-          display: none;
           h2 {
             font-size: 16px;
           }
