@@ -51,7 +51,6 @@ export async function getContact(id) {
   const contactsRef = ref(database, `contacts/${id}`);
   const snapshot = await get(contactsRef);
   const contact = snapshot.val();
-
   contact.id = snapshot.key;
   return contact;
 }
@@ -70,9 +69,20 @@ export function addContact(fullName, email, phone) {
   push(contactsRef, userObject);
 }
 
-export function deleteContact(id) {
+export async function deleteContact(id) {
   const { database } = getFirebase();
   const contactsRef = ref(database, `contacts/${id}`);
+  const boardSnap = await get(ref(database, "board/"));
+
+  boardSnap.forEach((slot) => {
+    slot.forEach((task) => {
+      const taskRef = task.val();
+      if (taskRef.assignee.includes(id)) {
+        taskRef.assignee = taskRef.assignee.filter((assignee) => assignee !== id);
+        set(ref(database, `board/${slot.key}/${task.key}`), taskRef);
+      }
+    });
+  });
   remove(contactsRef);
 }
 
