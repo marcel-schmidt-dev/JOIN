@@ -2,20 +2,15 @@ import returnContactListTemplate from "./contact-list/contact-list.js";
 import { getContacts } from "../firebase.js";
 import getContactDetailsTemplate from "./contact-details/contact-details.js";
 import getContactOverlayTemplate from "./contact-overlay/contact-overlay.js";
-import { getAuthUser } from "../firebase.js";
+import { checkAuth } from "../firebase.js";
 window.showContactDetails = showContactDetails;
 
 let contactList;
 
 document.addEventListener("DOMContentLoaded", () => {
-  const user = getAuthUser();
-
-  if (!user) {
-    window.location.href = "/index.html";
-  } else {
-    renderContactHeader();
-    renderContacts();
-  }
+  checkAuth();
+  renderContactHeader();
+  renderContacts();
 });
 
 export function showContactDetails(id) {
