@@ -61,11 +61,11 @@ async function renderSummaryTemplate() {
                 <div class="summary-grid">
                     <div class="summary-card-2">
                         <div class="summary-card-icon">${returnIcon('pen')}</div>
-                        <div class="summary-card-content"><span>${board['todo'].length}</span><br>To-do</div>
+                        <div class="summary-card-content"><span>${board['todo'] ? board['todo'].length : 0}</span><br>To-do</div>
                     </div>
                     <div class="summary-card-2">
                         <div class="summary-card-icon">${returnIcon('check')}</div>
-                        <div class="summary-card-content"><span>${board['done'].length}</span><br>Done</div>
+                        <div class="summary-card-content"><span>${board['done'] ? board['done'].length : 0}</span><br>Done</div>
                     </div>
                     <div class="summary-card-1">
                         <div>
@@ -82,10 +82,10 @@ async function renderSummaryTemplate() {
                         <span>${allTasks.length}</span>Tasks in Board
                     </div>
                     <div class="summary-card-3">
-                        <span>${board['inProgress'].length}</span>Tasks in Progress
+                        <span>${board['inProgress'] ? board['inProgress'].length : 0}</span>Tasks in Progress
                     </div>
                     <div class="summary-card-3">
-                        <span>${board['awaitFeedback'].length}</span>Awaiting Feedback
+                        <span>${board['awaitFeedback'] ? board['awaitFeedback'].length : 0}</span>Awaiting Feedback
                     </div>
                 </div>
             </div>
