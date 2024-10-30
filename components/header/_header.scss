@@ -11,7 +11,7 @@ header {
   padding: 20px 25px;
   position: relative;
 
-  >svg {
+  > svg {
     display: none;
 
     @media (max-width: 1024px) {
@@ -21,7 +21,7 @@ header {
     }
   }
 
-  >span {
+  > span {
     display: inline-block;
 
     @media (max-width: 1024px) {
@@ -29,7 +29,7 @@ header {
     }
   }
 
-  >div {
+  > div {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -43,24 +43,62 @@ header {
       fill: #a8a8a8;
     }
 
-    button {
-      background-color: transparent;
-      box-shadow: inset 0px 0px 0px 1px $navy-blue;
-      font-size: 1.75rem;
-      width: 3.5rem;
-      height: 3.5rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: $light-blue;
-      cursor: pointer;
-      transition: all 300ms ease-in-out;
+    .user {
+      position: relative;
 
-      &:hover {
+      &.open {
+        .user-menu {
+          display: block;
+        }
+      }
+
+      button {
+        background-color: transparent;
+        box-shadow: inset 0px 0px 0px 3px $navy-blue;
+        font-size: 1.25rem;
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: $light-blue;
+        cursor: pointer;
+        transition: all 300ms ease-in-out;
+        border: none;
+
+        &:hover {
+          background-color: $light-blue;
+          box-shadow: inset 0px 0px 0px 3px $light-blue;
+          color: #fff;
+        }
+      }
+
+      .user-menu {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        padding: 10px;
         background-color: $navy-blue;
-        color: #fff;
+        z-index: 100;
+        margin-top: 10px;
+        border-radius: 20px 0 20px 20px;
+        display: none;
+
+        a,
+        span {
+          display: block;
+          cursor: pointer;
+          color: #fff;
+          font-size: 1rem;
+          text-align: left;
+          width: 100%;
+          transition: all 300ms ease-in-out;
+          padding: 14px 16px;
+          white-space: nowrap;
+          text-decoration: none;
+        }
       }
     }
   }

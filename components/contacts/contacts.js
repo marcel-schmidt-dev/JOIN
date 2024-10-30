@@ -2,13 +2,15 @@ import returnContactListTemplate from "./contact-list/contact-list.js";
 import { getContacts } from "../firebase.js";
 import getContactDetailsTemplate from "./contact-details/contact-details.js";
 import getContactOverlayTemplate from "./contact-overlay/contact-overlay.js";
+import { checkAuth } from "../firebase.js";
 window.showContactDetails = showContactDetails;
 
 let contactList;
 
-document.addEventListener("DOMContentLoaded", async () => {
-  await renderContacts();
+document.addEventListener("DOMContentLoaded", () => {
+  checkAuth();
   renderContactHeader();
+  renderContacts();
 });
 
 export function showContactDetails(id) {
@@ -46,7 +48,10 @@ export function handleContactOverlayTemplate(id = false) {
 }
 
 export async function renderContacts() {
-  const contentRef = document.querySelector(".content");
+  let contentRef;
+  while ((contentRef = document.querySelector(".content")) === null) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 
   contentRef.innerHTML = "";
   contactList = await getContacts();
@@ -54,8 +59,11 @@ export async function renderContacts() {
   contentRef.innerHTML += returnContactListTemplate(contactList);
 }
 
-function renderContactHeader() {
-  const contentRef = document.querySelector(".content");
+async function renderContactHeader() {
+  let contentRef;
+  while ((contentRef = document.querySelector(".content")) === null) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 
   contentRef.innerHTML += /*html*/`
       <div class="contact-details-container">

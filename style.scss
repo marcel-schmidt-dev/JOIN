@@ -10,6 +10,8 @@
 @import "./components/board/add-task/add-task.scss";
 @import "./components/board/task-card/task-card.scss";
 @import "./components/board/task-details/task-details.scss";
+@import "./components/home/home.scss";
+@import "./components/summary/summary.scss";
 
 @font-face {
   font-family: "Inter";
@@ -48,6 +50,10 @@ body {
     display: flex;
     position: relative;
     overflow-y: auto;
+
+    &.home-content {
+      max-height: 100vh;
+    }
   }
 }
 

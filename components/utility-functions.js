@@ -4,6 +4,7 @@ export function returnRandomUserColor() {
 }
 
 export function getInitialsFromName(fullName) {
+
   const nameParts = fullName.split(" ");
   const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
   const lastNameInitial = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() : "";
