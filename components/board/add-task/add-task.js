@@ -313,14 +313,22 @@ async function handleAddTask() {
   const description = document.querySelector(".description-container").value;
   const dueDate = document.getElementById("input-container-date").value;
   const assignee = document.getElementById("selected-contact").value;
-  const subTasks = document.getElementById("subtasks").value;
+
+  let subTasks = [];
+
+  const subTasksRefs = document.querySelectorAll(".subtasks-flex p");
+
+  subTasksRefs.forEach((subtask) => {
+    subTasks.push(subtask.textContent);
+  });
+
   const priority = document.querySelector(".priority-buttons .button-urgent.active")
     ? "urgent"
     : document.querySelector(".priority-buttons .button-medium.active")
     ? "medium"
     : "low";
-  const type = "type";
-  const slot = "slot";
+  const type = document.getElementById("category").value;
+  const slot = undefined;
 
   if (!validateAddTask(title, dueDate)) {
     console.error(" validierung fehlgeschlagen");
