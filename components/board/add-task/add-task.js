@@ -114,7 +114,7 @@ async function getAddTaskTemplate() {
                          ${returnIcon("arrow-dropdown")}
                           <div class="dropdown" id="category-dropdown">
                             <ul>
-                                <li data-category="Technical task">Technical Task</li>
+                                <li data-category="Technical Task">Technical Task</li>
                                 <li data-category="Userstory">Userstory</li>
                             </ul>
                          </div>
