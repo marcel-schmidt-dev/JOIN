@@ -53,7 +53,7 @@ async function renderTaskTemplate() {
     `;
 }
 
-async function getAddTaskTemplate() {
+export async function getAddTaskTemplate() {
   const addTaskRef = document.querySelector(".task-content");
   addTaskRef.innerHTML += /*html*/ `
         <div class="main-content">
