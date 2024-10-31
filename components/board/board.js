@@ -99,7 +99,7 @@ export async function renderBoardTemplate() {
                 </div>
                 <div>
                   <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon("search")}</span></div>
-                  <button >Add task${returnIcon("plus")}</button>
+                  <button>Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
             <div class="board">
