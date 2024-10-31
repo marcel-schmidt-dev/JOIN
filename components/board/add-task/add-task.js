@@ -178,8 +178,6 @@ async function getAddTaskTemplate() {
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
           if (!selectedContactsArray.some((contact) => contact.id === user.id)) {
-            console.log(user.id);
-
             selectedContactsArray.push({
               id: user.id,
               name: user.fullName,
@@ -190,7 +188,6 @@ async function getAddTaskTemplate() {
         } else {
           selectedContactsArray = selectedContactsArray.filter((contact) => contact.id !== user.id);
         }
-        console.log(selectedContactsArray);
         updateSelectedContactsDisplay();
       });
     });
@@ -251,7 +248,6 @@ async function getAddTaskTemplate() {
     if (subtaskText !== "") {
       const subtasksObject = { title: subtaskText, checked: false };
       subtasksArray.push(subtasksObject);
-      console.log(subtasksArray);
 
       const subtaskContainer = document.createElement("div");
       subtaskContainer.classList.add("subtasks-flex");
@@ -281,7 +277,6 @@ async function getAddTaskTemplate() {
           if (e.key === "Enter") {
             newSubtask.textContent = inputField.value;
             subtasksObject.title = inputField.value;
-            console.log(subtasksArray);
           }
         });
 
@@ -296,7 +291,6 @@ async function getAddTaskTemplate() {
         const index = subtasksArray.indexOf(subtasksObject);
         if (index !== -1) {
           subtasksArray.splice(index, 1);
-          console.log(subtasksArray);
         }
         subtasksOverview.removeChild(subtaskContainer);
       });
@@ -351,15 +345,15 @@ function clearAddTaskForm() {
   document.getElementById("input-container-title").value = "";
   document.querySelector(".description-container").value = "";
   document.getElementById("input-container-date").value = "";
-  document.getElementById("selected-contact").value = "";
+  document.getElementById("selected-contacts-display").innerHTML = "";
   document.getElementById("subtasks").value = "";
   document.getElementById("category").value = "";
-  document.querySelector(".subtasks-flex").innerHTML = "";
-  const subtasksClearRef = document.getElementById("subtasks-flex");
-  subtasksClearRef.style.display = "none";
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => button.classList.remove("active"));
+
+  const subtasksClearRef = document.querySelector(".subtasks-overview");
+  subtasksClearRef.innerHTML = "";
 }
 
 function validateAddTask(title, dueDate) {
