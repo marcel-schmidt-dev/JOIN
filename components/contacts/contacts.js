@@ -64,7 +64,7 @@ async function renderContactHeader() {
 
   contentRef.innerHTML += /*html*/`
       <div class="contact-details-container">
-        <div class="header-container">
+        <div class="header-container initial">
             <div class="contact-header">
             <h1>Contacts</h1>
             <div class="separator"></div>
