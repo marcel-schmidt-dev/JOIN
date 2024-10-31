@@ -84,7 +84,7 @@ window.updatePlaceholder = function () {
   });
 };
 
-async function renderBoardTemplate() {
+export async function renderBoardTemplate() {
   let contentRef;
   while ((contentRef = document.querySelector(".content")) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -99,7 +99,7 @@ async function renderBoardTemplate() {
                 </div>
                 <div>
                   <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon("search")}</span></div>
-                  <button onclick="getAddTaskTemplate()">Add task${returnIcon("plus")}</button>
+                  <button >Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
             <div class="board">
