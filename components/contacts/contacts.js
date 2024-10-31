@@ -9,7 +9,6 @@ let contactList;
 
 document.addEventListener("DOMContentLoaded", () => {
   checkAuth();
-  renderContactHeader();
   renderContacts();
 });
 
@@ -57,13 +56,11 @@ export async function renderContacts() {
   contactList = await getContacts();
 
   contentRef.innerHTML += returnContactListTemplate(contactList);
+  renderContactHeader();
 }
 
 async function renderContactHeader() {
-  let contentRef;
-  while ((contentRef = document.querySelector(".content")) === null) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
+  const contentRef = document.querySelector(".content");
 
   contentRef.innerHTML += /*html*/`
       <div class="contact-details-container">
