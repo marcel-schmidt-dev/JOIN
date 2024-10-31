@@ -84,7 +84,7 @@ window.updatePlaceholder = function () {
   });
 };
 
-async function renderBoardTemplate() {
+export async function renderBoardTemplate() {
   let contentRef;
   while ((contentRef = document.querySelector(".content")) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
