@@ -1,6 +1,7 @@
 import { returnTaskById, getContact, returnSubTasks, deleteTask } from "../../firebase.js";
 import returnIcon from "../../icons.js";
 import { getInitialsFromName } from "../../utility-functions.js";
+import { renderBoardTemplate } from "../board.js";
 
 export default async function showTaskDetails(taskId, slot) {
   const task = await returnTaskById(taskId);
@@ -31,22 +32,23 @@ export default async function showTaskDetails(taskId, slot) {
                 <div class="assignee-list">
                 <p>Assigned To:</p>
                     ${assignees
-      .map((assignee) => {
-        return `<div class="assignee"><div class="bubble" style="background-color: #${assignee.userColor}">${getInitialsFromName(
-          `${assignee.fullName}`
-        )}</div><span>${assignee.fullName}</span></div>`;
-      })
-      .join("")}
+                      .map((assignee) => {
+                        return `<div class="assignee"><div class="bubble" style="background-color: #${assignee.userColor}">${getInitialsFromName(
+                          `${assignee.fullName}`
+                        )}</div><span>${assignee.fullName}</span></div>`;
+                      })
+                      .join("")}
                 </div>
 
                 <div class="subtask-list">
                     <p>Subtasks:</p>
                     ${subTasks
-      .map((subtask) => {
-        return `<div class="subtask"><input type="checkbox" ${subtask.checked ? "checked" : ""} name="${subtask.id}" id="${subtask.id}"><span>${subtask.title
-          }</span></div>`;
-      })
-      .join("")}
+                      .map((subtask) => {
+                        return `<div class="subtask"><input type="checkbox" ${subtask.checked ? "checked" : ""} name="${subtask.id}" id="${subtask.id}"><span>${
+                          subtask.title
+                        }</span></div>`;
+                      })
+                      .join("")}
                 </div>
                 <div class="buttons">
                     <button class="delete-btn">${returnIcon("trash-outline")}Delete</button>
@@ -61,8 +63,7 @@ export default async function showTaskDetails(taskId, slot) {
     deleteButton.addEventListener("click", async () => {
       deleteTask(slot, taskId);
       document.querySelector(".task-details-container").remove();
-    })
+      renderBoardTemplate();
+    });
   }
-};
-
-
+}
