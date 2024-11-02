@@ -440,6 +440,9 @@
           }
         }
         .subtasks-overview {
+          height: 120px;
+          overflow: hidden;
+          overflow-y: scroll;
           .subtasks-icons {
             svg {
               height: 20px;
