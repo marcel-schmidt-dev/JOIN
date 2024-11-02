@@ -172,8 +172,10 @@ export async function getAddTaskTemplate() {
       userListRef.appendChild(li);
 
       const checkbox = li.querySelector("input[type='checkbox']");
+      const label = li.querySelector(".label");
       if (selectedContactsArray.some((contact) => contact.id === user.id)) {
         checkbox.checked = true;
+        label.classList.add("selected-contact");
       }
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
@@ -185,8 +187,10 @@ export async function getAddTaskTemplate() {
               color: user.userColor,
             });
           }
+          label.classList.add("selected-contact");
         } else {
           selectedContactsArray = selectedContactsArray.filter((contact) => contact.id !== user.id);
+          label.classList.remove("selected-contact");
         }
         updateSelectedContactsDisplay();
       });
