@@ -30,15 +30,31 @@ export default async function showTaskDetails(taskId, slot) {
                 </table>
                 
                 <div class="assignee-list">
-                <p>Assigned To:</p>
-                    ${assignees
-                      .map((assignee) => {
-                        return `<div class="assignee"><div class="bubble" style="background-color: #${assignee.userColor}">${getInitialsFromName(
-                          `${assignee.fullName}`
-                        )}</div><span>${assignee.fullName}</span></div>`;
-                      })
-                      .join("")}
+                 <p>Assigned To:</p>
+                 <div class="assignee-container">
+                     ${assignees
+                       .slice(0, 3)
+                       .map((assignee) => {
+                         return `<div class="assignee">
+                        <div class="bubble" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}</div>
+                        <span>${assignee.fullName}</span>
+                        </div>`;
+                       })
+                       .join("")}
+                        ${
+                          assignees.length > 3
+                            ? `
+                         <div class="assignee extra-assignees" title="${assignees
+                           .slice(3)
+                           .map((a) => a.fullName)
+                           .join(", ")}">
+                         <div class="bubble" style="background-color: #d1d1d1;">+${assignees.length - 3}</div>
+                         <span>+ ${assignees.length - 3} more</span>
+                         </div>`
+                            : ""
+                        }
                 </div>
+       </div>
 
                 <div class="subtask-list">
                     <p>Subtasks:</p>
