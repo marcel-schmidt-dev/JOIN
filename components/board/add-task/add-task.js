@@ -26,6 +26,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       selectedContact.value = item.getAttribute("data-user");
     });
   });
+  const priorityButtons = document.querySelectorAll(".priority-buttons button");
+  const mediumButton = document.querySelector(".button-medium");
+  mediumButton.classList.add("active"); 
+  priorityButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      priorityButtons.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+    });
+  });
 
   // Datum anzeigen
   const today = new Date().toISOString().split("T")[0];
