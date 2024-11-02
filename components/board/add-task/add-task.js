@@ -351,6 +351,7 @@ async function handleAddTask() {
     addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
 
     clearAddTaskForm();
+    window.location.href = "/board.html";
   }
 }
 
@@ -364,7 +365,8 @@ function clearAddTaskForm() {
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => button.classList.remove("active"));
-
+  const mediumButton = document.querySelector(".button-medium");
+  mediumButton.classList.add("active");
   const subtasksClearRef = document.querySelector(".subtasks-overview");
   subtasksClearRef.innerHTML = "";
 }
