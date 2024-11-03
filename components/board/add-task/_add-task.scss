@@ -360,7 +360,6 @@
           }
           .request-container {
             margin-bottom: 12px;
-           
           }
 
           .dropdown {
@@ -373,21 +372,17 @@
             max-width: 280px;
             width: 100%;
             top: 49%;
-           
-            
           }
 
           .dropdown ul {
             list-style-type: none;
             padding: 0;
             margin: 0;
-            
           }
 
           .dropdown li {
             padding: 10px;
             cursor: pointer;
-            
           }
 
           .dropdown li:hover {
@@ -479,7 +474,7 @@
   .container-bottom {
     display: flex;
     justify-content: space-between;
-    margin-top: 120px;
+    margin-top: 30px;
 
     .span-content {
       margin-top: 40px;
@@ -644,9 +639,7 @@
           }
           .category-input {
             margin-bottom: 12px;
-
           }
-          
         }
         .subtasks {
           h2 {
@@ -687,11 +680,8 @@
       max-width: 280px;
       width: 100%;
       top: 78%;
-     
-      
     }
   }
-  
 }
 .initials-bg {
   width: 32px;
@@ -716,12 +706,12 @@
   align-items: center;
 }
 .selected-contact {
-  background-color: #2A3647; 
+  background-color: #2a3647;
   width: 100%;
   height: 100%;
   padding: 8px;
   border-radius: 12px;
-  color:  white;
+  color: white;
 }
 .additional-users {
   border: 1px solid #d1d1d1;
@@ -734,7 +724,6 @@
   height: 32px;
   margin-left: 10px;
 }
-
 
 @media (max-width: 360px) {
   .task-content {

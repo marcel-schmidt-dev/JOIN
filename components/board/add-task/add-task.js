@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   await renderTaskTemplate();
   await getAddTaskTemplate();
 
-  // Kontaktliste anzeigen
   const assignedContainer = document.querySelector(".assigned-container");
   const userDropdown = document.getElementById("user-dropdown");
   const selectedContact = document.getElementById("selected-contact");
@@ -28,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   const mediumButton = document.querySelector(".button-medium");
-  mediumButton.classList.add("active"); 
+  mediumButton.classList.add("active");
   priorityButtons.forEach((button) => {
     button.addEventListener("click", () => {
       priorityButtons.forEach((btn) => btn.classList.remove("active"));
@@ -36,7 +35,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Datum anzeigen
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("input-container-date").value = "YY";
   document.getElementById("input-container-date").min = today;
@@ -205,6 +203,7 @@ export async function getAddTaskTemplate() {
       });
     });
   });
+
   function updateSelectedContactsDisplay() {
     const selectedContactsContainer = document.getElementById("selected-contacts-display");
     selectedContactsContainer.innerHTML = "";
