@@ -49,25 +49,27 @@ async function renderSummaryTemplate() {
     }
 
     contentRef.innerHTML = /*html*/ `
+        
         <div class="summary-container">
+        <div class="summary-heading">
+            <h1>Join 360</h1>
+            <div>
+                <hr>
+                <span>Key Metrics at a Glance</span>
+            </div>
+        </div>
+        <div class="summary-row">
             <div class="summary-col">
-                <div class="summary-heading">
-                    <h1>Join 360</h1>
-                    <div>
-                        <hr>
-                        <span>Key Metrics at a Glance</span>
-                    </div>
-                </div>
                 <div class="summary-grid">
-                    <div class="summary-card-2">
+                    <a href="./board.html" class="summary-card-2">
                         <div class="summary-card-icon">${returnIcon('pen')}</div>
                         <div class="summary-card-content"><span>${board['todo'] ? board['todo'].length : 0}</span><br>To-do</div>
-                    </div>
-                    <div class="summary-card-2">
+                    </a>
+                    <a href="./board.html" class="summary-card-2">
                         <div class="summary-card-icon">${returnIcon('check')}</div>
                         <div class="summary-card-content"><span>${board['done'] ? board['done'].length : 0}</span><br>Done</div>
-                    </div>
-                    <div class="summary-card-1">
+                    </a>
+                    <a href="./board.html" class="summary-card-1">
                         <div>
                             <div class="summary-card-icon">${returnIcon('urgent')}</div>
                             <div class="summary-card-content"><span>${urgentTasks.length}</span><br>Urgent</div>
@@ -77,22 +79,24 @@ async function renderSummaryTemplate() {
                             <div class="date">${getRelevantDueDate(allTasks)}</div>
                             <div class="deadline">Upcoming Deadline</div>
                         </div>
-                    </div>
-                    <div class="summary-card-3">
+                    </a>
+                    <a href="./board.html" class="summary-card-3">
                         <span>${allTasks.length}</span>Tasks in Board
-                    </div>
-                    <div class="summary-card-3">
+                    </a>
+                    <a href="./board.html" class="summary-card-3">
                         <span>${board['inProgress'] ? board['inProgress'].length : 0}</span>Tasks in Progress
-                    </div>
-                    <div class="summary-card-3">
+                    </a>
+                    <a href="./board.html" class="summary-card-3">
                         <span>${board['awaitFeedback'] ? board['awaitFeedback'].length : 0}</span>Awaiting Feedback
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="summary-col">
                 Good morning,
                 <div>${user.displayName ? user.displayName : 'Guest'}</div>
             </div>
+        </div>
+            
         </div>
     `
 }
