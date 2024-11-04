@@ -254,67 +254,81 @@ export async function getAddTaskTemplate() {
 
   let subtasksArray = [];
 
-  addButton.addEventListener("click", () => {
-    const subtaskText = subtasksInput.value.trim();
+  addButton.addEventListener("click", createSubtask);
 
-    if (subtaskText !== "") {
+  function createSubtask() {
+    const subtaskText = subtasksInput.value.trim();
+    if (subtaskText) {
       const subtasksObject = { title: subtaskText, checked: false };
       subtasksArray.push(subtasksObject);
-
-      const subtaskContainer = document.createElement("div");
-      subtaskContainer.classList.add("subtasks-flex");
-      subtaskContainer.id = "subtasks-flex";
-      subtaskContainer.style.display = "flex";
-
-      const newSubtask = document.createElement("p");
-      newSubtask.textContent = subtaskText;
-
-      const subtaskIcons = document.createElement("div");
-      subtaskIcons.classList.add("subtasks-icons");
-
-      const penIcon = document.createElement("span");
-      penIcon.innerHTML = returnIcon("pen-outline");
-      penIcon.addEventListener("click", () => {
-        const inputField = document.createElement("input");
-        inputField.type = "text";
-        inputField.value = newSubtask.textContent;
-        inputField.classList.add("edit-subtask");
-
-        newSubtask.textContent = "";
-        newSubtask.appendChild(inputField);
-
-        inputField.focus();
-
-        inputField.addEventListener("keypress", (e) => {
-          if (e.key === "Enter") {
-            newSubtask.textContent = inputField.value;
-            subtasksObject.title = inputField.value;
-          }
-        });
-
-        inputField.addEventListener("blur", () => {
-          newSubtask.textContent = inputField.value;
-        });
-      });
-
-      const trashIcon = document.createElement("span");
-      trashIcon.innerHTML = returnIcon("trash-outline");
-      trashIcon.addEventListener("click", () => {
-        const index = subtasksArray.indexOf(subtasksObject);
-        if (index !== -1) {
-          subtasksArray.splice(index, 1);
-        }
-        subtasksOverview.removeChild(subtaskContainer);
-      });
-
-      subtaskIcons.appendChild(penIcon);
-      subtaskIcons.appendChild(trashIcon);
-      subtaskContainer.appendChild(newSubtask);
-      subtaskContainer.appendChild(subtaskIcons);
+      const subtaskContainer = createSubtaskContainer(subtaskText, subtasksObject);
       subtasksOverview.appendChild(subtaskContainer);
       subtasksInput.value = "";
     }
-  });
+  }
+
+  function createSubtaskContainer(subtaskText, subtasksObject) {
+    const container = document.createElement("div");
+    container.classList.add("subtasks-flex");
+    container.id = "subtasks-flex";
+    container.style.display = "flex";
+
+    const newSubtask = document.createElement("p");
+    newSubtask.textContent = subtaskText;
+
+    const subtaskIcons = createSubtaskIcons(newSubtask, subtasksObject, container);
+    container.append(newSubtask, subtaskIcons);
+
+    return container;
+  }
+
+  function createSubtaskIcons(newSubtask, subtasksObject, subtaskContainer) {
+    const icons = document.createElement("div");
+    icons.classList.add("subtasks-icons");
+
+    const penIcon = createIcon("pen-outline", () => editSubtask(newSubtask, subtasksObject));
+    const trashIcon = createIcon("trash-outline", () => deleteSubtask(subtasksObject, subtaskContainer));
+
+    icons.append(penIcon, trashIcon);
+    return icons;
+  }
+
+  function createIcon(type, callback) {
+    const icon = document.createElement("span");
+    icon.innerHTML = returnIcon(type);
+    icon.addEventListener("click", callback);
+    return icon;
+  }
+
+  function editSubtask(newSubtask, subtasksObject) {
+    const inputField = document.createElement("input");
+    inputField.type = "text";
+    inputField.value = newSubtask.textContent;
+    inputField.classList.add("edit-subtask");
+
+    newSubtask.textContent = "";
+    newSubtask.appendChild(inputField);
+    inputField.focus();
+
+    inputField.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        newSubtask.textContent = inputField.value;
+        subtasksObject.title = inputField.value;
+      }
+    });
+
+    inputField.addEventListener("blur", () => {
+      newSubtask.textContent = inputField.value;
+    });
+  }
+
+  function deleteSubtask(subtasksObject, subtaskContainer) {
+    const index = subtasksArray.indexOf(subtasksObject);
+    if (index !== -1) {
+      subtasksArray.splice(index, 1);
+    }
+    subtasksOverview.removeChild(subtaskContainer);
+  }
 }
 
 async function handleAddTask() {
