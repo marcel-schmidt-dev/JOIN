@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
             ${returnHeader()}
             <div class="content-container">
                 <div class="form-container"></div>
+                <div class="btn-container">
+                    <span>Not a Join user?</span>
+                    <button onclick="renderRegister()">Sign up</button>
+                </div>
                 <div class="sublinks">
                 <a href="#">Privacy Policy</a>
                 <a href="#">Legal notice</a>
