@@ -165,3 +165,49 @@ async function renderTasks() {
     }
   });
 }
+
+function isMobile() {
+  return window.innerWidth <= 768; 
+}
+
+if (!isMobile()) {
+  window.allowDrop = function (event) {
+    event.preventDefault();
+  };
+
+  window.dragTask = function (event, taskId) {
+    currentTaskId = taskId;
+    event.dataTransfer.setData("text", taskId);
+  };
+  window.dropTask = function (event, newStatus) {
+    event.preventDefault();
+    const taskId = event.dataTransfer.getData("text");
+    moveTaskToSlot(taskId, newStatus);
+    renderBoardTemplate();
+  };
+} else {
+  window.allowDrop = function () {};
+  window.dragTask = function () {};
+  window.dropTask = function () {};
+}
+function toggleDragAndDrop() {
+  if (window.innerWidth <= 768) {
+    window.allowDrop = () => {};
+    window.dragTask = () => {};
+    window.dropTask = () => {};
+  } else {
+    window.allowDrop = (e) => e.preventDefault();
+    window.dragTask = (e, taskId) => {
+      currentTaskId = taskId;
+      e.dataTransfer.setData("text", taskId);
+    };
+    window.dropTask = (e, newStatus) => {
+      e.preventDefault();
+      moveTaskToSlot(e.dataTransfer.getData("text"), newStatus);
+      renderBoardTemplate();
+    };
+  }
+}
+
+window.addEventListener("resize", toggleDragAndDrop);
+toggleDragAndDrop(); 

@@ -187,6 +187,53 @@
     }
   }
 }
+.board-container {
+  padding-top: 80px;
+  padding-left: 25px;
+  padding-right: 25px;
+  width: 100%;
+  max-width: calc(1080px + 50px);
+
+  .board {
+    display: flex;
+    gap: 25px;
+    justify-content: space-between;
+
+    @media (max-width: 1540px) {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .slots {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .slot-content {
+      margin-top: 10px;
+      height: 100%;
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      
+    }
+    
+      .btn {
+        transition: none;
+      }
+    
+      .rotate-task {
+        transition: none;
+        transform: none; // Rotation auf mobilen Geräten zurücksetzen
+      }
+    
+      .slot-content {
+        transition: none;
+      }
+  }
+}
 
 @media (max-width: 710px) {
   .board-heading {
@@ -204,4 +251,6 @@
       }
     }
   }
+  
 }
+
