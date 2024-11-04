@@ -1,42 +1,62 @@
 @import "../../scss/vars.scss";
 
 .summary-container {
-  display: flex;
-  padding: 0 25px;
+  padding: 25px;
   padding-top: 80px;
-  gap: 80px;
   align-items: center;
   height: max-content;
+  width: 100%;
 
-  .summary-col {
+  .summary-row {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    flex-direction: column;
-    height: 100%;
-  }
+    gap: 80px;
 
-  .summary-col:last-child {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-weight: 500;
-    color: $navy-blue;
-    font-size: 48px;
+    .summary-col {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      flex-direction: column;
+      height: 100%;
+    }
 
-    div {
-      font-size: 64px;
-      color: $light-blue;
-      font-weight: bold;
+    .summary-col:last-child {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-weight: 500;
+      color: $navy-blue;
+      font-size: 48px;
+
+      @media (max-width: 1024px) {
+        display: none;
+      }
+
+      div {
+        font-size: 64px;
+        color: $light-blue;
+        font-weight: bold;
+      }
     }
   }
 
   .summary-heading {
     display: flex;
     margin-bottom: 55px;
+    position: relative;
+
+    @media (max-width: 1024px) {
+      flex-direction: column;
+    }
+
     h1 {
       font-size: 61px;
       font-weight: bold;
+
+      @media (max-width: 1024px) {
+        font-size: 46px;
+      }
     }
     div {
       display: flex;
@@ -49,6 +69,16 @@
         background-color: $light-blue;
         border: none;
         border-radius: 100vw;
+
+        @media (max-width: 1024px) {
+          margin: 0;
+          width: 100%;
+          max-width: 80px;
+          height: 3px;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+        }
       }
 
       span {
@@ -64,6 +94,16 @@
     flex-wrap: wrap;
     max-width: 560px;
 
+    a {
+      text-decoration: none;
+      transition: all 0.3s ease-in-out;
+      color: #000;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+    }
+
     .summary-card-2 {
       width: calc(50% - 16px);
       background-color: #fff;
@@ -75,7 +115,11 @@
       align-items: center;
       justify-content: center;
       gap: 18px;
-      padding: 38px;
+      padding: 33px 10px;
+
+      @media (max-width: 1024px) {
+        padding: 18px 10px;
+      }
 
       .summary-card-icon {
         width: 100%;
@@ -86,21 +130,35 @@
         border-radius: 50%;
         background-color: $navy-blue;
 
+        @media (max-width: 1024px) {
+          max-width: 40px;
+          max-height: 40px;
+          padding: 12px;
+        }
+
         svg {
           fill: #fff;
         }
       }
 
       .summary-card-content {
-        width: 100%;
         text-align: center;
         font-size: 20px;
-        font-size: $navy-blue;
+        color: $navy-blue;
+        display: inline;
+
+        @media (max-width: 1024px) {
+          font-size: 14px;
+        }
 
         span {
           font-size: 64px;
           font-weight: 600;
           color: #000;
+
+          @media (max-width: 1024px) {
+            font-size: 46px;
+          }
         }
       }
     }
@@ -114,9 +172,12 @@
       -moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 60px;
-      padding: 32px;
+      justify-content: space-evenly;
+      padding: 32px 10px;
+
+      @media (max-width: 1024px) {
+        padding: 20px;
+      }
 
       > div:first-child {
         display: flex;
@@ -141,6 +202,14 @@
         padding: 20px;
         border-radius: 50%;
         background-color: $urgent;
+        display: flex;
+        align-items: center;
+
+        @media (max-width: 1024px) {
+          max-width: 40px;
+          max-height: 40px;
+          padding: 12px;
+        }
 
         svg {
           fill: #fff;
@@ -153,10 +222,18 @@
         font-size: 20px;
         font-size: $navy-blue;
 
+        @media (max-width: 1024px) {
+          font-size: 14px;
+        }
+
         span {
           font-size: 64px;
           font-weight: 600;
           color: #000;
+
+          @media (max-width: 1024px) {
+            font-size: 46px;
+          }
         }
       }
 
