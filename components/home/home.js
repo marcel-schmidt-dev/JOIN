@@ -52,6 +52,9 @@ function returnHeader() {
 
 function renderLogin() {
     const formRef = document.querySelector('.form-container');
+    const btnContainerRef = document.querySelectorAll('.btn-container');
+    btnContainerRef.forEach(btn => btn.style.display = 'flex');
+
     formRef.innerHTML = /*html*/`
             <div class="login">
                 <div class="header">
@@ -88,6 +91,9 @@ function renderLogin() {
 
 function renderRegister() {
     const formRef = document.querySelector('.form-container');
+    const btnContainerRef = document.querySelectorAll('.btn-container');
+    btnContainerRef.forEach(btn => btn.style.display = 'none');
+
     formRef.innerHTML = /*html*/`
             <div class="register">
                 <div class="header">
