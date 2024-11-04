@@ -1,4 +1,7 @@
 .task-content {
+  * {
+    font-family: "Inter";
+  }
   display: flex;
   justify-content: center;
   max-width: 1440px;
@@ -371,7 +374,6 @@
             border: 1px solid #d1d1d1;
             border-radius: 10px;
             z-index: 100;
-            max-width: 333px;
             width: 100%;
             top: 100%;
             right: 0px;
@@ -652,7 +654,7 @@
             font-size: 16px;
           }
           .subtasks-input {
-            margin-bottom: 12px;
+            margin-bottom: 0px;
           }
           .subtasks-overview {
             height: 100%;
