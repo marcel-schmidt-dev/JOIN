@@ -19,8 +19,8 @@ export default async function returnHeader() {
             <span>Kanban Projekt Management Tool</span>
             ${returnIcon('logo-dark')}
             <div>
-                <a href="./help.html">${returnIcon('help')}</a>
                 ${displayName ? /*html*/ `
+                    <a href="./help.html">${returnIcon('help')}</a>
                     <div class="user">
                         <button onclick="toggleMenu(event)">${getInitialsFromName(displayName)}</button>
                         <div class="user-menu">
