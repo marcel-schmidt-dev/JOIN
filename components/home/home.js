@@ -50,10 +50,13 @@ function returnHeader() {
     `;
 }
 
-function renderLogin() {
+function renderLogin(displayBtns) {
     const formRef = document.querySelector('.form-container');
     const btnContainerRef = document.querySelectorAll('.btn-container');
-    btnContainerRef.forEach(btn => btn.style.display = 'flex');
+
+    if (displayBtns) {
+        btnContainerRef.forEach(btn => btn.style.display = '');
+    }
 
     formRef.innerHTML = /*html*/`
             <div class="login">
@@ -98,7 +101,7 @@ function renderRegister() {
             <div class="register">
                 <div class="header">
                     <h1>Sign up<hr></h1>
-                    <button onclick="renderLogin()">${returnIcon('arrow-left')}</button>
+                    <button onclick="renderLogin(true)">${returnIcon('arrow-left')}</button>
                 </div>
                 <form class="form" onsubmit=handleRegister(event)>
                     <div class="inputs">
