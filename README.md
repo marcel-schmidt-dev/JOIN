@@ -29,21 +29,41 @@ No installation needed. Simply open `index.html` in your web browser to get star
 │   ├── board/
 │   │   ├── _board.scss
 │   │   ├── add-task/
+│   │   │   ├── add-task.js
+│   │   │   └── _add-task.scss
 │   │   ├── board.js
 │   │   ├── task-card/
+│   │   │   ├── task-card.js
+│   │   │   └── _task-card.scss
 │   │   └── task-details/
+│   │       ├── task-details.js
+│   │       └── _task-details.scss
 │   ├── contacts/
 │   │   ├── _contacts.scss
 │   │   ├── contact-details/
+│   │   │   ├── contact-details.js
+│   │   │   └── _contact-details.scss
 │   │   └── contact-list/
+│   │       ├── contact-list.js
+│   │       └── _contact-list.scss
 │   ├── firebase.js
 │   ├── header/
+│   │   └── _header.scss
 │   ├── help-privacy-legal/
+│   │   └── help-privacy-legal.js
 │   ├── home/
+│   │   ├── home.js
+│   │   └── _home.scss
 │   ├── icons.js
 │   ├── sidebar/
+│   │   ├── sidebar.js
+│   │   └── _sidebar.scss
 │   ├── summary/
+│   │   ├── summary.js
+│   │   └── _summary.scss
 │   ├── toast/
+│   │   ├── toast.js
+│   │   └── _toast.scss
 │   └── utility-functions.js
 ├── contacts.html
 ├── fonts/
