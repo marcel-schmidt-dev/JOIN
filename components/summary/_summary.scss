@@ -7,6 +7,10 @@
   height: max-content;
   width: 100%;
 
+  @media (max-width: 1024px) {
+    padding-top: 48px;
+  }
+
   .summary-row {
     display: flex;
     align-items: center;
