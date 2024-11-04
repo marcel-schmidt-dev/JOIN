@@ -1,0 +1,63 @@
+.help-privacy-legal {
+  padding: 0 20px;
+  padding-top: 80px;
+  padding-bottom: 20px;
+  height: fit-content;
+
+  span {
+    color: $light-blue;
+  }
+
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+
+    h1 {
+      font-size: 60px;
+    }
+
+    button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      svg {
+        fill: $light-blue;
+        height: 30px;
+        width: auto;
+      }
+    }
+  }
+
+  h2 {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    margin-bottom: 24px;
+  }
+
+  ol {
+    margin-left: 30px;
+
+    li {
+      &::marker {
+        font-size: 25px;
+        font-weight: bold;
+      }
+
+      h3 {
+        font-size: 20px;
+        font-weight: bold;
+      }
+    }
+  }
+}
