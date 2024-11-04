@@ -223,6 +223,15 @@
             }
           }
         }
+
+        .remember-me a {
+          text-decoration: none;
+          color: $light-blue;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
 
       .error-message {

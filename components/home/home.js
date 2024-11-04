@@ -158,35 +158,46 @@ async function anonymouslyLogin() {
 
 async function handleRegister(e) {
     e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirm-password').value;
+    const getField = (id) => document.getElementById(id).value;
+    const name = getField('name'), email = getField('email');
+    const password = getField('password'), confirmPassword = getField('confirm-password');
     const checkPrivacy = document.getElementById('check-privacy').checked;
     const errorRef = document.querySelector('.form .error-message');
-    const formRef = document.querySelector('.form');
     errorRef.innerText = '';
 
-    if (!name || !email || !password || !confirmPassword) {
-        errorRef.innerHTML += 'Please fill all the fields.<br>';
-        formRef.classList.add('error');
+    const { errorMessages, returnState } = validateRegister(name, email, password, confirmPassword, checkPrivacy);
+
+    if (!returnState) {
+        errorRef.innerHTML = errorMessages;
+        document.querySelector('.form').classList.add('error');
+        return;
     }
 
-    if (password !== confirmPassword) {
-        errorRef.innerHTML += 'Passwords do not match.<br>';
-        formRef.classList.add('error');
-    }
-    if (!checkPrivacy) {
-        errorRef.innerHTML += 'Please accept the privacy policy.<br>';
-        formRef.classList.add('error');
-    }
     try {
         const user = await signUp(name, email, password);
-        if (user) {
-            renderLogin();
-            showToast('You Signed Up successfully');
-        }
+        if (user) renderLogin(), showToast('You Signed Up successfully');
     } catch (error) {
-        throw (error);
+        throw error;
     }
+}
+
+function validateRegister(name, email, password, confirmPassword, checkPrivacy) {
+    let errorMessages = '', returnState = true;
+    if (![name, email, password, confirmPassword].every(Boolean)) {
+        errorMessages += 'Fill all fields.<br>'; returnState = false;
+    }
+    if (!checkPrivacy) {
+        errorMessages += 'Accept the privacy policy.<br>'; returnState = false;
+    }
+    if (email && !/@/.test(email)) {
+        errorMessages += 'Enter a valid email.<br>'; returnState = false;
+    }
+    if (password.length < 6) {
+        errorMessages += 'Password must be at least 6 characters.<br>'; returnState = false;
+    }
+    if (password !== confirmPassword) {
+        errorMessages += 'Passwords do not match.<br>'; returnState = false;
+    }
+
+    return { errorMessages, returnState };
 }
