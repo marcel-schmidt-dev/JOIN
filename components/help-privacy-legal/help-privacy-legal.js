@@ -101,9 +101,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (urlPath === '/privacy-policy.html') {
         contentRef.innerHTML = /*html*/`
             <div class="help-privacy-legal">
-                <div class="heading"><h1>Legal Notice</h1><button onclick="handleBack()">${returnIcon('arrow-left')}</button></div>
+                <div class="heading"><h1>Privacy Policy</h1><button onclick="handleBack()">${returnIcon('arrow-left')}</button></div>
                 <div class="inner-content">
-                    <h2>Privacy Policy</h2>
                     <h2>1. Overview of Data Protection</h2>
                     <h3>General Information</h3>
                     <p>The following notes provide a simple overview of what happens to your personal data when you visit this website. Personal data is any data by which you can be personally identified. Detailed information on data protection can be found in our privacy policy below this text.</p>
