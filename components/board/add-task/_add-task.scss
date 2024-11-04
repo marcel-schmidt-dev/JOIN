@@ -97,6 +97,7 @@
             z-index: 100;
             max-width: 333px;
             width: 100%;
+            max-width: 333px;
           }
 
           .dropdown ul {
@@ -328,6 +329,7 @@
       }
 
       .category {
+        position: relative;
         h2 {
           font-size: 20px;
           font-weight: 400;
@@ -371,8 +373,8 @@
             z-index: 100;
             max-width: 333px;
             width: 100%;
-            top: 54%;
-            right: 46px;
+            top: 100%;
+            right: 0px;
           }
 
           .dropdown ul {
@@ -569,7 +571,7 @@
       margin-top: 220px;
     }
     .input-container {
-      max-width: 396px;
+      max-width: 333px;
       flex-direction: column;
 
       .input-left {
@@ -666,6 +668,10 @@
 
       .span-content {
         margin-top: 0px;
+
+        span {
+          font-size: 15px;
+        }
       }
       .add-task-button-container {
         .clear {
@@ -684,9 +690,10 @@
       border: 1px solid #d1d1d1;
       border-radius: 10px;
       z-index: 100;
-      max-width: 280px;
+      max-width: 333px;
       width: 100%;
-      top: 78%;
+      top: 100%;
+      right: 0px;
     }
   }
 }
