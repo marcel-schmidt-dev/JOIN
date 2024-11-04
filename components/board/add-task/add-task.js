@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   await renderTaskTemplate();
   await getAddTaskTemplate();
 
-  // Kontaktliste anzeigen
   const assignedContainer = document.querySelector(".assigned-container");
   const userDropdown = document.getElementById("user-dropdown");
   const selectedContact = document.getElementById("selected-contact");
@@ -26,8 +25,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       selectedContact.value = item.getAttribute("data-user");
     });
   });
+  const priorityButtons = document.querySelectorAll(".priority-buttons button");
+  const mediumButton = document.querySelector(".button-medium");
+  mediumButton.classList.add("active");
+  priorityButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      priorityButtons.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+    });
+  });
 
-  // Datum anzeigen
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("input-container-date").value = "YY";
   document.getElementById("input-container-date").min = today;
@@ -172,8 +179,10 @@ export async function getAddTaskTemplate() {
       userListRef.appendChild(li);
 
       const checkbox = li.querySelector("input[type='checkbox']");
+      const label = li.querySelector(".label");
       if (selectedContactsArray.some((contact) => contact.id === user.id)) {
         checkbox.checked = true;
+        label.classList.add("selected-contact");
       }
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
@@ -185,13 +194,16 @@ export async function getAddTaskTemplate() {
               color: user.userColor,
             });
           }
+          label.classList.add("selected-contact");
         } else {
           selectedContactsArray = selectedContactsArray.filter((contact) => contact.id !== user.id);
+          label.classList.remove("selected-contact");
         }
         updateSelectedContactsDisplay();
       });
     });
   });
+
   function updateSelectedContactsDisplay() {
     const selectedContactsContainer = document.getElementById("selected-contacts-display");
     selectedContactsContainer.innerHTML = "";
@@ -338,6 +350,7 @@ async function handleAddTask() {
     addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
 
     clearAddTaskForm();
+    window.location.href = "/board.html";
   }
 }
 
@@ -351,7 +364,8 @@ function clearAddTaskForm() {
 
   const priorityButtons = document.querySelectorAll(".priority-buttons button");
   priorityButtons.forEach((button) => button.classList.remove("active"));
-
+  const mediumButton = document.querySelector(".button-medium");
+  mediumButton.classList.add("active");
   const subtasksClearRef = document.querySelector(".subtasks-overview");
   subtasksClearRef.innerHTML = "";
 }
