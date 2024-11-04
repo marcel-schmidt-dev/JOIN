@@ -70,6 +70,10 @@
         transform: translate(-50%, -50%) scale(3);
         animation: moveLogo 0.5s ease-in-out forwards 1s;
 
+        @media (max-width: 1024px) {
+          transform: translate(-50%, -50%) scale(2);
+        }
+
         @keyframes moveLogo {
           to {
             left: 20px;
@@ -130,6 +134,10 @@
           color: $navy-blue;
           display: inline-block;
           line-height: 150%;
+
+          @media (max-width: 1024px) {
+            font-size: 48px;
+          }
 
           hr {
             border: 1.5px solid $light-blue;
