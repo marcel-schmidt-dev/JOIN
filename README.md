@@ -6,6 +6,7 @@ JOIN is a collaborative project management tool designed to streamline team work
 
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
+- [File Structure](#file-structure)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -17,6 +18,48 @@ No installation needed. Simply open `index.html` in your web browser to get star
 
 - <img src="https://img.icons8.com/color/24/000000/sass.png" style="vertical-align: middle;"/> **SCSS**: For styling the application.
 - <img src="https://img.icons8.com/color/24/000000/firebase.png" style="vertical-align: middle;"/> **Firebase**: For authentication and real-time database.
+
+## <img src="https://img.icons8.com/color/24/000000/folder-invoices.png" style="vertical-align: middle;"/> File Structure
+
+```
+├── .gitignore
+├── add-task.html
+├── board.html
+├── components/
+│   ├── board/
+│   │   ├── _board.scss
+│   │   ├── add-task/
+│   │   ├── board.js
+│   │   ├── task-card/
+│   │   └── task-details/
+│   ├── contacts/
+│   │   ├── _contacts.scss
+│   │   ├── contact-details/
+│   │   └── contact-list/
+│   ├── firebase.js
+│   ├── header/
+│   ├── help-privacy-legal/
+│   ├── home/
+│   ├── icons.js
+│   ├── sidebar/
+│   ├── summary/
+│   ├── toast/
+│   └── utility-functions.js
+├── contacts.html
+├── fonts/
+│   └── Inter.ttf
+├── help.html
+├── index.html
+├── legal-notice.html
+├── privacy-policy.html
+├── script.js
+├── scss/
+│   ├── _vars.scss
+│   └── _home.scss
+├── style.css
+├── style.scss
+└── summary.html
+```
 
 ## <img src="https://img.icons8.com/color/24/000000/conference-call.png" style="vertical-align: middle;"/> Contributing
 
