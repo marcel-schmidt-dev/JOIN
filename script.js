@@ -4,7 +4,7 @@ import returnSidebar from "./components/sidebar/sidebar.js";
 const urlPath = window.location.pathname;
 document.body.innerHTML += /*html*/`
     <div class="app">
-        ${urlPath !== '/' && urlPath !== '/index.html' ? returnSidebar() : ''}
+        ${urlPath !== '/' && urlPath !== '/index.html' ? await returnSidebar() : ''}
         <div class="content-container">
         ${urlPath !== '/' && urlPath !== '/index.html' ? await returnHeader() : ''}
             <div class="content ${!urlPath !== '/' && !urlPath !== '/index.html' ? 'home-content' : ''}"></div>
