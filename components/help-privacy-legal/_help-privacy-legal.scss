@@ -8,6 +8,10 @@
     color: $light-blue;
   }
 
+  a {
+    color: $light-blue;
+  }
+
   .heading {
     display: flex;
     justify-content: space-between;
@@ -43,6 +47,11 @@
 
   p {
     margin-bottom: 24px;
+  }
+
+  ul {
+    margin-left: 30px;
+    margin-bottom: 20px;
   }
 
   ol {
