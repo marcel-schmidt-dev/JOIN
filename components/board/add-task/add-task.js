@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 });
-async function renderTaskTemplate() {
+export async function renderTaskTemplate() {
   const taskSectionRef = document.querySelector(".content");
   taskSectionRef.innerHTML = /*html*/ `
         <div class="task-content"></div>

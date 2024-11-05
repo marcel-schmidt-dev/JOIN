@@ -2,9 +2,25 @@ import { returnBoard, moveTaskToSlot, updateSubTaskStatus } from "../firebase.js
 import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
 import showTaskDetails from "./task-details/task-details.js";
+import { renderTaskTemplate } from "./add-task/add-task.js";
+import { getAddTaskTemplate } from "./add-task/add-task.js";
+
+window.getAddTaskTemplate = getAddTaskTemplate;
+window.renderTaskTemplate = renderTaskTemplate;
+window.handleAddTaskContent = handleAddTaskContent;
+
+async function handleAddTaskContent() {
+  renderTaskTemplate();
+  getAddTaskTemplate();
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   await renderBoardTemplate();
+
+  const taskRef = document.querySelector("#handleTask");
+  taskRef.addEventListener("click", async () => {
+    await handleAddTaskContent();
+  });
 });
 
 let currentTaskId;
@@ -99,7 +115,7 @@ export async function renderBoardTemplate() {
                 </div>
                 <div>
                   <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon("search")}</span></div>
-                  <button>Add task${returnIcon("plus")}</button>
+                  <button id="handleTask" >Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
             <div class="board">
@@ -167,7 +183,7 @@ async function renderTasks() {
 }
 
 function isMobile() {
-  return window.innerWidth <= 768; 
+  return window.innerWidth <= 768;
 }
 
 if (!isMobile()) {
@@ -210,4 +226,4 @@ function toggleDragAndDrop() {
 }
 
 window.addEventListener("resize", toggleDragAndDrop);
-toggleDragAndDrop(); 
+toggleDragAndDrop();
