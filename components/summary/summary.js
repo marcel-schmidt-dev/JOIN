@@ -92,8 +92,10 @@ async function renderSummaryTemplate() {
                 </div>
             </div>
             <div class="summary-col">
-                Good morning,
-                <div>${user.displayName ? user.displayName : 'Guest'}</div>
+                <div class="welcome">
+                    Good morning,
+                    <div>${user.displayName ? user.displayName : 'Guest'}</div>
+                </div>
             </div>
         </div>
             
