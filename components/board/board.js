@@ -8,19 +8,22 @@ import { getAddTaskTemplate } from "./add-task/add-task.js";
 window.getAddTaskTemplate = getAddTaskTemplate;
 window.renderTaskTemplate = renderTaskTemplate;
 window.handleAddTaskContent = handleAddTaskContent;
+window.handleTask = handleTask;
 
 async function handleAddTaskContent() {
-  renderTaskTemplate();
-  getAddTaskTemplate();
+  await renderTaskTemplate();
+  await getAddTaskTemplate();
+}
+
+function handleTask() {
+  handleAddTaskContent();
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
   await renderBoardTemplate();
 
-  const taskRef = document.querySelector("#handleTask");
-  taskRef.addEventListener("click", async () => {
-    await handleAddTaskContent();
-  });
+  const taskButton = document.getElementById("handleTask");
+  taskButton.addEventListener("click", handleTask);
 });
 
 let currentTaskId;
