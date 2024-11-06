@@ -6,12 +6,30 @@ import { renderTaskTemplate } from "./add-task/add-task.js";
 import { getAddTaskTemplate } from "./add-task/add-task.js";
 
 window.getAddTaskTemplate = getAddTaskTemplate;
-window.renderTaskTemplate = renderTaskTemplate;
+window.renderAddTaskBoard = renderAddTaskBoard;
 window.handleAddTaskContent = handleAddTaskContent;
 window.handleTask = handleTask;
+window.renderBoardTemplate = renderBoardTemplate;
+
+async function renderAddTaskBoard() {
+  const taskSectionRef = document.querySelector(".content");
+  taskSectionRef.innerHTML = /*html*/ `
+      <div class="test">
+        <div class="add-task-board">
+          <div class="button">
+            <svg onclick="renderBoardTemplate()" class="x">${returnIcon("x")}</svg>
+          </div>
+          <div class="task-content"></div>
+        </div>
+      </div>
+    `;
+
+  const addTaskBoard = document.querySelector(".add-task-board");
+  addTaskBoard.classList.add("slide-in");
+}
 
 async function handleAddTaskContent() {
-  await renderTaskTemplate();
+  await renderAddTaskBoard();
   await getAddTaskTemplate();
 }
 
