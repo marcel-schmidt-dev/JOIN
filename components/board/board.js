@@ -2,7 +2,6 @@ import { returnBoard, moveTaskToSlot, updateSubTaskStatus } from "../firebase.js
 import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
 import showTaskDetails from "./task-details/task-details.js";
-import { renderTaskTemplate } from "./add-task/add-task.js";
 import { getAddTaskTemplate } from "./add-task/add-task.js";
 
 window.getAddTaskTemplate = getAddTaskTemplate;
@@ -23,9 +22,6 @@ async function renderAddTaskBoard() {
         </div>
       </div>
     `;
-
-  const addTaskBoard = document.querySelector(".add-task-board");
-  addTaskBoard.classList.add("slide-in");
 }
 
 async function handleAddTaskContent() {

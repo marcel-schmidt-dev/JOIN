@@ -75,6 +75,13 @@ body {
   background: $dark-navy-blue;
 }
 
+.assignee-container {
+  height: 155px;
+  overflow-y: scroll;
+  max-width: 530px;
+  width: 100%;
+}
+
 @media (max-width: 1024px) {
   .app {
     flex-direction: column-reverse;
