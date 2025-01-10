@@ -2,13 +2,16 @@ import { returnBoard, moveTaskToSlot, updateSubTaskStatus } from "../firebase.js
 import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
 import showTaskDetails from "./task-details/task-details.js";
-import { getAddTaskTemplate } from "./add-task/add-task.js";
+import openTaskMenu from "./task-details/task-details.js";
 
-window.getAddTaskTemplate = getAddTaskTemplate;
+// import { getAddTaskTemplate } from "./add-task/add-task.js";
+window.openTaskMenu = openTaskMenu;
+
+// window.getAddTaskTemplate = getAddTaskTemplate;
 window.renderAddTaskBoard = renderAddTaskBoard;
-window.handleAddTaskContent = handleAddTaskContent;
-window.handleTask = handleTask;
-window.renderBoardTemplate = renderBoardTemplate;
+// window.handleAddTaskContent = handleAddTaskContent;
+// window.handleTask = handleTask;
+// window.renderBoardTemplate = renderBoardTemplate;
 
 async function renderAddTaskBoard() {
   const taskSectionRef = document.querySelector(".content");
@@ -22,16 +25,17 @@ async function renderAddTaskBoard() {
         </div>
       </div>
     `;
+  s;
 }
 
-async function handleAddTaskContent() {
-  await renderAddTaskBoard();
-  await getAddTaskTemplate();
-}
+// async function handleAddTaskContent() {
+//   await renderAddTaskBoard();
+//   await getAddTaskTemplate();
+// }
 
-function handleTask() {
-  handleAddTaskContent();
-}
+// function handleTask() {
+//   handleAddTaskContent();
+// }
 
 document.addEventListener("DOMContentLoaded", async () => {
   await renderBoardTemplate();
@@ -48,7 +52,10 @@ window.filterTasks = function () {
   allTasks.forEach((task) => {
     const taskTitle = task.querySelector(".heading span").textContent;
     const taskDescription = task.querySelector(".heading p").textContent;
-    if (taskTitle.toLowerCase().includes(searchInput.value.toLowerCase()) || taskDescription.toLowerCase().includes(searchInput.value.toLowerCase())) {
+    if (
+      taskTitle.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+      taskDescription.toLowerCase().includes(searchInput.value.toLowerCase())
+    ) {
       task.classList.remove("d-none");
     } else {
       task.classList.add("d-none");
@@ -126,16 +133,18 @@ export async function renderBoardTemplate() {
   contentRef.innerHTML = /*html*/ `
         <div class="board-container">
             <div class="board-heading">
-            <div>
+            <div class="board-header">
                 <h2>Board</h2>
                 <button class="covered-btn">${returnIcon("plus")}</button>
                 </div>
-                <div>
-                  <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon("search")}</span></div>
+                <div >
+                  <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon(
+                    "search"
+                  )}</span></div>
                   <button id="handleTask" >Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
-            <div class="board">
+            <div class="board ">
               <div class="slots">
                 <div class="slots-header">
                   <h2>To do</h2>
@@ -168,6 +177,7 @@ export async function renderBoardTemplate() {
               </div>
             </div>
         </div>
+              
     `;
 
   renderTasks();
@@ -180,6 +190,7 @@ async function renderTasks() {
     awaitFeedback: document.getElementById("awaitFeedback-tasks"),
     done: document.getElementById("done-tasks"),
   };
+
   const boardData = await returnBoard();
   for (let status in boardData) {
     for (let task of boardData[status]) {
@@ -187,6 +198,7 @@ async function renderTasks() {
       slots[status].innerHTML += taskTemplate;
     }
   }
+
   document.querySelectorAll(".task").forEach((taskElement) => {
     taskElement.ondragstart = () => startDragging(taskElement.getAttribute("data-task-id"));
     taskElement.ondragend = endDragging;

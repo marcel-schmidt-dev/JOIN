@@ -133,6 +133,7 @@
     justify-content: space-between;
     display: flex;
     gap: 25px;
+    max-width: calc(1080px + 50px);
 
     .slots {
       flex: 1;
@@ -220,6 +221,10 @@
     }
   }
 }
+.board-header {
+  display: flex;
+  justify-content: flex-end;
+}
 .board-container {
   padding-top: 80px;
   padding-left: 25px;
@@ -257,7 +262,7 @@
 
     .rotate-task {
       transition: none;
-      transform: none; // Rotation auf mobilen Geräten zurücksetzen
+      transform: none;
     }
 
     .slot-content {
