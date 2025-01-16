@@ -1,7 +1,22 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getDatabase, ref, get, push, remove, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+import {
+  getDatabase,
+  ref,
+  get,
+  push,
+  remove,
+  set,
+} from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 import { returnRandomUserColor, returnRandomContact } from "./utility-functions.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, createUserWithEmailAndPassword, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInAnonymously,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
 function getFirebase() {
   const firebaseConfig = {
@@ -11,7 +26,7 @@ function getFirebase() {
     projectId: "join-d177e",
     storageBucket: "join-d177e.appspot.com",
     messagingSenderId: "224091284746",
-    appId: "1:224091284746:web:22cd033dcc6f13c23146f3"
+    appId: "1:224091284746:web:22cd033dcc6f13c23146f3",
   };
 
   const app = initializeApp(firebaseConfig);
@@ -153,7 +168,16 @@ export async function returnSubTasks(id, slot) {
   return subTaskArray;
 }
 
-export function addTask(slot = "todo", title, description, type, priority, dueDate, subTasks, assignee) {
+export function addTask(
+  slot = "todo",
+  title,
+  description,
+  type,
+  priority,
+  dueDate,
+  subTasks,
+  assignee
+) {
   const { database } = getFirebase();
   const taskRef = ref(database, `board/${slot}`);
 
@@ -187,7 +211,17 @@ export function deleteTask(slot, id) {
   remove(taskRef);
 }
 
-export function editTask(slot, id, title, description, type, priority, dueDate, subTasks, assignee) {
+export function editTask(
+  slot,
+  id,
+  title,
+  description,
+  type,
+  priority,
+  dueDate,
+  subTasks,
+  assignee
+) {
   const { database } = getFirebase();
   const taskRef = ref(database, `board/${slot}/${id}`);
   set(taskRef, {
@@ -211,8 +245,8 @@ export async function moveTaskToSlot(newSlot, id) {
     let currentSlot = null;
 
     const boardRef = ref(database, "board/");
-    const boardSnapshot = await get(boardRef);
 
+    const boardSnapshot = await get(boardRef);
     const board = boardSnapshot.val();
 
     for (const slot in board) {
@@ -220,6 +254,7 @@ export async function moveTaskToSlot(newSlot, id) {
         currentSlot = slot;
         taskRef = ref(database, `board/${slot}/${id}`);
         const taskSnapshot = await get(taskRef);
+
         if (taskSnapshot.exists()) {
           taskData = taskSnapshot.val();
           break;
@@ -227,14 +262,26 @@ export async function moveTaskToSlot(newSlot, id) {
       }
     }
 
+    if (!taskData) {
+      console.error(`Task with ID ${id} not found in current slots.`);
+      return;
+    }
+
     if (currentSlot === newSlot) {
+      console.log(`Task ${id} is already in the ${newSlot} slot.`);
       return;
     }
 
     const newTaskRef = ref(database, `board/${newSlot}/${id}`);
+    if (!newTaskRef) {
+      console.error(`New slot ${newSlot} does not exist.`);
+      return;
+    }
+
     await set(newTaskRef, taskData);
 
     await remove(taskRef);
+    console.log(`Task ${id} moved to slot ${newSlot}`);
   } catch (error) {
     console.error("Error moving Task to slot:", error);
     throw error;
@@ -258,7 +305,13 @@ async function createRandomTasks() {
   const { database } = getFirebase();
   const contactsRef = ref(database, "contacts/");
 
-  const exampleTitles = ["Implement new feature", "Fix bug in application", "Write documentation", "Design UI for new project", "Conduct code review"];
+  const exampleTitles = [
+    "Implement new feature",
+    "Fix bug in application",
+    "Write documentation",
+    "Design UI for new project",
+    "Conduct code review",
+  ];
   const exampleDescriptions = [
     "This task involves implementing a new feature for the application.",
     "This task is about fixing a bug that has been reported.",
@@ -280,8 +333,10 @@ async function createRandomTasks() {
     for (const slot of boardSlots) {
       for (let i = 0; i < 2; i++) {
         const randomTitle = exampleTitles[Math.floor(Math.random() * exampleTitles.length)];
-        const randomDescription = exampleDescriptions[Math.floor(Math.random() * exampleDescriptions.length)];
-        const randomPriority = examplePriorities[Math.floor(Math.random() * examplePriorities.length)];
+        const randomDescription =
+          exampleDescriptions[Math.floor(Math.random() * exampleDescriptions.length)];
+        const randomPriority =
+          examplePriorities[Math.floor(Math.random() * examplePriorities.length)];
         const randomDueDate = exampleDueDates[Math.floor(Math.random() * exampleDueDates.length)];
         const randomType = exampleTypes[Math.floor(Math.random() * exampleTypes.length)];
 
@@ -315,19 +370,22 @@ async function createRandomTasks() {
   }
 }
 
-
 // TODO: FIX AUTHENTICATION
 
 export async function getAuthUser() {
   const { auth } = getFirebase();
   const user = await new Promise((resolve, reject) => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        resolve(user);
-      } else {
-        resolve(null);
-      }
-    }, reject);
+    onAuthStateChanged(
+      auth,
+      (user) => {
+        if (user) {
+          resolve(user);
+        } else {
+          resolve(null);
+        }
+      },
+      reject
+    );
   });
   return user;
 }
@@ -352,7 +410,7 @@ export async function signIn(email, password) {
   } catch (error) {
     return false;
   }
-};
+}
 
 export async function signOutUser() {
   const { auth } = getFirebase();
@@ -363,7 +421,7 @@ export async function signOutUser() {
     console.error("Error signing out:", error);
     throw error;
   }
-};
+}
 
 export async function signInAnonymouslyUser() {
   const { auth } = getFirebase();
@@ -375,7 +433,7 @@ export async function signInAnonymouslyUser() {
   } catch (error) {
     throw error;
   }
-};
+}
 
 export async function signUp(fullName, email, password) {
   const { auth } = getFirebase();
@@ -383,10 +441,10 @@ export async function signUp(fullName, email, password) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     await updateProfile(user, {
-      displayName: fullName
+      displayName: fullName,
     });
     return user;
   } catch (error) {
     throw error;
   }
-};
+}

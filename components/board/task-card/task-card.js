@@ -9,12 +9,6 @@ export async function returnTaskTemplate(task, slot) {
         <div class="task" draggable="true" 
          ondragstart="startDragging('${task.id}')" 
          data-task-id="${task.id}" onclick="showTaskDetails('${task.id}', '${slot}')">
-         <div class="burger-menu" onclick="openTaskMenu(event, '${task.id}')">
-           <svg viewBox="0 0 24 24">
-             <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" />
-           </svg>
-         </div>
-         
          <div class="type ${task.type === "Technical Task" ? "technical" : "story"}" >${
     task.type
   }</div>
@@ -59,18 +53,10 @@ export async function returnTaskTemplate(task, slot) {
               ${returnIcon(task.priority)}
            </div>
          </div>
+          
+         
         </div>
     `;
-}
-
-export function openTaskMenu(event, taskId) {
-  event.stopPropagation();
-
-  console.log(`Task menu for ${taskId} opened!`);
-
-  if (taskId) {
-    showTaskDetails(taskId);
-  }
 }
 
 async function returnContacts(ids) {

@@ -183,7 +183,7 @@ export async function renderBoardTemplate() {
   renderTasks();
 }
 
-async function renderTasks() {
+export async function renderTasks() {
   const slots = {
     todo: document.getElementById("todo-tasks"),
     inProgress: document.getElementById("inProgress-tasks"),
