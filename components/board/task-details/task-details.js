@@ -21,7 +21,7 @@ export default async function showTaskDetails(taskId, slot) {
                     <div class="type" style="background-color: ${
                       task.type === "Technical Task" ? "#1FD7C1" : "#0038FF"
                     }">${task.type}</div>
-                    <div class="close" onclick="closeTaskDetails()">X</div>
+                    <div class="close" onclick="closeTaskDetails()">✘</div>
                 </div>
                 <h2>${task.title}</h2>
                 <p class="description">${task.description}</p>
