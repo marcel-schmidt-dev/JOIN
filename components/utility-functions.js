@@ -144,3 +144,7 @@ export function returnRandomContact() {
 
   return [names[random], emails[random], phones[random]];
 }
+
+export function returnPath() {
+  return window.location.pathname;
+}
