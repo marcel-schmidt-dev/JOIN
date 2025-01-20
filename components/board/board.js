@@ -3,24 +3,26 @@ import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
 import showTaskDetails from "./task-details/task-details.js";
 import openTaskMenu from "./task-details/task-details.js";
-// import { getAddTaskTemplate } from "./add-task/add-task.js";
+import { getAddTaskTemplate } from "./add-task/add-task.js";
 
 window.openTaskMenu = openTaskMenu;
 window.handleTaskModal = handleTaskModal;
 
 function renderAddTaskBoard() {
-  let taskSectionRef = document.querySelector(".content-container");
+  let taskSectionRef = document.querySelector(".content");
+  const modalTemplate = document.createElement("div");
+  modalTemplate.classList.add("modal-container");
 
-  taskSectionRef.innerHTML += /*html*/ `
-      <div class="modal-container">
+  modalTemplate.innerHTML += /*html*/ `
         <div class="add-task-board">
           <div class="button" onclick="handleTaskModal()">
             <svg class="x">${returnIcon("x")}</svg>
           </div>
           <div class="task-content"></div>
         </div>
-      </div>
     `;
+
+  taskSectionRef.appendChild(modalTemplate);
 }
 
 function handleTaskModal() {
@@ -136,8 +138,8 @@ export async function renderBoardTemplate() {
                 </div>
                 <div >
                   <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon(
-                    "search"
-                  )}</span></div>
+    "search"
+  )}</span></div>
                   <button id="handleTask" >Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
@@ -228,16 +230,16 @@ if (!isMobile()) {
     renderBoardTemplate();
   };
 } else {
-  window.allowDrop = function () {};
-  window.dragTask = function () {};
-  window.dropTask = function () {};
+  window.allowDrop = function () { };
+  window.dragTask = function () { };
+  window.dropTask = function () { };
 }
 
 function toggleDragAndDrop() {
   if (window.innerWidth <= 768) {
-    window.allowDrop = () => {};
-    window.dragTask = () => {};
-    window.dropTask = () => {};
+    window.allowDrop = () => { };
+    window.dragTask = () => { };
+    window.dropTask = () => { };
   } else {
     window.allowDrop = (e) => e.preventDefault();
     window.dragTask = (e, taskId) => {
