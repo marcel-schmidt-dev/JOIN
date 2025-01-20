@@ -11,15 +11,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (returnPath() === "/add-task.html") {
     await renderTaskTemplate();
   }
-  await getAddTaskTemplate();
+
+  //! 4 ###########
+  //   await getAddTaskTemplate();
+
+  if (!document.querySelector(".task-content")) return;
+  //! 4 ###########
 
   const assignedContainer = document.querySelector(".assigned-container");
   const userDropdown = document.getElementById("user-dropdown");
   const selectedContact = document.getElementById("selected-contact");
 
   assignedContainer.addEventListener("click", () => {
-    userDropdown.style.display = userDropdown.style.display === "block" ? "none" : "block";
-    userDropdown.style.display = userDropdown.style.display === "none" ? "block" : "none";
+    userDropdown.style.display =
+      userDropdown.style.display === "block" ? "none" : "block";
+    userDropdown.style.display =
+      userDropdown.style.display === "none" ? "block" : "none";
   });
 
   userDropdown.querySelectorAll("li").forEach((item) => {
@@ -46,7 +53,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const categoryInput = document.getElementById("category");
 
   categoryContainer.addEventListener("click", () => {
-    categoryDropdown.style.display = categoryDropdown.style.display === "block" ? "none" : "block";
+    categoryDropdown.style.display =
+      categoryDropdown.style.display === "block" ? "none" : "block";
   });
 
   categoryDropdown.querySelectorAll("li").forEach((item) => {
@@ -56,16 +64,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
+//! 5 ###########
 export async function renderTaskTemplate() {
   const taskSectionRef = document.querySelector(".content");
   taskSectionRef.innerHTML += /*html*/ `
         <div class="task-content"></div>
     `;
+  getAddTaskTemplate();
 }
+//! 5 ###########
 
+//! 6 ###########
 export async function getAddTaskTemplate() {
   const addTaskRef = document.querySelector(".task-content");
-  addTaskRef.innerHTML += /*html*/ `
+  addTaskRef.innerHTML = /*html*/ `  <!-- 6 ########   +=  to  =  -->
         <div class="main-content">
             <h1>Add Task</h1>
             <div class="input-container">
@@ -86,7 +98,9 @@ export async function getAddTaskTemplate() {
                         <h2>Assigned to</h2>
                         <div class="assigned">
                          <input type="text" name="assigned" class="assigned-container" id="selected-contact" placeholder="Select contacts to assign" readonly />
-                         <span id="dropdown-icon">${returnIcon("arrow-dropdown")}</span>
+                         <span id="dropdown-icon">${returnIcon(
+                           "arrow-dropdown"
+                         )}</span>
                            <div class="dropdown" id="user-dropdown">
                               <ul id="user-list" data-user="user">
                               </ul>
@@ -111,9 +125,15 @@ export async function getAddTaskTemplate() {
                     <div class="priority">
                         <h2>Prio</h2>
                         <div class="priority-buttons">
-                            <button class="button-urgent">Urgent ${returnIcon("urgent")}</button>
-                            <button class="button-medium">Medium ${returnIcon("medium")}</button>
-                            <button class="button-low">Low ${returnIcon("low")}</button>
+                            <button class="button-urgent">Urgent ${returnIcon(
+                              "urgent"
+                            )}</button>
+                            <button class="button-medium">Medium ${returnIcon(
+                              "medium"
+                            )}</button>
+                            <button class="button-low">Low ${returnIcon(
+                              "low"
+                            )}</button>
                         </div>
                     </div>
                     <div class="category">
@@ -150,7 +170,9 @@ export async function getAddTaskTemplate() {
                     <span>This field is required</span>
              </div>
              <div class="add-task-button-container">
-                    <button id="delete-task-button"  class="clear">Clear ${returnIcon("x")}</button>
+                    <button id="delete-task-button"  class="clear">Clear ${returnIcon(
+                      "x"
+                    )}</button>
                     <button id="create-task-button" class="create">Create task ${returnIcon(
                       "check"
                     )}</button>
@@ -193,7 +215,9 @@ export async function getAddTaskTemplate() {
       }
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
-          if (!selectedContactsArray.some((contact) => contact.id === user.id)) {
+          if (
+            !selectedContactsArray.some((contact) => contact.id === user.id)
+          ) {
             selectedContactsArray.push({
               id: user.id,
               name: user.fullName,
@@ -203,7 +227,9 @@ export async function getAddTaskTemplate() {
           }
           label.classList.add("selected-contact");
         } else {
-          selectedContactsArray = selectedContactsArray.filter((contact) => contact.id !== user.id);
+          selectedContactsArray = selectedContactsArray.filter(
+            (contact) => contact.id !== user.id
+          );
           label.classList.remove("selected-contact");
         }
         updateSelectedContactsDisplay();
@@ -212,11 +238,14 @@ export async function getAddTaskTemplate() {
   });
 
   function updateSelectedContactsDisplay() {
-    const selectedContactsContainer = document.getElementById("selected-contacts-display");
+    const selectedContactsContainer = document.getElementById(
+      "selected-contacts-display"
+    );
     selectedContactsContainer.innerHTML = "";
 
     const displayContacts = selectedContactsArray.slice(0, 3);
-    const additionalCount = selectedContactsArray.length - displayContacts.length;
+    const additionalCount =
+      selectedContactsArray.length - displayContacts.length;
 
     displayContacts.forEach((contact) => {
       selectedContactsContainer.innerHTML += `
@@ -234,7 +263,10 @@ export async function getAddTaskTemplate() {
   }
 
   document.addEventListener("click", (event) => {
-    if (!dropdownIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
+    if (
+      !dropdownIcon.contains(event.target) &&
+      !dropdownMenu.contains(event.target)
+    ) {
       dropdownMenu.style.display = "none";
     }
   });
@@ -247,13 +279,17 @@ export async function getAddTaskTemplate() {
     });
   });
 
-  document.getElementById("create-task-button").addEventListener("click", () => {
-    handleAddTask();
-  });
+  document
+    .getElementById("create-task-button")
+    .addEventListener("click", () => {
+      handleAddTask();
+    });
 
-  document.getElementById("delete-task-button").addEventListener("click", () => {
-    clearAddTaskForm();
-  });
+  document
+    .getElementById("delete-task-button")
+    .addEventListener("click", () => {
+      clearAddTaskForm();
+    });
 
   const subtasksInput = document.getElementById("subtasks");
   const subtasksOverview = document.getElementById("subtasks-overview");
@@ -268,7 +304,10 @@ export async function getAddTaskTemplate() {
     if (subtaskText) {
       const subtasksObject = { title: subtaskText, checked: false };
       subtasksArray.push(subtasksObject);
-      const subtaskContainer = createSubtaskContainer(subtaskText, subtasksObject);
+      const subtaskContainer = createSubtaskContainer(
+        subtaskText,
+        subtasksObject
+      );
       subtasksOverview.appendChild(subtaskContainer);
       subtasksInput.value = "";
     }
@@ -283,7 +322,11 @@ export async function getAddTaskTemplate() {
     const newSubtask = document.createElement("p");
     newSubtask.textContent = subtaskText;
 
-    const subtaskIcons = createSubtaskIcons(newSubtask, subtasksObject, container);
+    const subtaskIcons = createSubtaskIcons(
+      newSubtask,
+      subtasksObject,
+      container
+    );
     container.append(newSubtask, subtaskIcons);
 
     return container;
@@ -293,7 +336,9 @@ export async function getAddTaskTemplate() {
     const icons = document.createElement("div");
     icons.classList.add("subtasks-icons");
 
-    const penIcon = createIcon("pen-outline", () => editSubtask(newSubtask, subtasksObject));
+    const penIcon = createIcon("pen-outline", () =>
+      editSubtask(newSubtask, subtasksObject)
+    );
     const trashIcon = createIcon("trash-outline", () =>
       deleteSubtask(subtasksObject, subtaskContainer)
     );
@@ -339,6 +384,7 @@ export async function getAddTaskTemplate() {
     subtasksOverview.removeChild(subtaskContainer);
   }
 }
+//! 6 ###########
 
 async function handleAddTask() {
   const title = document.getElementById("input-container-title").value;
@@ -359,7 +405,9 @@ async function handleAddTask() {
     subTasks.push(subtask.textContent);
   });
 
-  const priority = document.querySelector(".priority-buttons .button-urgent.active")
+  const priority = document.querySelector(
+    ".priority-buttons .button-urgent.active"
+  )
     ? "urgent"
     : document.querySelector(".priority-buttons .button-medium.active")
     ? "medium"
@@ -370,7 +418,16 @@ async function handleAddTask() {
   if (!validateAddTask(title, dueDate)) {
     console.error(" validierung fehlgeschlagen");
   } else {
-    addTask(slot, title, description, type, priority, dueDate, subTasks, assignee);
+    addTask(
+      slot,
+      title,
+      description,
+      type,
+      priority,
+      dueDate,
+      subTasks,
+      assignee
+    );
 
     clearAddTaskForm();
     window.location.href = "/board.html";
