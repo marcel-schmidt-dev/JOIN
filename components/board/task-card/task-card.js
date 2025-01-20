@@ -68,5 +68,6 @@ async function returnContacts(ids) {
 
 function returnCheckedSubtasks(subtasks) {
   let checkedSubtasks = subtasks.filter((subtask) => subtask.checked);
+
   return checkedSubtasks.length;
 }
