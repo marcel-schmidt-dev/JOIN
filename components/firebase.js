@@ -36,7 +36,6 @@ function getFirebase() {
   return { database, auth };
 }
 
-//TODO: Refactor to Async/Await
 export async function getContacts() {
   const { database } = getFirebase();
   const contactsRef = ref(database, "contacts");
@@ -369,8 +368,6 @@ async function createRandomTasks() {
     console.error("Error creating tasks: ", error);
   }
 }
-
-// TODO: FIX AUTHENTICATION
 
 export async function getAuthUser() {
   const { auth } = getFirebase();
