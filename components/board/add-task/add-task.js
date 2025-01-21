@@ -99,8 +99,8 @@ export async function getAddTaskTemplate() {
                         <div class="assigned">
                          <input type="text" name="assigned" class="assigned-container" id="selected-contact" placeholder="Select contacts to assign" readonly />
                          <span id="dropdown-icon">${returnIcon(
-                           "arrow-dropdown"
-                         )}</span>
+    "arrow-dropdown"
+  )}</span>
                            <div class="dropdown" id="user-dropdown">
                               <ul id="user-list" data-user="user">
                               </ul>
@@ -126,14 +126,14 @@ export async function getAddTaskTemplate() {
                         <h2>Prio</h2>
                         <div class="priority-buttons">
                             <button class="button-urgent">Urgent ${returnIcon(
-                              "urgent"
-                            )}</button>
+    "urgent"
+  )}</button>
                             <button class="button-medium">Medium ${returnIcon(
-                              "medium"
-                            )}</button>
+    "medium"
+  )}</button>
                             <button class="button-low">Low ${returnIcon(
-                              "low"
-                            )}</button>
+    "low"
+  )}</button>
                         </div>
                     </div>
                     <div class="category">
@@ -171,11 +171,11 @@ export async function getAddTaskTemplate() {
              </div>
              <div class="add-task-button-container">
                     <button id="delete-task-button"  class="clear">Clear ${returnIcon(
-                      "x"
-                    )}</button>
+    "x"
+  )}</button>
                     <button id="create-task-button" class="create">Create task ${returnIcon(
-                      "check"
-                    )}</button>
+    "check"
+  )}</button>
              </div>
             </div>
         </div>
@@ -199,9 +199,8 @@ export async function getAddTaskTemplate() {
       li.innerHTML = `
         <label class="label">
 
-          <div class="initials-bg" style="background-color: #${
-            user.userColor
-          }">${getInitialsFromName(user.fullName)}</div>  ${user.fullName}
+          <div class="initials-bg" style="background-color: #${user.userColor
+        }">${getInitialsFromName(user.fullName)}</div>  ${user.fullName}
            <input type="checkbox" data-user="${user.fullName}">
         </label>
       `;
@@ -410,8 +409,8 @@ async function handleAddTask() {
   )
     ? "urgent"
     : document.querySelector(".priority-buttons .button-medium.active")
-    ? "medium"
-    : "low";
+      ? "medium"
+      : "low";
   const type = document.getElementById("category").value;
   const slot = undefined;
 

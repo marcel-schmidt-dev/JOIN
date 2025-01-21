@@ -13,22 +13,6 @@ import { getAddTaskTemplate } from "./add-task/add-task.js";
 window.openTaskMenu = openTaskMenu;
 window.handleTask = handleTask;
 
-//! 1 ###########
-
-// async function renderAddTaskBoard() {
-//   const taskSectionRef = document.querySelector(".content");
-//   taskSectionRef.innerHTML += /*html*/ `
-//       <div class="modal-container">
-//         <div class="add-task-board">
-//           <div class="button">
-//             <svg onclick="handleTask()" class="x">${returnIcon("x")}</svg>
-//           </div>
-//           <div class="task-content"></div>
-//         </div>
-//       </div>
-//     `;
-// }
-
 export async function renderAddTaskBoard() {
   const taskSectionRef = document.querySelector(".content");
   const modalContainer = document.createElement("div");
@@ -43,24 +27,10 @@ export async function renderAddTaskBoard() {
   `;
   taskSectionRef.appendChild(modalContainer);
 }
-//! 1 ###########
 
 function handleTask() {
   document.querySelector(".modal-container").classList.toggle("active");
 }
-
-//! 2 ###########
-
-// document.addEventListener("DOMContentLoaded", async () => {
-//   checkAuth();
-//   await renderBoardTemplate();
-//   await renderAddTaskBoard();
-
-//   const taskButton = document.getElementById("handleTask");
-//   const coveredButton = document.querySelector(".covered-btn");
-//   coveredButton.addEventListener("click", handleTask);
-//   taskButton.addEventListener("click", handleTask);
-// });
 
 document.addEventListener("DOMContentLoaded", async () => {
   initializeBoard();
@@ -187,11 +157,11 @@ export async function renderBoardTemplate() {
                 </div>
                 <div >
                   <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon(
-                    "search"
-                  )}</span></div>
+    "search"
+  )}</span></div>
                   <button id="handleTask" >Add task${returnIcon(
-                    "plus"
-                  )}</button>
+    "plus"
+  )}</button>
                 </div> 
             </div>
             <div class="board ">
@@ -282,15 +252,15 @@ if (!isMobile()) {
     renderBoardTemplate();
   };
 } else {
-  window.allowDrop = function () {};
-  window.dragTask = function () {};
-  window.dropTask = function () {};
+  window.allowDrop = function () { };
+  window.dragTask = function () { };
+  window.dropTask = function () { };
 }
 function toggleDragAndDrop() {
   if (window.innerWidth <= 768) {
-    window.allowDrop = () => {};
-    window.dragTask = () => {};
-    window.dropTask = () => {};
+    window.allowDrop = () => { };
+    window.dragTask = () => { };
+    window.dropTask = () => { };
   } else {
     window.allowDrop = (e) => e.preventDefault();
     window.dragTask = (e, taskId) => {
