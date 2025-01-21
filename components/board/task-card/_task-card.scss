@@ -12,10 +12,11 @@
   width: 300px;
   max-width: 300px;
   min-width: 300px;
-  height: auto;
+  min-height: 250px;
+
   box-sizing: border-box;
 
-  justify-content: space-between;
+  justify-content: flex-start;
 
   &.d-none {
     display: none;
@@ -40,6 +41,7 @@
 
   .heading {
     font-size: 1rem;
+    flex: 1;
 
     span {
       font-weight: bold;
