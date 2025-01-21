@@ -90,6 +90,7 @@
             color: #d1d1d1;
             font-size: 1.25rem;
             line-height: 120%;
+            -webkit-user-drag: none;
           }
         }
 
@@ -222,6 +223,13 @@
   padding: 15px;
   border-radius: 12px;
   width: 300px;
+}
+.ph {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
 }
 .d-none {
   display: none;
