@@ -1,18 +1,43 @@
+/**
+ * Imports required icons and Firebase authentication utilities.
+ */
 import returnIcon from "../icons.js";
 import { getAuthUser } from "../firebase.js";
 
+/**
+ * Event listener for DOMContentLoaded to ensure the script runs after the DOM is fully loaded.
+ */
 document.addEventListener("DOMContentLoaded", async () => {
+  /**
+   * Expose the `handleBack` function to the global `window` object.
+   * This allows the function to be used in inline HTML event handlers.
+   */
   window.handleBack = handleBack;
 
+  /**
+   * Reference to the content container element.
+   * The script waits until the element is available in the DOM.
+   */
   let contentRef;
   while ((contentRef = document.querySelector(".content")) === null) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100)); // Polling every 100ms
   }
 
+  /**
+   * Get the current URL path to determine which content to load dynamically.
+   */
   const urlPath = window.location.pathname;
 
+  /**
+   * Retrieve the currently authenticated user using Firebase.
+   * If no user is authenticated, the function returns `null`.
+   */
   const user = await getAuthUser();
 
+  /**
+   * Handles the back navigation button.
+   * Redirects the user to different pages based on authentication status.
+   */
   function handleBack() {
     if (user) {
       window.location.href = "/summary.html";

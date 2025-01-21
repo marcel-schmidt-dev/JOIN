@@ -1,12 +1,19 @@
+/**
+ * Imports required modules and functions.
+ */
 import returnIcon from "../icons.js";
 import { signIn, signInAnonymouslyUser, signUp } from "../firebase.js";
 import { showToast } from "../toast/toast.js";
+
 window.anonymouslyLogin = anonymouslyLogin;
 window.renderRegister = renderRegister;
 window.renderLogin = renderLogin;
 window.handleLogin = handleLogin;
 window.handleRegister = handleRegister;
 
+/**
+ * Initializes the app and sets up the default UI on DOMContentLoaded.
+ */
 document.addEventListener("DOMContentLoaded", function () {
   const contentRef = document.querySelector(".content");
   contentRef.innerHTML = /*html*/ `
@@ -32,6 +39,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }, 2000);
 });
 
+/**
+ * Renders the header section of the page.
+ * @returns {string} - The HTML string for the header.
+ */
 function returnHeader() {
   return /*html*/ `
         <div class="head">
@@ -50,6 +61,10 @@ function returnHeader() {
     `;
 }
 
+/**
+ * Renders the login form and optionally displays additional buttons.
+ * @param {boolean} [displayBtns] - Whether to display buttons for toggling views.
+ */
 function renderLogin(displayBtns) {
   const formRef = document.querySelector(".form-container");
   const btnContainerRef = document.querySelectorAll(".btn-container");
@@ -92,6 +107,9 @@ function renderLogin(displayBtns) {
     `;
 }
 
+/**
+ * Renders the registration form and hides toggle buttons.
+ */
 function renderRegister() {
   const formRef = document.querySelector(".form-container");
   const btnContainerRef = document.querySelectorAll(".btn-container");
@@ -143,6 +161,10 @@ function renderRegister() {
     `;
 }
 
+/**
+ * Handles user login.
+ * @param {Event} e - The form submission event.
+ */
 async function handleLogin(e) {
   e.preventDefault();
   const email = document.getElementById("email").value;
@@ -156,6 +178,9 @@ async function handleLogin(e) {
   }
 }
 
+/**
+ * Handles anonymous login.
+ */
 async function anonymouslyLogin() {
   try {
     const user = await signInAnonymouslyUser();
@@ -165,6 +190,10 @@ async function anonymouslyLogin() {
   }
 }
 
+/**
+ * Handles user registration.
+ * @param {Event} e - The form submission event.
+ */
 async function handleRegister(e) {
   e.preventDefault();
   const getField = (id) => document.getElementById(id).value;
@@ -198,6 +227,15 @@ async function handleRegister(e) {
   }
 }
 
+/**
+ * Validates the registration form inputs.
+ * @param {string} name - User's name.
+ * @param {string} email - User's email.
+ * @param {string} password - User's password.
+ * @param {string} confirmPassword - Confirmation of the password.
+ * @param {boolean} checkPrivacy - Whether the privacy policy was accepted.
+ * @returns {{ errorMessages: string, returnState: boolean }} - Validation results.
+ */
 function validateRegister(name, email, password, confirmPassword, checkPrivacy) {
   let errorMessages = "",
     returnState = true;

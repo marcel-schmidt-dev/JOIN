@@ -8,6 +8,10 @@ import { getAddTaskTemplate } from "./add-task/add-task.js";
 window.openTaskMenu = openTaskMenu;
 window.handleTask = handleTask;
 
+/**
+ * Renders the "Add Task" board as a modal window.
+ * @async
+ */
 export async function renderAddTaskBoard() {
   const taskSectionRef = document.querySelector(".content");
   const modalContainer = document.createElement("div");
@@ -23,14 +27,22 @@ export async function renderAddTaskBoard() {
   taskSectionRef.appendChild(modalContainer);
 }
 
+/**
+ * Toggles the visibility of the task modal container.
+ */
 function handleTask() {
   document.querySelector(".modal-container").classList.toggle("active");
 }
 
+// Initialize the board once the DOM is fully loaded.
 document.addEventListener("DOMContentLoaded", async () => {
   initializeBoard();
 });
 
+/**
+ * Initializes the task board, renders templates, and sets up event listeners.
+ * @async
+ */
 async function initializeBoard() {
   checkAuth();
   await renderBoardTemplate();
@@ -46,6 +58,9 @@ async function initializeBoard() {
 
 let currentTaskId;
 
+/**
+ * Filters tasks based on the user's input in the search bar.
+ */
 window.filterTasks = function () {
   const searchInput = document.querySelector(".search input");
   const allTasks = document.querySelectorAll(".task");
@@ -64,7 +79,12 @@ window.filterTasks = function () {
 };
 
 window.showTaskDetails = showTaskDetails;
-window.closeTaskDetails = () => {
+
+/**
+ * Closes the task details modal and updates subtask statuses.
+ * @async
+ */
+window.closeTaskDetails = async () => {
   const subTasks = document.querySelectorAll(".subtask");
   const taskId = document.querySelector(".task-details").getAttribute("data-task-id");
   const slot = document.querySelector(".task-details").getAttribute("data-task-slot");
@@ -79,10 +99,18 @@ window.closeTaskDetails = () => {
   initializeBoard();
 };
 
+/**
+ * Allows drag-and-drop functionality by preventing the default dragover behavior.
+ * @param {DragEvent} event - The dragover event.
+ */
 window.allowDrop = function (event) {
   event.preventDefault();
 };
 
+/**
+ * Moves a task to a new status slot.
+ * @param {string} newStatus - The ID of the new status slot.
+ */
 window.moveTo = function (newStatus) {
   const taskElement = document.querySelector(`[data-task-id="${currentTaskId}"]`);
   document.getElementById(newStatus).appendChild(taskElement);
@@ -90,22 +118,35 @@ window.moveTo = function (newStatus) {
   moveTaskToSlot(newStatus, currentTaskId);
 };
 
+/**
+ * Starts dragging a task.
+ * @param {string} taskId - The ID of the task being dragged.
+ */
 window.startDragging = function (taskId) {
   currentTaskId = taskId;
   const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
   taskElement.classList.add("rotate-task");
 };
 
+/**
+ * Highlights all available slots during drag-and-drop.
+ */
 window.addAllHighlights = function () {
   const allSlots = document.querySelectorAll(".slot-content");
   allSlots.forEach((slot) => slot.classList.add("drag-area-highlight"));
 };
 
+/**
+ * Removes highlights from all slots after drag-and-drop.
+ */
 window.removeAllHighlights = function () {
   const allSlots = document.querySelectorAll(".slot-content");
   allSlots.forEach((slot) => slot.classList.remove("drag-area-highlight"));
 };
 
+/**
+ * Ends the dragging of a task and removes its drag styles.
+ */
 window.endDragging = function () {
   const taskElement = document.querySelector(`[data-task-id="${currentTaskId}"]`);
   taskElement.classList.remove("rotate-task");
@@ -113,6 +154,9 @@ window.endDragging = function () {
   removeAllHighlights();
 };
 
+/**
+ * Updates the placeholder visibility in slots based on their content.
+ */
 window.updatePlaceholder = function () {
   const allSlots = document.querySelectorAll(".slot-content");
   allSlots.forEach((slot) => {
@@ -124,6 +168,10 @@ window.updatePlaceholder = function () {
   });
 };
 
+/**
+ * Renders the board template, including slots for tasks, buttons, and search functionality.
+ * @async
+ */
 export async function renderBoardTemplate() {
   let contentRef;
   while ((contentRef = document.querySelector(".content")) === null) {
@@ -137,14 +185,14 @@ export async function renderBoardTemplate() {
                 <h2>Board</h2>
                 <button class="covered-btn">${returnIcon("plus")}</button>
                 </div>
-                <div >
+                <div>
                   <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon(
                     "search"
                   )}</span></div>
-                  <button id="handleTask" >Add task${returnIcon("plus")}</button>
+                  <button id="handleTask">Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
-            <div class="board ">
+            <div class="board">
               <div class="slots">
                 <div class="slots-header">
                   <h2>To do</h2>
@@ -177,12 +225,15 @@ export async function renderBoardTemplate() {
               </div>
             </div>
         </div>
-              
     `;
 
   renderTasks();
 }
 
+/**
+ * Renders tasks inside their respective slots on the board.
+ * @async
+ */
 export async function renderTasks() {
   const slots = {
     todo: document.getElementById("todo-tasks"),
@@ -211,19 +262,37 @@ export async function renderTasks() {
   });
 }
 
+/**
+ * Checks if the current device is mobile based on the viewport width.
+ * @returns {boolean} `true` if the device is mobile, `false` otherwise.
+ */
 function isMobile() {
   return window.innerWidth <= 768;
 }
 
+/**
+ * Enables drag-and-drop functionality for desktop devices.
+ */
 if (!isMobile()) {
   window.allowDrop = function (event) {
     event.preventDefault();
   };
 
+  /**
+   * Starts dragging a task, storing its ID.
+   * @param {DragEvent} event - The drag event.
+   * @param {string} taskId - The ID of the task being dragged.
+   */
   window.dragTask = function (event, taskId) {
     currentTaskId = taskId;
     event.dataTransfer.setData("text", taskId);
   };
+
+  /**
+   * Handles dropping a task into a new slot and updating its status.
+   * @param {DragEvent} event - The drop event.
+   * @param {string} newStatus - The new status of the task.
+   */
   window.dropTask = function (event, newStatus) {
     event.preventDefault();
     const taskId = event.dataTransfer.getData("text");
@@ -235,6 +304,10 @@ if (!isMobile()) {
   window.dragTask = function () {};
   window.dropTask = function () {};
 }
+
+/**
+ * Toggles drag-and-drop functionality based on the viewport size.
+ */
 function toggleDragAndDrop() {
   if (window.innerWidth <= 768) {
     window.allowDrop = () => {};
@@ -254,5 +327,6 @@ function toggleDragAndDrop() {
   }
 }
 
+// Add a resize event listener to toggle drag-and-drop functionality dynamically.
 window.addEventListener("resize", toggleDragAndDrop);
 toggleDragAndDrop();

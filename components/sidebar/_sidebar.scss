@@ -98,7 +98,8 @@
     z-index: 10;
     max-height: 80px;
 
-    > svg {
+    > svg,
+    .logo-head {
       display: none;
     }
 

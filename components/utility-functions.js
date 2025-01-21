@@ -1,16 +1,43 @@
+/**
+ * Returns a random user color code from a predefined set of colors.
+ *
+ * @returns {string} A random hex color code from the predefined set.
+ */
 export function returnRandomUserColor() {
-  const colors = ["0038FF", "00BEE8", "1FD7C1", "6E52FF", "9327FF", "9747FF", "FC71FF", "FF4646", "FF5EB3", "FF745E"];
+  const colors = [
+    "0038FF",
+    "00BEE8",
+    "1FD7C1",
+    "6E52FF",
+    "9327FF",
+    "9747FF",
+    "FC71FF",
+    "FF4646",
+    "FF5EB3",
+    "FF745E",
+  ];
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
+/**
+ * Extracts the initials from a full name.
+ * The initials are formed by the first letter of the first name and, if available, the first letter of the last name.
+ *
+ * @param {string} fullName The full name of a person.
+ * @returns {string} A string containing the initials from the full name.
+ */
 export function getInitialsFromName(fullName) {
-
   const nameParts = fullName.split(" ");
   const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
   const lastNameInitial = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() : "";
   return firstNameInitial + lastNameInitial;
 }
 
+/**
+ * Returns a random contact name, email, and phone number from predefined lists.
+ *
+ * @returns {Array} An array containing a name, email, and phone number in that order.
+ */
 export function returnRandomContact() {
   const names = [
     "Max Mustermann",
@@ -52,7 +79,7 @@ export function returnRandomContact() {
     "Günter Ludwig",
     "Angelika Busch",
     "Horst Peters",
-    "Christa Fuchs"
+    "Christa Fuchs",
   ];
   const emails = [
     "max.mustermann@example.com",
@@ -94,9 +121,8 @@ export function returnRandomContact() {
     "guenter.ludwig@example.com",
     "angelika.busch@example.com",
     "horst.peters@example.com",
-    "christa.fuchs@example.com"
+    "christa.fuchs@example.com",
   ];
-
   const phones = [
     "+49 170 1234567",
     "+49 171 2345678",
@@ -137,7 +163,7 @@ export function returnRandomContact() {
     "+49 136 7890123",
     "+49 137 8901234",
     "+49 138 9012345",
-    "+49 139 0123456"
+    "+49 139 0123456",
   ];
 
   const random = Math.floor(Math.random() * names.length);
@@ -145,6 +171,11 @@ export function returnRandomContact() {
   return [names[random], emails[random], phones[random]];
 }
 
+/**
+ * Returns the current path of the window's URL.
+ *
+ * @returns {string} The current pathname from the URL.
+ */
 export function returnPath() {
   return window.location.pathname;
 }

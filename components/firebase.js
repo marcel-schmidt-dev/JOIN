@@ -18,6 +18,10 @@ import {
   signOut,
 } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
+/**
+ * Initializes and returns the Firebase app, database, and authentication instance.
+ * @returns {Object} An object containing the Firebase database and authentication instances.
+ */
 function getFirebase() {
   const firebaseConfig = {
     apiKey: "AIzaSyBDHRtmOAgzYOtLRS0haC7KvV_AQO-HodA",
@@ -36,6 +40,11 @@ function getFirebase() {
   return { database, auth };
 }
 
+/**
+ * Retrieves all contacts from the Firebase database.
+ * If there are fewer than 20 contacts, it generates and adds dummy contacts.
+ * @returns {Promise<Array>} A promise that resolves to an array of contacts.
+ */
 export async function getContacts() {
   const { database } = getFirebase();
   const contactsRef = ref(database, "contacts");
@@ -60,6 +69,11 @@ export async function getContacts() {
   });
 }
 
+/**
+ * Retrieves a single contact by its ID from the Firebase database.
+ * @param {string} id - The ID of the contact to retrieve.
+ * @returns {Promise<Object>} A promise that resolves to the contact object.
+ */
 export async function getContact(id) {
   const { database } = getFirebase();
   const contactsRef = ref(database, `contacts/${id}`);
@@ -69,6 +83,12 @@ export async function getContact(id) {
   return contact;
 }
 
+/**
+ * Adds a new contact to the Firebase database.
+ * @param {string} fullName - The full name of the contact.
+ * @param {string} email - The email address of the contact.
+ * @param {string} phone - The phone number of the contact.
+ */
 export function addContact(fullName, email, phone) {
   const userObject = {
     fullName: fullName,
@@ -83,6 +103,10 @@ export function addContact(fullName, email, phone) {
   push(contactsRef, userObject);
 }
 
+/**
+ * Deletes a contact from the Firebase database and removes the contact from any tasks they are assigned to.
+ * @param {string} id - The ID of the contact to delete.
+ */
 export async function deleteContact(id) {
   const { database } = getFirebase();
   const contactsRef = ref(database, `contacts/${id}`);
@@ -100,6 +124,14 @@ export async function deleteContact(id) {
   remove(contactsRef);
 }
 
+/**
+ * Edits the details of an existing contact in the Firebase database.
+ * @param {string} id - The ID of the contact to edit.
+ * @param {string} name - The updated full name of the contact.
+ * @param {string} email - The updated email of the contact.
+ * @param {string} phone - The updated phone number of the contact.
+ * @param {string} userColor - The updated user color for the contact.
+ */
 export function editContact(id, name, email, phone, userColor) {
   const { database } = getDatabase();
   set(ref(database, `contacts/${id}`), {
@@ -110,8 +142,12 @@ export function editContact(id, name, email, phone, userColor) {
   });
 }
 
+/**
+ * Retrieves the entire task board or a specific slot of tasks.
+ * @param {string} [slot] - The specific slot to retrieve (e.g., "todo", "done").
+ * @returns {Promise<Object>} A promise that resolves to an object representing the board or a specific slot.
+ */
 export async function returnBoard(slot) {
-  //await createRandomTasks();
   const { database } = getFirebase();
 
   try {
@@ -136,6 +172,11 @@ export async function returnBoard(slot) {
   }
 }
 
+/**
+ * Retrieves a specific task by its ID from the Firebase database.
+ * @param {string} id - The ID of the task to retrieve.
+ * @returns {Promise<Object|null>} A promise that resolves to the task object or null if not found.
+ */
 export async function returnTaskById(id) {
   const { database } = getFirebase();
   const boardRef = ref(database, `board/`);
@@ -152,6 +193,12 @@ export async function returnTaskById(id) {
   return null;
 }
 
+/**
+ * Retrieves the sub-tasks of a task from the Firebase database.
+ * @param {string} id - The ID of the task to retrieve sub-tasks for.
+ * @param {string} slot - The slot in the task board (e.g., "todo").
+ * @returns {Promise<Array>} A promise that resolves to an array of sub-task objects.
+ */
 export async function returnSubTasks(id, slot) {
   const { database } = getFirebase();
   const taskRef = ref(database, `board/${slot}/${id}/subTasks`);
@@ -167,6 +214,17 @@ export async function returnSubTasks(id, slot) {
   return subTaskArray;
 }
 
+/**
+ * Adds a new task to the board in the specified slot.
+ * @param {string} slot - The slot to add the task to (e.g., "todo").
+ * @param {string} title - The title of the task.
+ * @param {string} description - The description of the task.
+ * @param {string} type - The type of the task (e.g., "Technical Task").
+ * @param {string} priority - The priority of the task (e.g., "urgent").
+ * @param {string} dueDate - The due date of the task.
+ * @param {Array<string>} subTasks - An array of sub-task titles.
+ * @param {Array<string>} assignee - An array of user IDs assigned to the task.
+ */
 export function addTask(
   slot = "todo",
   title,
@@ -191,6 +249,11 @@ export function addTask(
   });
 }
 
+/**
+ * Converts an array of sub-task titles into an array of sub-task objects with a "checked" property.
+ * @param {Array<string>} subTasks - An array of sub-task titles.
+ * @returns {Array<Object>} An array of sub-task objects with a "checked" property.
+ */
 function returnSubtaskArray(subTasks) {
   let subTaskArray = [];
 
@@ -204,12 +267,29 @@ function returnSubtaskArray(subTasks) {
   return subTaskArray;
 }
 
+/**
+ * Deletes a task from the specified slot on the board.
+ * @param {string} slot - The slot the task is in (e.g., "todo").
+ * @param {string} id - The ID of the task to delete.
+ */
 export function deleteTask(slot, id) {
   const { database } = getFirebase();
   const taskRef = ref(database, `board/${slot}/${id}`);
   remove(taskRef);
 }
 
+/**
+ * Edits an existing task on the board.
+ * @param {string} slot - The slot the task is in (e.g., "todo").
+ * @param {string} id - The ID of the task to edit.
+ * @param {string} title - The updated title of the task.
+ * @param {string} description - The updated description of the task.
+ * @param {string} type - The updated type of the task (e.g., "Technical Task").
+ * @param {string} priority - The updated priority of the task.
+ * @param {string} dueDate - The updated due date of the task.
+ * @param {Array<string>} subTasks - The updated sub-tasks of the task.
+ * @param {Array<string>} assignee - The updated assignees for the task.
+ */
 export function editTask(
   slot,
   id,
@@ -234,6 +314,13 @@ export function editTask(
   });
 }
 
+/**
+ * Moves a task to a different slot in the board.
+ *
+ * @param {string} newSlot The new slot where the task should be moved.
+ * @param {string} id The ID of the task to be moved.
+ * @throws {Error} If there is an error moving the task or the task is not found.
+ */
 export async function moveTaskToSlot(newSlot, id) {
   try {
     newSlot = newSlot.replace("-tasks", "");
@@ -278,7 +365,6 @@ export async function moveTaskToSlot(newSlot, id) {
     }
 
     await set(newTaskRef, taskData);
-
     await remove(taskRef);
     console.log(`Task ${id} moved to slot ${newSlot}`);
   } catch (error) {
@@ -287,6 +373,16 @@ export async function moveTaskToSlot(newSlot, id) {
   }
 }
 
+/**
+ * Updates the status of a subtask.
+ *
+ * @param {string} slot The slot of the task where the subtask belongs.
+ * @param {string} taskId The ID of the task to which the subtask belongs.
+ * @param {string} subTaskId The ID of the subtask to update.
+ * @param {boolean} isChecked The new status of the subtask (checked or not).
+ * @param {string} title The title of the subtask.
+ * @throws {Error} If there is an error updating the subtask status.
+ */
 export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked, title) {
   const { database } = getFirebase();
   const subTaskRef = ref(database, `board/${slot}/${taskId}/subTasks/${subTaskId}`);
@@ -299,7 +395,12 @@ export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked, ti
   }
 }
 
-// Copyright by ChatGPT for creating dummy data in Database faster
+/**
+ * Creates random tasks and assigns them to the board slots.
+ *
+ * @async
+ * @throws {Error} If there is an error creating the tasks.
+ */
 async function createRandomTasks() {
   const { database } = getFirebase();
   const contactsRef = ref(database, "contacts/");
@@ -369,6 +470,11 @@ async function createRandomTasks() {
   }
 }
 
+/**
+ * Retrieves the current authenticated user.
+ *
+ * @returns {Promise<Object|null>} The current authenticated user or null if no user is authenticated.
+ */
 export async function getAuthUser() {
   const { auth } = getFirebase();
   const user = await new Promise((resolve, reject) => {
@@ -387,6 +493,11 @@ export async function getAuthUser() {
   return user;
 }
 
+/**
+ * Checks if a user is authenticated, and redirects to login if not.
+ *
+ * @throws {Error} If the user is not authenticated.
+ */
 export async function checkAuth() {
   const user = await getAuthUser();
   if (!user) {
@@ -394,6 +505,13 @@ export async function checkAuth() {
   }
 }
 
+/**
+ * Signs in a user with the provided email and password.
+ *
+ * @param {string} email The user's email address.
+ * @param {string} password The user's password.
+ * @returns {Promise<Object|false>} The authenticated user object or false if authentication failed.
+ */
 export async function signIn(email, password) {
   const { auth } = getFirebase();
 
@@ -409,6 +527,11 @@ export async function signIn(email, password) {
   }
 }
 
+/**
+ * Signs out the current authenticated user.
+ *
+ * @throws {Error} If there is an error signing out.
+ */
 export async function signOutUser() {
   const { auth } = getFirebase();
   try {
@@ -420,6 +543,12 @@ export async function signOutUser() {
   }
 }
 
+/**
+ * Signs in a user anonymously.
+ *
+ * @returns {Promise<Object>} The anonymously signed-in user object.
+ * @throws {Error} If there is an error signing in anonymously.
+ */
 export async function signInAnonymouslyUser() {
   const { auth } = getFirebase();
   try {
@@ -432,6 +561,15 @@ export async function signInAnonymouslyUser() {
   }
 }
 
+/**
+ * Signs up a new user with the provided full name, email, and password.
+ *
+ * @param {string} fullName The user's full name.
+ * @param {string} email The user's email address.
+ * @param {string} password The user's password.
+ * @returns {Promise<Object>} The signed-up user object.
+ * @throws {Error} If there is an error during the sign-up process.
+ */
 export async function signUp(fullName, email, password) {
   const { auth } = getFirebase();
   try {
