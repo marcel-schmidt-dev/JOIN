@@ -1,9 +1,4 @@
-import {
-  returnBoard,
-  moveTaskToSlot,
-  updateSubTaskStatus,
-  checkAuth,
-} from "../firebase.js";
+import { returnBoard, moveTaskToSlot, updateSubTaskStatus, checkAuth } from "../firebase.js";
 import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
 import showTaskDetails from "./task-details/task-details.js";
@@ -12,22 +7,6 @@ import { getAddTaskTemplate } from "./add-task/add-task.js";
 
 window.openTaskMenu = openTaskMenu;
 window.handleTask = handleTask;
-
-//! 1 ###########
-
-// async function renderAddTaskBoard() {
-//   const taskSectionRef = document.querySelector(".content");
-//   taskSectionRef.innerHTML += /*html*/ `
-//       <div class="modal-container">
-//         <div class="add-task-board">
-//           <div class="button">
-//             <svg onclick="handleTask()" class="x">${returnIcon("x")}</svg>
-//           </div>
-//           <div class="task-content"></div>
-//         </div>
-//       </div>
-//     `;
-// }
 
 export async function renderAddTaskBoard() {
   const taskSectionRef = document.querySelector(".content");
@@ -43,24 +22,10 @@ export async function renderAddTaskBoard() {
   `;
   taskSectionRef.appendChild(modalContainer);
 }
-//! 1 ###########
 
 function handleTask() {
   document.querySelector(".modal-container").classList.toggle("active");
 }
-
-//! 2 ###########
-
-// document.addEventListener("DOMContentLoaded", async () => {
-//   checkAuth();
-//   await renderBoardTemplate();
-//   await renderAddTaskBoard();
-
-//   const taskButton = document.getElementById("handleTask");
-//   const coveredButton = document.querySelector(".covered-btn");
-//   coveredButton.addEventListener("click", handleTask);
-//   taskButton.addEventListener("click", handleTask);
-// });
 
 document.addEventListener("DOMContentLoaded", async () => {
   initializeBoard();
@@ -78,7 +43,6 @@ async function initializeBoard() {
   coveredButton.addEventListener("click", handleTask);
   taskButton.addEventListener("click", handleTask);
 }
-//! 2 ###########
 
 let currentTaskId;
 
@@ -99,16 +63,11 @@ window.filterTasks = function () {
   });
 };
 
-//! 3 ###########
 window.showTaskDetails = showTaskDetails;
 window.closeTaskDetails = () => {
   const subTasks = document.querySelectorAll(".subtask");
-  const taskId = document
-    .querySelector(".task-details")
-    .getAttribute("data-task-id");
-  const slot = document
-    .querySelector(".task-details")
-    .getAttribute("data-task-slot");
+  const taskId = document.querySelector(".task-details").getAttribute("data-task-id");
+  const slot = document.querySelector(".task-details").getAttribute("data-task-slot");
 
   subTasks.forEach(async (subTask) => {
     const subTaskId = subTask.querySelector("input").id;
@@ -117,20 +76,15 @@ window.closeTaskDetails = () => {
     await updateSubTaskStatus(slot, taskId, subTaskId, isChecked, title);
   });
 
-  // renderBoardTemplate();
-
   initializeBoard();
 };
-//! 3 ###########
 
 window.allowDrop = function (event) {
   event.preventDefault();
 };
 
 window.moveTo = function (newStatus) {
-  const taskElement = document.querySelector(
-    `[data-task-id="${currentTaskId}"]`
-  );
+  const taskElement = document.querySelector(`[data-task-id="${currentTaskId}"]`);
   document.getElementById(newStatus).appendChild(taskElement);
   removeAllHighlights();
   moveTaskToSlot(newStatus, currentTaskId);
@@ -153,9 +107,7 @@ window.removeAllHighlights = function () {
 };
 
 window.endDragging = function () {
-  const taskElement = document.querySelector(
-    `[data-task-id="${currentTaskId}"]`
-  );
+  const taskElement = document.querySelector(`[data-task-id="${currentTaskId}"]`);
   taskElement.classList.remove("rotate-task");
 
   removeAllHighlights();
@@ -189,9 +141,7 @@ export async function renderBoardTemplate() {
                   <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon(
                     "search"
                   )}</span></div>
-                  <button id="handleTask" >Add task${returnIcon(
-                    "plus"
-                  )}</button>
+                  <button id="handleTask" >Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
             <div class="board ">
@@ -250,8 +200,7 @@ export async function renderTasks() {
   }
 
   document.querySelectorAll(".task").forEach((taskElement) => {
-    taskElement.ondragstart = () =>
-      startDragging(taskElement.getAttribute("data-task-id"));
+    taskElement.ondragstart = () => startDragging(taskElement.getAttribute("data-task-id"));
     taskElement.ondragend = endDragging;
   });
 

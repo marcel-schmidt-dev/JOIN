@@ -1,11 +1,21 @@
+/**
+ * Imports necessary functions and icons for task details.
+ */
 import { returnTaskById, getContact, returnSubTasks, deleteTask } from "../../firebase.js";
 import returnIcon from "../../icons.js";
 import { getInitialsFromName } from "../../utility-functions.js";
 import { renderBoardTemplate, renderTasks } from "../board.js";
 import { moveTaskToSlot } from "../../firebase.js";
 
+// Attach the moveTaskToSlot function to the global window object.
 window.moveTaskToSlot = moveTaskToSlot;
 
+/**
+ * Displays detailed information about a task.
+ * @async
+ * @param {string} taskId - The ID of the task to display.
+ * @param {string} slot - The current slot the task belongs to.
+ */
 export default async function showTaskDetails(taskId, slot) {
   const task = await returnTaskById(taskId);
   const contentRef = document.querySelector(".content");
@@ -93,9 +103,7 @@ export default async function showTaskDetails(taskId, slot) {
                     <button>${returnIcon("pen")}Edit</button>
                 </div>
             </div>
-            
         </div>
-       
     `;
 
   const moveButtons = contentRef.querySelectorAll(".move-btn");
@@ -122,6 +130,9 @@ export default async function showTaskDetails(taskId, slot) {
   }
 }
 
+/**
+ * Closes the task details view.
+ */
 export function closeTaskDetails() {
   document.querySelector(".task-details-container").remove();
 }

@@ -1,7 +1,17 @@
+/**
+ * Imports necessary icons and utility functions.
+ */
 import returnIcon from "../../icons.js";
 import { getContact } from "../../firebase.js";
 import { getInitialsFromName } from "../../utility-functions.js";
 
+/**
+ * Generates the HTML template for a task card.
+ * @async
+ * @param {Object} task - The task object containing all details about the task.
+ * @param {string} slot - The slot identifier where the task belongs.
+ * @returns {Promise<string>} The HTML string representing the task card.
+ */
 export async function returnTaskTemplate(task, slot) {
   let assigneeList = await returnContacts(task.assignee);
 
@@ -53,12 +63,16 @@ export async function returnTaskTemplate(task, slot) {
               ${returnIcon(task.priority)}
            </div>
          </div>
-          
-         
         </div>
     `;
 }
 
+/**
+ * Fetches contact details for a list of contact IDs.
+ * @async
+ * @param {string[]} ids - An array of contact IDs.
+ * @returns {Promise<Object[]|null>} An array of contact objects or null if no IDs are provided.
+ */
 async function returnContacts(ids) {
   if (!ids) return null;
   let contactPromises = ids.map((id) => getContact(id));
@@ -66,8 +80,13 @@ async function returnContacts(ids) {
   return contacts;
 }
 
+/**
+ * Counts the number of checked subtasks.
+ * @param {Object[]} subtasks - An array of subtask objects.
+ * @param {boolean} subtasks[].checked - Indicates if the subtask is checked.
+ * @returns {number} The count of checked subtasks.
+ */
 function returnCheckedSubtasks(subtasks) {
   let checkedSubtasks = subtasks.filter((subtask) => subtask.checked);
-
   return checkedSubtasks.length;
 }

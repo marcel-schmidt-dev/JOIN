@@ -2,31 +2,31 @@ import returnIcon from "../icons.js";
 import { getAuthUser } from "../firebase.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    window.handleBack = handleBack;
+  window.handleBack = handleBack;
 
-    let contentRef;
-    while ((contentRef = document.querySelector(".content")) === null) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+  let contentRef;
+  while ((contentRef = document.querySelector(".content")) === null) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
+  const urlPath = window.location.pathname;
+
+  const user = await getAuthUser();
+
+  function handleBack() {
+    if (user) {
+      window.location.href = "/summary.html";
+    } else {
+      window.location.href = "/";
     }
+  }
 
-    const urlPath = window.location.pathname;
-
-    const user = await getAuthUser();
-
-    function handleBack() {
-        if (user) {
-            window.location.href = "/board.html";
-        }
-        else {
-            window.location.href = "/";
-        }
-    }
-
-
-    if (urlPath === '/help.html') {
-        contentRef.innerHTML = /*html*/`
+  if (urlPath === "/help.html") {
+    contentRef.innerHTML = /*html*/ `
             <div class="help-privacy-legal">
-                <div class="heading"><h1>Help</h1><button onclick="handleBack()">${returnIcon('arrow-left')}</button></div>
+                <div class="heading"><h1>Help</h1><button onclick="handleBack()">${returnIcon(
+                  "arrow-left"
+                )}</button></div>
                 <div class="inner-content">
                     <p>Welcome to the help page for <span>Join</span>, your guide to using our kanban project management tool. Here, we'll provide an overview of what <span>Join</span> is, how it can benefit you, and how to use it.</p>
                     <h2>What is Join?</h2>
@@ -62,13 +62,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <h2>Enjoy using Join!</h2>
                 </div>
             </div>
-        `
-    }
+        `;
+  }
 
-    if (urlPath === '/legal-notice.html') {
-        contentRef.innerHTML = /*html*/`
+  if (urlPath === "/legal-notice.html") {
+    contentRef.innerHTML = /*html*/ `
             <div class="help-privacy-legal">
-                <div class="heading"><h1>Legal Notice</h1><button onclick="handleBack()">${returnIcon('arrow-left')}</button></div>
+                <div class="heading"><h1>Legal Notice</h1><button onclick="handleBack()">${returnIcon(
+                  "arrow-left"
+                )}</button></div>
                 <div class="inner-content">
                     <h2>Imprint</h2>
                     <ul>
@@ -95,13 +97,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <p>Date: July 26, 2023</p>
                 </div>
             </div>
-        `
-    }
+        `;
+  }
 
-    if (urlPath === '/privacy-policy.html') {
-        contentRef.innerHTML = /*html*/`
+  if (urlPath === "/privacy-policy.html") {
+    contentRef.innerHTML = /*html*/ `
             <div class="help-privacy-legal">
-                <div class="heading"><h1>Privacy Policy</h1><button onclick="handleBack()">${returnIcon('arrow-left')}</button></div>
+                <div class="heading"><h1>Privacy Policy</h1><button onclick="handleBack()">${returnIcon(
+                  "arrow-left"
+                )}</button></div>
                 <div class="inner-content">
                     <h2>1. Overview of Data Protection</h2>
                     <h3>General Information</h3>
@@ -197,6 +201,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <p>Source: <a href="https://www.e-recht24.de" target="_blank" >https://www.e-recht24.de</a></p>
                 </div>
             </div>
-        `
-    }
+        `;
+  }
 });
