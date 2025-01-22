@@ -8,6 +8,10 @@
     margin-bottom: 48px;
   }
 
+  .red-star {
+    color: red;
+  }
+
   .task-form-container {
     #task-form {
       display: flex;
@@ -21,7 +25,7 @@
       }
 
       label,
-      > input,
+      input:not([type="checkbox"]),
       #assignee-input,
       textarea,
       select {
@@ -50,8 +54,15 @@
           margin-bottom: 12px;
         }
 
-        #assignee-input:focus + .assignee-dropdown {
-          display: block;
+        #assignee-input {
+          background-image: url("data:image/svg+xml,%3Csvg%20width%3D%228%22%20height%3D%225%22%20viewBox%3D%220%200%208%205%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M3.29998%204.3L0.699975%201.7C0.383309%201.38333%200.312475%201.02083%200.487475%200.6125C0.662475%200.204167%200.974975%200%201.42498%200H6.57498C7.02498%200%207.33747%200.204167%207.51248%200.6125C7.68748%201.02083%207.61664%201.38333%207.29997%201.7L4.69998%204.3C4.59998%204.4%204.49164%204.475%204.37498%204.525C4.25831%204.575%204.13331%204.6%203.99998%204.6C3.86664%204.6%203.74164%204.575%203.62498%204.525C3.50831%204.475%203.39998%204.4%203.29998%204.3Z%22%20fill%3D%22%232A3647%22/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 22px top 50%;
+          background-size: auto 6px;
+          cursor: pointer;
+          &:focus + .assignee-dropdown {
+            display: block;
+          }
         }
 
         .assignee-dropdown {
@@ -67,32 +78,54 @@
             display: block;
           }
 
+          > span {
+            padding: 8px 16px;
+            display: block;
+          }
+
           .assignee {
             display: flex;
             align-items: center;
             gap: 16px;
             padding: 8px 16px;
             border-radius: 10px;
+            cursor: pointer;
+
+            &.selected {
+              background-color: $dark-navy-blue !important;
+              color: #fff;
+            }
 
             &:hover {
               background-color: #eee;
             }
 
-            .initials-bubble {
-              min-width: 2.625rem;
-              height: 2.625rem;
-              border-radius: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: #fff;
-              border: 2px solid #fff;
-            }
             span {
               flex: 1;
             }
+            input {
+              pointer-events: none;
+            }
           }
         }
+      }
+
+      .assignees {
+        display: flex;
+        gap: 8px;
+      }
+
+      .initials-bubble {
+        width: 2.625rem;
+        height: 2.625rem;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        border: 2px solid #fff;
+        font-size: 0.75rem;
+        user-select: none;
       }
 
       #due-date {
@@ -171,6 +204,10 @@
         background-position: right 22px top 50%;
         cursor: pointer;
         background-size: auto 6px;
+
+        option[value=""][disabled] {
+          display: none;
+        }
       }
     }
     hr {
@@ -184,9 +221,9 @@
     width: 100%;
     margin-top: 50px;
 
-    span {
+    P {
       display: flex;
-      align-items: end;
+      align-items: flex-end;
       font-size: 20px;
       font-weight: 400;
     }
@@ -239,12 +276,11 @@
       }
     }
   }
-  .subtasks-container {
+  .input-container {
     display: flex;
     align-items: center;
     border: 1px solid #d1d1d1;
     border-radius: 10px;
-    display: flex;
     justify-content: space-between;
     background-color: white;
 

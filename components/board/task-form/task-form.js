@@ -5,10 +5,16 @@ import returnIcon from "../../icons.js";
 window.handlePriorityClick = handlePriorityClick;
 window.showDatepicker = showDatepicker;
 window.renderAssigneeList = renderAssigneeList;
+window.clearForm = clearForm;
+window.toggleAssigneeInList = toggleAssigneeInList;
+window.clearPriority = clearPriority;
+
+let contactList;
+let assignedContacts = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
   checkAuth();
-
+  contactList = await getContacts();
   if (returnPath() === "/add-task.html") {
     renderTaskForm();
   }
@@ -27,7 +33,7 @@ export async function renderTaskForm(className = ".content", task = null) {
               <div class="task-form-container">
               <form id="task-form">
               <div>
-                <label for="title">Title</label>
+                <label for="title">Title <span class="red-star">*</span></label>
                 <input type="text" id="title" name="title" placeholder="Enter a title" required>
                 <label for="description">Description</label>
                 <textarea id="description" name="description" placeholder="Enter a Description" rows="3"></textarea>
@@ -36,7 +42,7 @@ export async function renderTaskForm(className = ".content", task = null) {
               </div>
               <hr />
               <div>
-                <label for="due-date">Due date</label>
+                <label for="due-date">Due date <span class="red-star">*</span></label>
                 <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" required>
                 <label for="priority">Prio</label>
                 <div class="priorities">
@@ -44,14 +50,15 @@ export async function renderTaskForm(className = ".content", task = null) {
                   <button type="button" class="priority selected" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon("medium")}</button>
                   <button type="button" class="priority" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
                 </div>
-                <label for="category">Category</label>
+                <label for="category">Category <span class="red-star">*</span></label>
                 <select name="category" id="category">
+                  <option value="" disabled selected>Select task category</option>
                   <option value="User Story">User Story</option>
                   <option value="Technical Task">Technical Task</option>
                 </select>
                 <label for="Subtasks">Subtasks</label>
                 <!-- TODO: Custom Input Field -->
-                <div class="subtasks-container">
+                <div class="input-container">
                 <input type="text" id="subtasks-input" name="" placeholder="Add new subtask"/> 
                 <div class="icon">
                 ${returnIcon("plus")}
@@ -61,9 +68,9 @@ export async function renderTaskForm(className = ".content", task = null) {
               </div>
               </div>
               <div class="footer-buttons">
-                  <span>This field is required</span>
+                  <p><span class="red-star">*</span>This field is required</p>
                   <div class="buttons">
-                  <button type="button" id="clear-form" class="clear-button">Clear ${returnIcon("x")}</button>
+                  <button type="button" onclick="clearForm(); clearPriority()" id="clear-form" class="clear-button">Clear ${returnIcon("x")}</button>
                   <button type="submit" id="submit-task" class="submit-button">Create Task ${returnIcon("check")}</button>
                   </div>
                </div>
@@ -71,6 +78,23 @@ export async function renderTaskForm(className = ".content", task = null) {
             </div>
         `;
   }
+}
+
+function clearForm() {
+  document.querySelector("#title").value = "";
+  document.querySelector("#description").value = "";
+  assignedContacts = [];
+  document.querySelector("#due-date").value = "";
+  document.querySelector("#category").value = "";
+  document.querySelector("#subtasks-input").value = "";
+
+  renderSelectedAssignees();
+}
+
+function clearPriority() {
+  const buttons = document.querySelectorAll(".priorities .priority");
+  buttons.forEach((button) => button.classList.remove("selected"));
+  buttons[1].classList.add("selected");
 }
 
 function handlePriorityClick(element) {
@@ -92,7 +116,7 @@ async function returnAssigneeInput() {
   return /*html*/ `
   <div class="assignee-input">
   <label for="assigned-input">Assigned to</label>
-    <input type="text" id="assignee-input" name="assigned-input" placeholder="Select contacts to assign" onClick="renderAssigneeList()">
+      <input type="text" id="assignee-input" name="assigned-input" placeholder="Select contacts to assign" onClick="renderAssigneeList()" oninput="renderAssigneeList()">
     <div class="assignee-dropdown">
     </div>
   </div>
@@ -100,23 +124,51 @@ async function returnAssigneeInput() {
 }
 
 async function renderAssigneeList() {
-  const contacts = await getContacts();
   const filterInput = document.getElementById("assignee-input");
-  const filteredContacts = contacts.filter((contact) => contact.fullName.toLowerCase().includes(filterInput.value.toLowerCase()));
-
-  let contactsList = "";
+  const filteredContacts = contactList.filter((contact) => contact.fullName.toLowerCase().includes(filterInput.value.toLowerCase()));
   filteredContacts.sort((a, b) => a.fullName.localeCompare(b.fullName));
   const assigneeDropdown = document.querySelector(".assignee-dropdown");
 
+  let contactsList = "";
+
   filteredContacts.forEach((contact) => {
+    const isChecked = assignedContacts.find((assignedContact) => assignedContact.id === contact.id);
+
     contactsList += /*html*/ `
-    <div class="assignee">
-      <div class="initials-bubble" style="background-color: #${filteredContacts.userColor}">${getInitialsFromName(filteredContacts.fullName)}</div>
+    <div class="assignee ${isChecked && "selected"}" onClick="toggleAssigneeInList(this)">
+      <div class="initials-bubble" style="background-color: #${contact.userColor}">${getInitialsFromName(contact.fullName)} </div>
       <span>${contact.fullName}</span>
-      <input type="checkbox" name="assignee" value="${filteredContacts.id}">
-    </div>
+      <input ${isChecked && "checked"} type="checkbox" name="assignee" data-id="${contact.id}" data-fullname="${contact.fullName}" data-usercolor="${contact.userColor}" />
+  </div>
     `;
   });
 
-  assigneeDropdown.innerHTML = contactsList;
+  assigneeDropdown.innerHTML = "";
+  assigneeDropdown.innerHTML = filteredContacts.length > 0 ? contactsList : "<span>No contacts found</span>";
+}
+
+function toggleAssigneeInList(element) {
+  const checkBox = element.querySelector("input");
+
+  if (!checkBox.checked) {
+    assignedContacts.push({ id: checkBox.dataset.id, fullName: checkBox.dataset.fullname, userColor: checkBox.dataset.usercolor });
+    checkBox.checked = true;
+    element.classList.add("selected");
+  } else {
+    assignedContacts = assignedContacts.filter((contact) => contact.id !== checkBox.dataset.id);
+    checkBox.checked = false;
+    element.classList.remove("selected");
+  }
+
+  renderSelectedAssignees();
+}
+
+function renderSelectedAssignees() {
+  const assignees = document.querySelector(".assignees");
+  assignees.innerHTML = "";
+  assignedContacts.forEach((contact) => {
+    assignees.innerHTML += /*html*/ `
+      <div class="initials-bubble" style="background-color: #${contact.userColor}" title="${contact.fullName}">${getInitialsFromName(contact.fullName)}</div>
+    `;
+  });
 }
