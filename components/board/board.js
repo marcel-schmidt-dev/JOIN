@@ -3,7 +3,6 @@ import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
 import showTaskDetails from "./task-details/task-details.js";
 import openTaskMenu from "./task-details/task-details.js";
-import { getAddTaskTemplate } from "./add-task/add-task.js";
 
 window.openTaskMenu = openTaskMenu;
 window.handleTask = handleTask;
@@ -47,9 +46,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function initializeBoard() {
   checkAuth();
   await renderBoardTemplate();
-  await renderAddTaskBoard();
-
-  await getAddTaskTemplate();
 
   const taskButton = document.getElementById("handleTask");
   const coveredButton = document.querySelector(".covered-btn");
@@ -68,10 +64,7 @@ window.filterTasks = function () {
   allTasks.forEach((task) => {
     const taskTitle = task.querySelector(".heading span").textContent;
     const taskDescription = task.querySelector(".heading p").textContent;
-    if (
-      taskTitle.toLowerCase().includes(searchInput.value.toLowerCase()) ||
-      taskDescription.toLowerCase().includes(searchInput.value.toLowerCase())
-    ) {
+    if (taskTitle.toLowerCase().includes(searchInput.value.toLowerCase()) || taskDescription.toLowerCase().includes(searchInput.value.toLowerCase())) {
       task.classList.remove("d-none");
     } else {
       task.classList.add("d-none");
@@ -187,9 +180,7 @@ export async function renderBoardTemplate() {
                 <button class="covered-btn">${returnIcon("plus")}</button>
                 </div>
                 <div>
-                  <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon(
-                    "search"
-                  )}</span></div>
+                  <div class="search"><input type="text" placeholder="Find Task" oninput="filterTasks()"><span>${returnIcon("search")}</span></div>
                   <button id="handleTask">Add task${returnIcon("plus")}</button>
                 </div> 
             </div>
