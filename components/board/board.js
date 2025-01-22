@@ -257,7 +257,7 @@ export async function renderTasks() {
 
   document.querySelectorAll(".slot-content").forEach((slot) => {
     if (slot.children.length <= 1) {
-      slot.querySelector(".placeholder").classList.remove("d-none");
+      slot.querySelector(".placeholder").classList.remove("ph d-none");
     }
   });
 }
