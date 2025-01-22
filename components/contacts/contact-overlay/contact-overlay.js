@@ -1,6 +1,6 @@
 import returnIcon from "../../icons.js";
 import { editContact } from "../../firebase.js";
-import { renderContacts } from "../contacts.js";
+import { renderContacts, showContactDetails } from "../contacts.js";
 import { getInitialsFromName } from "../../utility-functions.js";
 import { addContact, deleteContact } from "../../firebase.js";
 import { showToast } from "../../toast/toast.js";
@@ -132,8 +132,8 @@ function handleAddContact() {
   const phone = document.getElementById("number").value;
 
   if (validateForm(fullName, email, phone)) {
-    addContact(fullName, email, phone);
-    renderContacts();
+    const contactID = addContact(fullName, email, phone);
+    renderContacts().then(() => showContactDetails(contactID));
     showToast("Contact successfully Created", "add-user");
   }
 }
@@ -148,9 +148,7 @@ function handleEditContact(id, userColor) {
   const email = document.getElementById("email").value;
   const phone = document.getElementById("number").value;
   if (validateForm(fullName, email, phone)) {
-    editContact(id, fullName, email, phone, userColor);
-    renderContacts();
-    showToast("Contact successfully Edited", "pen");
+    editContact(id, fullName, email, phone, userColor).then(() => renderContacts()).then(() => showToast("Contact successfully Edited", "pen"));
   }
 }
 
@@ -159,7 +157,5 @@ function handleEditContact(id, userColor) {
  * @param {string} id - The ID of the contact to delete.
  */
 export function handleDeleteContact(id) {
-  deleteContact(id);
-  renderContacts();
-  showToast("Contact successfully Deleted", "trash-outline");
+  deleteContact(id).then(() => renderContacts().then(() => showToast("Contact successfully Deleted", "trash-outline")));
 }

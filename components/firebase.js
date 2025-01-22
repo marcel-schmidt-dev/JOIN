@@ -100,7 +100,8 @@ export function addContact(fullName, email, phone) {
   const { database } = getFirebase();
   const contactsRef = ref(database, "contacts");
 
-  push(contactsRef, userObject);
+  const newContactRef = push(contactsRef, userObject);
+  return newContactRef.key;
 }
 
 /**
