@@ -250,8 +250,6 @@
         padding: 20px;
         border-radius: 50%;
         background-color: $urgent;
-        display: flex;
-        align-items: center;
 
         @media (max-width: 1024px) {
           max-width: 40px;
