@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: summary/summary.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: summary/summary.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Imports required functions and modules.
+ */
+import returnIcon from "../icons.js";
+import { returnBoard, getAuthUser } from "../firebase.js";
+
+/**
+ * Listens for the DOM content to be fully loaded and then renders the summary template.
+ */
+document.addEventListener("DOMContentLoaded", async () => {
+  await renderSummaryTemplate();
+});
+
+/**
+ * Gets the most relevant due date from the list of tasks.
+ * If there are overdue tasks, it selects the earliest overdue task.
+ * Otherwise, it selects the earliest upcoming task.
+ *
+ * @param {Array} tasks - An array of task objects, each containing a dueDate property.
+ * @returns {string} - A string representing the most relevant due date in the format "Month Day, Year".
+ */
+function getRelevantDueDate(tasks) {
+  const today = new Date();
+  const parsedDueDates = tasks.map((task) => new Date(task.dueDate));
+  const overdueDates = parsedDueDates.filter((date) => date &lt; today);
+
+  let selectedDate;
+  if (overdueDates.length > 0) {
+    overdueDates.sort((a, b) => a - b);
+    selectedDate = overdueDates[0];
+  } else {
+    parsedDueDates.sort((a, b) => a - b);
+    selectedDate = parsedDueDates[0];
+  }
+
+  return selectedDate.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+/**
+ * Renders the summary template with key metrics at a glance, including task counts
+ * and the user's welcome message.
+ *
+ * @returns {Promise&lt;void>} - A promise that resolves once the summary template is rendered.
+ */
+async function renderSummaryTemplate() {
+  const board = await returnBoard();
+  const user = await getAuthUser();
+
+  let urgentTasks = [];
+  let allTasks = [];
+
+  Object.keys(board).forEach((key) => {
+    board[key].forEach((task) => {
+      allTasks.push(task);
+      if (task.priority === "urgent") {
+        urgentTasks.push(task);
+      }
+    });
+  });
+
+  let contentRef;
+
+  while ((contentRef = document.querySelector(".content")) === null) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
+  contentRef.innerHTML = /*html*/ `
+        &lt;div class="summary-container">
+            &lt;div class="summary-heading">
+                &lt;h1>Join 360&lt;/h1>
+                &lt;div>
+                    &lt;hr>
+                    &lt;span>Key Metrics at a Glance&lt;/span>
+                &lt;/div>
+            &lt;/div>
+            &lt;div class="summary-row">
+                &lt;div class="summary-col">
+                    &lt;div class="summary-grid">
+                        
+                        &lt;a href="./board.html" class="summary-card-2">
+                            &lt;div class="summary-card-icon">${returnIcon("pen")}&lt;/div>
+                            &lt;div class="summary-card-content">&lt;span>${
+                              board["todo"] ? board["todo"].length : 0
+                            }&lt;/span>&lt;br>To-do&lt;/div>
+                        &lt;/a>
+                        
+                        
+                        &lt;a href="./board.html" class="summary-card-2">
+                            &lt;div class="summary-card-icon">${returnIcon("check")}&lt;/div>
+                            &lt;div class="summary-card-content">&lt;span>${
+                              board["done"] ? board["done"].length : 0
+                            }&lt;/span>&lt;br>Done&lt;/div>
+                        &lt;/a>
+                        
+                       
+                        &lt;a href="./board.html" class="summary-card-1">
+                            &lt;div>
+                                &lt;div class="summary-card-icon">${returnIcon("urgent")}&lt;/div>
+                                &lt;div class="summary-card-content">&lt;span>${
+                                  urgentTasks.length
+                                }&lt;/span>&lt;br>Urgent&lt;/div>
+                            &lt;/div>
+                            &lt;hr>
+                            &lt;div>
+                                &lt;div class="date">${getRelevantDueDate(allTasks)}&lt;/div>
+                                &lt;div class="deadline">Upcoming Deadline&lt;/div>
+                            &lt;/div>
+                        &lt;/a>
+
+                        &lt;a href="./board.html" class="summary-card-3">
+                            &lt;span>${allTasks.length}&lt;/span>Tasks in Board
+                        &lt;/a>
+
+                        
+                        &lt;a href="./board.html" class="summary-card-3">
+                            &lt;span>${
+                              board["inProgress"] ? board["inProgress"].length : 0
+                            }&lt;/span>Tasks in Progress
+                        &lt;/a>
+
+                        
+                        &lt;a href="./board.html" class="summary-card-3">
+                            &lt;span>${
+                              board["awaitFeedback"] ? board["awaitFeedback"].length : 0
+                            }&lt;/span>Awaiting Feedback
+                        &lt;/a>
+                    &lt;/div>
+                &lt;/div>
+                &lt;div class="summary-col">
+                    &lt;div class="welcome">
+                        Good morning,
+                        &lt;div>${user.displayName ? user.displayName : "Guest"}&lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    `;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#createRandomTasks">createRandomTasks</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleTask">handleTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#renderAddTaskBoard">renderAddTaskBoard</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnHeader">returnHeader</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubtaskArray">returnSubtaskArray</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jan 22 2025 11:25:38 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: contacts/contacts.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: contacts/contacts.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import returnContactListTemplate from "./contact-list/contact-list.js";
+import { getContacts } from "../firebase.js";
+import getContactDetailsTemplate from "./contact-details/contact-details.js";
+import getContactOverlayTemplate from "./contact-overlay/contact-overlay.js";
+import { checkAuth } from "../firebase.js";
+
+window.showContactDetails = showContactDetails;
+
+let contactList;
+
+document.addEventListener("DOMContentLoaded", () => {
+  checkAuth();
+  renderContacts();
+});
+
+/**
+ * Displays the details of a specific contact.
+ * @param {string} id - The ID of the contact to display.
+ */
+export function showContactDetails(id) {
+  const contact = contactList.find((contact) => contact.id.toString() === id.toString());
+
+  const contentRef = document.querySelector(".content");
+  let contactSectionRef = contentRef.querySelector(".contact-details-container");
+
+  if (contactSectionRef) {
+    contactSectionRef.innerHTML = getContactDetailsTemplate(contact);
+  } else {
+    contentRef.innerHTML += `&lt;div class="contact-details-container">${getContactDetailsTemplate(
+      contact
+    )}&lt;/div>`;
+  }
+
+  const contactListItems = document.querySelectorAll(".contact");
+  contactListItems.forEach((item) => item.classList.remove("active"));
+
+  const activeContact = document.querySelector(`.contact[data-id="${id}"]`);
+  if (activeContact) {
+    activeContact.classList.add("active");
+  }
+}
+
+/**
+ * Displays the contact overlay for adding or editing a contact.
+ * @param {string|boolean} id - The ID of the contact to edit, or `false` to add a new contact.
+ */
+export function handleContactOverlayTemplate(id = false) {
+  let contact = id ? contactList.find((contact) => contact.id.toString() === id.toString()) : false;
+
+  const contentRef = document.querySelector(".content");
+  contentRef.innerHTML = getContactOverlayTemplate(contact);
+}
+
+/**
+ * Fetches and renders the contact list.
+ * Displays a loading spinner if necessary while waiting for the contacts.
+ */
+export async function renderContacts() {
+  let contentRef;
+  while ((contentRef = document.querySelector(".content")) === null) {
+    await new Promise((resolve) => setTimeout(resolve, 100)); // Wait for content container to load
+  }
+
+  contentRef.innerHTML = ""; // Clear existing content
+
+  contactList = await getContacts(); // Fetch contacts from the database
+
+  contentRef.innerHTML += returnContactListTemplate(contactList); // Render the contact list
+  renderContactHeader(); // Render the header
+}
+
+/**
+ * Renders the header section for the contact page.
+ */
+async function renderContactHeader() {
+  const contentRef = document.querySelector(".content");
+
+  contentRef.innerHTML += /*html*/ `
+    &lt;div class="contact-details-container">
+      &lt;div class="header-container initial">
+        &lt;div class="contact-header">
+          &lt;h1>Contacts&lt;/h1>
+          &lt;div class="separator">&lt;/div>
+          &lt;p>Better with team&lt;/p>
+          &lt;div class="second-separator">&lt;/div>
+        &lt;/div>
+      &lt;/div>
+    &lt;/div>
+  `;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#createRandomTasks">createRandomTasks</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleTask">handleTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#renderAddTaskBoard">renderAddTaskBoard</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnHeader">returnHeader</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubtaskArray">returnSubtaskArray</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jan 22 2025 11:25:38 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

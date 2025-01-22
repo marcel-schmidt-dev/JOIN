@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: board/task-card/task-card.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: board/task-card/task-card.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Imports necessary icons and utility functions.
+ */
+import returnIcon from "../../icons.js";
+import { getContact } from "../../firebase.js";
+import { getInitialsFromName } from "../../utility-functions.js";
+
+/**
+ * Generates the HTML template for a task card.
+ * @async
+ * @param {Object} task - The task object containing all details about the task.
+ * @param {string} slot - The slot identifier where the task belongs.
+ * @returns {Promise&lt;string>} The HTML string representing the task card.
+ */
+export async function returnTaskTemplate(task, slot) {
+  let assigneeList = await returnContacts(task.assignee);
+
+  return /*html*/ `
+        &lt;div class="task" draggable="true" 
+         ondragstart="startDragging('${task.id}')" 
+         data-task-id="${task.id}" onclick="showTaskDetails('${task.id}', '${slot}')">
+         &lt;div class="type ${task.type === "Technical Task" ? "technical" : "story"}" >${
+    task.type
+  }&lt;/div>
+         &lt;div class="heading">
+             &lt;span>${task.title}&lt;/span>
+             &lt;p>${task.description}&lt;/p>
+         &lt;/div>
+         ${
+           task.subTasks
+             ? `&lt;div class="sub-tasks">
+             &lt;progress value=${returnCheckedSubtasks(task.subTasks)} max=${
+                 task.subTasks.length
+               }>&lt;/progress>
+             &lt;span>${returnCheckedSubtasks(task.subTasks)}/${task.subTasks.length} Subtasks&lt;/span>
+         &lt;/div>`
+             : ""
+         }
+         &lt;div class="assignee-priority" style="justify-content: ${
+           task.assignee ? "space-between" : "flex-end"
+         }">
+           ${
+             assigneeList &amp;&amp; assigneeList.length > 0
+               ? `&lt;div class="assignee">
+             ${assigneeList
+               .slice(0, 3)
+               .map(
+                 (assignee) =>
+                   `&lt;div class="assignee-icon" style="background-color: #${
+                     assignee.userColor
+                   }">${getInitialsFromName(assignee.fullName)}&lt;/div>`
+               )
+               .join("")}
+             ${
+               assigneeList.length > 3
+                 ? `&lt;div class="assignee-icon extra-assignees">+${assigneeList.length - 3}&lt;/div>`
+                 : ""
+             } 
+           &lt;/div>`
+               : ""
+           }
+           &lt;div class="priority ${task.priority}">
+              ${returnIcon(task.priority)}
+           &lt;/div>
+         &lt;/div>
+        &lt;/div>
+    `;
+}
+
+/**
+ * Fetches contact details for a list of contact IDs.
+ * @async
+ * @param {string[]} ids - An array of contact IDs.
+ * @returns {Promise&lt;Object[]|null>} An array of contact objects or null if no IDs are provided.
+ */
+async function returnContacts(ids) {
+  if (!ids) return null;
+  let contactPromises = ids.map((id) => getContact(id));
+  let contacts = await Promise.all(contactPromises);
+  return contacts;
+}
+
+/**
+ * Counts the number of checked subtasks.
+ * @param {Object[]} subtasks - An array of subtask objects.
+ * @param {boolean} subtasks[].checked - Indicates if the subtask is checked.
+ * @returns {number} The count of checked subtasks.
+ */
+function returnCheckedSubtasks(subtasks) {
+  let checkedSubtasks = subtasks.filter((subtask) => subtask.checked);
+  return checkedSubtasks.length;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#createRandomTasks">createRandomTasks</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleTask">handleTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#renderAddTaskBoard">renderAddTaskBoard</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnHeader">returnHeader</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubtaskArray">returnSubtaskArray</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jan 22 2025 11:25:38 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: contacts/contact-overlay/contact-overlay.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: contacts/contact-overlay/contact-overlay.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import returnIcon from "../../icons.js";
+import { editContact } from "../../firebase.js";
+import { renderContacts, showContactDetails } from "../contacts.js";
+import { getInitialsFromName } from "../../utility-functions.js";
+import { addContact, deleteContact } from "../../firebase.js";
+import { showToast } from "../../toast/toast.js";
+
+/**
+ * Generates the HTML template for the contact overlay (Add/Edit Contact).
+ * @param {Object|null} contactInfos - Information about the contact (null if adding a new contact).
+ * @param {string} [contactInfos.id] - The unique ID of the contact.
+ * @param {string} [contactInfos.fullName] - The full name of the contact.
+ * @param {string} [contactInfos.email] - The email address of the contact.
+ * @param {string} [contactInfos.phone] - The phone number of the contact.
+ * @param {string} [contactInfos.userColor] - The background color associated with the contact.
+ * @returns {string} The HTML template for the contact overlay.
+ */
+export default function getContactOverlayTemplate(contactInfos) {
+  window.handleDeleteContact = handleDeleteContact;
+  window.handleEditContact = handleEditContact;
+  window.renderContacts = renderContacts;
+  window.handleAddContact = handleAddContact;
+  window.addContact = addContact;
+
+  return /*html*/ `
+    &lt;div class="edit-contact">
+      &lt;div class="card">
+        &lt;div class="header-container">
+          ${returnIcon("logo-light")}
+          &lt;h1>${contactInfos ? "Edit Contact" : "Add Contact"}&lt;/h1>
+          ${!contactInfos ? "&lt;p>Tasks are better with team!&lt;/p>" : ""}
+          &lt;hr>
+        &lt;/div>
+        &lt;div class="form-container">
+          &lt;div class="close-container" onclick="renderContacts()">
+            ${returnIcon("x")}
+          &lt;/div>
+          &lt;div class="form">
+            &lt;div>
+              &lt;div class="bubble-container" style="background-color: ${contactInfos ? "#" + contactInfos.userColor : ""
+    }">
+                ${contactInfos
+      ? `&lt;span>${getInitialsFromName(contactInfos.fullName)}&lt;/span>`
+      : returnIcon("user-outline")
+    }
+              &lt;/div>
+            &lt;/div>
+            &lt;div>
+              &lt;div class="input-content">
+                &lt;div class="input-container" id="input-container-name">
+                  &lt;input id="name" type="text" name="name" placeholder="Name" value="${contactInfos ? contactInfos.fullName : ""
+    }" />
+                  ${returnIcon("user-outline")}
+                &lt;/div>
+                &lt;div class="request-container">
+                  &lt;p id="name-requested">Vollständiger Name erforderlich&lt;/p>
+                &lt;/div>
+              &lt;/div>
+              &lt;div class="input-content">
+                &lt;div class="input-container" id="input-container-email">
+                  &lt;input id="email" type="text" name="Email" placeholder="Email" value="${contactInfos ? contactInfos.email : ""
+    }" />
+                  ${returnIcon("mail-outline")}
+                &lt;/div>
+                &lt;p id="email-requested">Gültige Email-Adresse erforderlich&lt;/p>
+              &lt;/div>  
+              &lt;div class="input-content">   
+                &lt;div class="input-container" id="input-container-phone">
+                  &lt;input id="number" type="text" name="Phone" placeholder="Phone" value="${contactInfos ? contactInfos.phone : ""
+    }" />
+                  ${returnIcon("tel-outline")}
+                &lt;/div>
+                &lt;p id="phone-requested">Gültige Handynummer erforderlich&lt;/p>
+              &lt;/div>
+              &lt;div class="button-container">
+                ${contactInfos
+      ? `&lt;button class="button-delete" onclick="handleDeleteContact('${contactInfos.id
+      }')">Delete${returnIcon("trash-outline")}&lt;/button>`
+      : `&lt;button class="button-cancel button-none" onclick="renderContacts()">Cancel ${returnIcon(
+        "x"
+      )} &lt;/button>`
+    }
+                ${contactInfos
+      ? `&lt;button class="button-save" onclick="handleEditContact('${contactInfos.id
+      }', '${contactInfos.userColor}')">Save${returnIcon("check")}&lt;/button>`
+      : `&lt;button class="button-save" onclick="handleAddContact()">Create contact ${returnIcon(
+        "check"
+      )} &lt;/button>`
+    }
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+    &lt;/div>`;
+}
+
+/**
+ * Validates the form fields for adding/editing a contact.
+ * @param {string} fullName - The full name of the contact.
+ * @param {string} email - The email address of the contact.
+ * @param {string} phone - The phone number of the contact.
+ * @returns {boolean} True if the form is valid, otherwise false.
+ */
+function validateForm(fullName, email, phone) {
+  const formValidations = [
+    { value: fullName, regex: /^[a-zA-ZäöüÄÖÜß\s-]+$/, minLength: 10, element: "name" },
+    { value: email, regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, element: "email" },
+    { value: phone, regex: /^(\+49)?[0-9]+$/, minLength: 10, element: "phone" },
+  ];
+  for (let { value, regex, minLength, element } of formValidations) {
+    const request = document.getElementById(`${element}-requested`);
+    const input = document.getElementById(`input-container-${element}`);
+    if (!regex.test(value) || (minLength &amp;&amp; value.length &lt; minLength)) {
+      request.style.display = "block";
+      input.style.borderColor = "red";
+      return false;
+    } else {
+      request.style.display = "none";
+      input.style.borderColor = "#d1d1d1";
+    }
+  }
+  return true;
+}
+
+/**
+ * Handles the addition of a new contact.
+ */
+function handleAddContact() {
+  const fullName = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const phone = document.getElementById("number").value;
+
+  if (validateForm(fullName, email, phone)) {
+    const contactID = addContact(fullName, email, phone);
+    renderContacts().then(() => showContactDetails(contactID));
+    showToast("Contact successfully Created", "add-user");
+  }
+}
+
+/**
+ * Handles editing an existing contact.
+ * @param {string} id - The ID of the contact to edit.
+ * @param {string} userColor - The existing color of the contact.
+ */
+function handleEditContact(id, userColor) {
+  const fullName = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const phone = document.getElementById("number").value;
+  if (validateForm(fullName, email, phone)) {
+    editContact(id, fullName, email, phone, userColor).then(() => renderContacts()).then(() => showToast("Contact successfully Edited", "pen"));
+  }
+}
+
+/**
+ * Handles deleting a contact.
+ * @param {string} id - The ID of the contact to delete.
+ */
+export function handleDeleteContact(id) {
+  deleteContact(id).then(() => renderContacts().then(() => showToast("Contact successfully Deleted", "trash-outline")));
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#createRandomTasks">createRandomTasks</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleTask">handleTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#renderAddTaskBoard">renderAddTaskBoard</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnHeader">returnHeader</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubtaskArray">returnSubtaskArray</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jan 22 2025 11:25:38 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
