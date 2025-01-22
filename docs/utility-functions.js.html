@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utility-functions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utility-functions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Returns a random user color code from a predefined set of colors.
+ *
+ * @returns {string} A random hex color code from the predefined set.
+ */
+export function returnRandomUserColor() {
+  const colors = [
+    "0038FF",
+    "00BEE8",
+    "1FD7C1",
+    "6E52FF",
+    "9327FF",
+    "9747FF",
+    "FC71FF",
+    "FF4646",
+    "FF5EB3",
+    "FF745E",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
+/**
+ * Extracts the initials from a full name.
+ * The initials are formed by the first letter of the first name and, if available, the first letter of the last name.
+ *
+ * @param {string} fullName The full name of a person.
+ * @returns {string} A string containing the initials from the full name.
+ */
+export function getInitialsFromName(fullName) {
+  const nameParts = fullName.split(" ");
+  const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
+  const lastNameInitial = nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() : "";
+  return firstNameInitial + lastNameInitial;
+}
+
+/**
+ * Returns a random contact name, email, and phone number from predefined lists.
+ *
+ * @returns {Array} An array containing a name, email, and phone number in that order.
+ */
+export function returnRandomContact() {
+  const names = [
+    "Max Mustermann",
+    "Erika Mustermann",
+    "Hans Müller",
+    "Petra Schmidt",
+    "Klaus Schneider",
+    "Monika Fischer",
+    "Wolfgang Weber",
+    "Sabine Meyer",
+    "Jürgen Wagner",
+    "Andrea Becker",
+    "Thomas Schulz",
+    "Birgit Hoffmann",
+    "Michael Bauer",
+    "Ursula Koch",
+    "Stefan Richter",
+    "Gabriele Klein",
+    "Andreas Wolf",
+    "Martina Schröder",
+    "Peter Neumann",
+    "Susanne Schwarz",
+    "Frank Zimmermann",
+    "Karin Braun",
+    "Ralf Krüger",
+    "Heike Hofmann",
+    "Joachim Hartmann",
+    "Anja Lange",
+    "Bernd Schmitt",
+    "Claudia Werner",
+    "Holger Krause",
+    "Ingrid Lehmann",
+    "Matthias Schmid",
+    "Renate Schubert",
+    "Dieter Böhm",
+    "Elke Frank",
+    "Manfred Albrecht",
+    "Silke Simon",
+    "Günter Ludwig",
+    "Angelika Busch",
+    "Horst Peters",
+    "Christa Fuchs",
+  ];
+  const emails = [
+    "max.mustermann@example.com",
+    "erika.mustermann@example.com",
+    "hans.mueller@example.com",
+    "petra.schmidt@example.com",
+    "klaus.schneider@example.com",
+    "monika.fischer@example.com",
+    "wolfgang.weber@example.com",
+    "sabine.meyer@example.com",
+    "juergen.wagner@example.com",
+    "andrea.becker@example.com",
+    "thomas.schulz@example.com",
+    "birgit.hoffmann@example.com",
+    "michael.bauer@example.com",
+    "ursula.koch@example.com",
+    "stefan.richter@example.com",
+    "gabriele.klein@example.com",
+    "andreas.wolf@example.com",
+    "martina.schroeder@example.com",
+    "peter.neumann@example.com",
+    "susanne.schwarz@example.com",
+    "frank.zimmermann@example.com",
+    "karin.braun@example.com",
+    "ralf.krueger@example.com",
+    "heike.hofmann@example.com",
+    "joachim.hartmann@example.com",
+    "anja.lange@example.com",
+    "bernd.schmitt@example.com",
+    "claudia.werner@example.com",
+    "holger.krause@example.com",
+    "ingrid.lehmann@example.com",
+    "matthias.schmid@example.com",
+    "renate.schubert@example.com",
+    "dieter.boehm@example.com",
+    "elke.frank@example.com",
+    "manfred.albrecht@example.com",
+    "silke.simon@example.com",
+    "guenter.ludwig@example.com",
+    "angelika.busch@example.com",
+    "horst.peters@example.com",
+    "christa.fuchs@example.com",
+  ];
+  const phones = [
+    "+49 170 1234567",
+    "+49 171 2345678",
+    "+49 172 3456789",
+    "+49 173 4567890",
+    "+49 174 5678901",
+    "+49 175 6789012",
+    "+49 176 7890123",
+    "+49 177 8901234",
+    "+49 178 9012345",
+    "+49 179 0123456",
+    "+49 160 1234567",
+    "+49 161 2345678",
+    "+49 162 3456789",
+    "+49 163 4567890",
+    "+49 164 5678901",
+    "+49 165 6789012",
+    "+49 166 7890123",
+    "+49 167 8901234",
+    "+49 168 9012345",
+    "+49 169 0123456",
+    "+49 150 1234567",
+    "+49 151 2345678",
+    "+49 152 3456789",
+    "+49 153 4567890",
+    "+49 154 5678901",
+    "+49 155 6789012",
+    "+49 156 7890123",
+    "+49 157 8901234",
+    "+49 158 9012345",
+    "+49 159 0123456",
+    "+49 130 1234567",
+    "+49 131 2345678",
+    "+49 132 3456789",
+    "+49 133 4567890",
+    "+49 134 5678901",
+    "+49 135 6789012",
+    "+49 136 7890123",
+    "+49 137 8901234",
+    "+49 138 9012345",
+    "+49 139 0123456",
+  ];
+
+  const random = Math.floor(Math.random() * names.length);
+
+  return [names[random], emails[random], phones[random]];
+}
+
+/**
+ * Returns the current path of the window's URL.
+ *
+ * @returns {string} The current pathname from the URL.
+ */
+export function returnPath() {
+  return window.location.pathname;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#createRandomTasks">createRandomTasks</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleTask">handleTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#renderAddTaskBoard">renderAddTaskBoard</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnHeader">returnHeader</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubtaskArray">returnSubtaskArray</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jan 22 2025 11:25:38 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
