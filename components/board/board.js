@@ -7,6 +7,7 @@ import { getAddTaskTemplate } from "./add-task/add-task.js";
 
 window.openTaskMenu = openTaskMenu;
 window.handleTask = handleTask;
+window.preventDrag = preventDrag;
 
 /**
  * Renders the "Add Task" board as a modal window.
@@ -198,7 +199,7 @@ export async function renderBoardTemplate() {
                   <h2>To do</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="todo-tasks" ondrop="moveTo('todo-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()"><div class="placeholder d-none"><p>No tasks To do</p></div></div>
+                <div class="slot-content" id="todo-tasks" ondrop="moveTo('todo-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()"><div class="placeholder d-none" draggable="false" ondragstart="preventDrag(event)"><p>No tasks To do</p></div></div>
               </div>
 
               <div class="slots">
@@ -206,7 +207,7 @@ export async function renderBoardTemplate() {
                   <h2>In Progress</h2>
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
-                <div class="slot-content" id="inProgress-tasks" ondrop="moveTo('inProgress-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()"><div class="placeholder d-none"><p>No tasks To do</p></div></div>
+                <div class="slot-content" id="inProgress-tasks" ondrop="moveTo('inProgress-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()"><div class="placeholder d-none" draggable="false" ondragstart="preventDrag(event)"><p>No tasks To do</p></div></div>
               </div>
 
               <div class="slots">
@@ -215,13 +216,13 @@ export async function renderBoardTemplate() {
                   <button class="btn">${returnIcon("plus")}</button>
                 </div>
                 <div class="slot-content" id="awaitFeedback-tasks" ondrop="moveTo('awaitFeedback-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()">
-                  <div class="placeholder d-none"><p>No tasks To do</p></div>
+                  <div class="placeholder ph d-none" draggable="false" ondragstart="preventDrag(event)"><p>No tasks To do</p></div>
                 </div>
               </div>
 
               <div class="slots">
                 <div class="slots-header"><h2>Done</h2></div>
-                <div class="slot-content" id="done-tasks" ondrop="moveTo('done-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()"><div class="placeholder d-none"><p>No tasks To do</p></div></div>
+                <div class="slot-content" id="done-tasks" ondrop="moveTo('done-tasks'); updatePlaceholder();" ondragover="allowDrop(event);" ondragstart="addAllHighlights()"><div class="placeholder d-none" draggable="false" ondragstart="preventDrag(event)"><p>No tasks To do</p></div></div>
               </div>
             </div>
         </div>
@@ -230,6 +231,10 @@ export async function renderBoardTemplate() {
   renderTasks();
 }
 
+function preventDrag(event) {
+  event.preventDefault();
+  event.stopPropagation();
+}
 /**
  * Renders tasks inside their respective slots on the board.
  * @async
@@ -256,7 +261,7 @@ export async function renderTasks() {
   });
 
   document.querySelectorAll(".slot-content").forEach((slot) => {
-    if (slot.children.length <= 1) {
+    if (slot.children.length < 1) {
       slot.querySelector(".placeholder").classList.remove("ph d-none");
     }
   });
