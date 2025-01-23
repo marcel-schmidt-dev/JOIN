@@ -7,10 +7,11 @@ window.showDatepicker = showDatepicker;
 window.renderAssigneeList = renderAssigneeList;
 window.clearForm = clearForm;
 window.toggleAssigneeInList = toggleAssigneeInList;
-window.clearPriority = clearPriority;
+window.addSubtask = addSubtask;
 
 let contactList;
 let assignedContacts = [];
+let subtasks = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
   checkAuth();
@@ -59,10 +60,10 @@ export async function renderTaskForm(className = ".content", task = null) {
                 <label for="Subtasks">Subtasks</label>
                 <!-- TODO: Custom Input Field -->
                 <div class="input-container">
-                <input type="text" id="subtasks-input" name="" placeholder="Add new subtask"/> 
-                <div class="icon">
-                ${returnIcon("plus")}
-                </div>
+                  <input type="text" id="subtasks-input" name="" placeholder="Add new subtask"/> 
+                  <div class="icon" onclick="addSubtask()">
+                    ${returnIcon("plus")}
+                  </div>
                 </div>
                  <div class="subtasks"></div> 
               </div>
@@ -70,7 +71,7 @@ export async function renderTaskForm(className = ".content", task = null) {
               <div class="footer-buttons">
                   <p><span class="red-star">*</span>This field is required</p>
                   <div class="buttons">
-                  <button type="button" onclick="clearForm(); clearPriority()" id="clear-form" class="clear-button">Clear ${returnIcon("x")}</button>
+                  <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon("x")}</button>
                   <button type="submit" id="submit-task" class="submit-button">Create Task ${returnIcon("check")}</button>
                   </div>
                </div>
@@ -81,13 +82,13 @@ export async function renderTaskForm(className = ".content", task = null) {
 }
 
 function clearForm() {
+  clearPriority();
   document.querySelector("#title").value = "";
   document.querySelector("#description").value = "";
   assignedContacts = [];
   document.querySelector("#due-date").value = "";
   document.querySelector("#category").value = "";
   document.querySelector("#subtasks-input").value = "";
-
   renderSelectedAssignees();
 }
 
@@ -169,6 +170,30 @@ function renderSelectedAssignees() {
   assignedContacts.forEach((contact) => {
     assignees.innerHTML += /*html*/ `
       <div class="initials-bubble" style="background-color: #${contact.userColor}" title="${contact.fullName}">${getInitialsFromName(contact.fullName)}</div>
+    `;
+  });
+}
+
+function addSubtask() {
+  const subtaskInput = document.querySelector("#subtasks-input");
+  if (subtaskInput.value === "") return;
+  subtasks.push(subtaskInput.value);
+  subtaskInput.value = "";
+  renderSubtasks();
+}
+
+function renderSubtasks() {
+  const subtasksContainer = document.querySelector(".subtasks");
+  subtasksContainer.innerHTML = "";
+  subtasks.forEach((subtask) => {
+    subtasksContainer.innerHTML += /*html*/ `
+      <div class="subtask">
+        <input type="text" value="${subtask}" readonly> 
+        <div class="buttons">
+          <button type="button">${returnIcon("pen-outline")}</button>
+          <button type="button">${returnIcon("trash-outline")}</button>
+        </div>
+      </div>
     `;
   });
 }
