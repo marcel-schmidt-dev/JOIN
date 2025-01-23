@@ -17,6 +17,22 @@
       display: flex;
       gap: 10px;
 
+      .request-alert {
+        margin-bottom: 10px;
+
+        #request-title {
+          display: none;
+        }
+
+        #request-date {
+          display: none;
+        }
+
+        #request-category {
+          display: none;
+        }
+      }
+
       > div {
         flex: 1;
         display: flex;
@@ -195,7 +211,7 @@
         }
       }
 
-      select {
+      #category {
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
@@ -207,6 +223,75 @@
 
         option[value=""][disabled] {
           display: none;
+        }
+      }
+
+      .subtask {
+        display: flex;
+        transition: all 300ms;
+        border-radius: 10px;
+        transition: all 0.3s;
+        border-bottom: 1px solid transparent;
+        position: relative;
+        z-index: 1;
+
+        input {
+          background-color: transparent;
+          border: none;
+        }
+
+        .buttons {
+          display: flex;
+          align-items: center;
+          padding-right: 16px;
+
+          button {
+            background-color: transparent;
+            border: none;
+            display: none;
+            cursor: pointer;
+            padding: 0 8px;
+            transition: all 0.3s;
+            z-index: 2;
+            svg {
+              width: 16px;
+              height: 16px;
+            }
+
+            &:hover svg {
+              fill: $light-blue;
+            }
+          }
+        }
+
+        &:hover:not(:focus-within) {
+          background-color: #d1d1d1;
+
+          .buttons {
+            button:first-child {
+              display: block;
+              border-right: 1px solid $dark-navy-blue;
+            }
+            button:nth-child(2) {
+              display: block;
+            }
+          }
+        }
+
+        &:focus-within {
+          background-color: #fff;
+          border-bottom: 1px solid $light-blue;
+          border-radius: 0;
+
+          .buttons {
+            button:nth-child(2) {
+              display: block;
+              border-right: 1px solid $dark-navy-blue;
+            }
+            button:last-child {
+              display: block;
+            }
+          }
         }
       }
     }

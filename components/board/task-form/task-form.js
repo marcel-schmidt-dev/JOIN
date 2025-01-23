@@ -8,6 +8,11 @@ window.renderAssigneeList = renderAssigneeList;
 window.clearForm = clearForm;
 window.toggleAssigneeInList = toggleAssigneeInList;
 window.addSubtask = addSubtask;
+window.titleValidation = titleValidation;
+window.deleteSubTask = deleteSubtask;
+window.editSubtask = editSubtask;
+window.saveSubtask = saveSubtask;
+window.dateValidation = dateValidation;
 
 let contactList;
 let assignedContacts = [];
@@ -34,8 +39,11 @@ export async function renderTaskForm(className = ".content", task = null) {
               <div class="task-form-container">
               <form id="task-form">
               <div>
-                <label for="title">Title <span class="red-star">*</span></label>
+                <label for="title">Title<span class="red-star">*</span></label>
                 <input type="text" id="title" name="title" placeholder="Enter a title" required>
+                <div class="request-alert">
+                    <p id="request-title" >This field is required</p>
+                </div>
                 <label for="description">Description</label>
                 <textarea id="description" name="description" placeholder="Enter a Description" rows="3"></textarea>
                 ${await returnAssigneeInput()}
@@ -43,20 +51,26 @@ export async function renderTaskForm(className = ".content", task = null) {
               </div>
               <hr />
               <div>
-                <label for="due-date">Due date <span class="red-star">*</span></label>
+                <label for="due-date">Due date<span class="red-star">*</span></label>
                 <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" required>
+                <div class="request-alert">
+                    <p id="request-date" >This field is required</p>
+                </div>
                 <label for="priority">Prio</label>
                 <div class="priorities">
                   <button type="button" class="priority" onClick="handlePriorityClick(this)" value="urgent">Urgent ${returnIcon("urgent")}</button>
                   <button type="button" class="priority selected" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon("medium")}</button>
                   <button type="button" class="priority" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
                 </div>
-                <label for="category">Category <span class="red-star">*</span></label>
+                <label for="category">Category<span class="red-star">*</span></label>
                 <select name="category" id="category">
                   <option value="" disabled selected>Select task category</option>
                   <option value="User Story">User Story</option>
                   <option value="Technical Task">Technical Task</option>
                 </select>
+                <div class="request-alert">
+                    <p id="request-category" >This field is required</p>
+                </div>
                 <label for="Subtasks">Subtasks</label>
                 <!-- TODO: Custom Input Field -->
                 <div class="input-container">
@@ -96,6 +110,39 @@ function clearPriority() {
   const buttons = document.querySelectorAll(".priorities .priority");
   buttons.forEach((button) => button.classList.remove("selected"));
   buttons[1].classList.add("selected");
+}
+
+function titleValidation(title) {
+  const validateTitle = document.querySelector("#request-title");
+  const titleContainer = document.querySelector("#title");
+
+  if (title !== "") {
+    validateTitle.style.display = "block";
+    validateTitle.style.color = "red";
+    titleContainer.style.borderColor = "red";
+    return false;
+  } else {
+    validateTitle.style.display = "none";
+    titleContainer.style.borderColor = "$light-blue";
+  }
+  return true;
+}
+
+function dateValidation(dueDate) {
+  const validateDate = document.querySelector("#request-date");
+  const dateContainer = document.querySelector("#due-date");
+  const dateValidation = /^\d{2}\.\d{2}\.\d{4}$/;
+
+  if (!dateValidation.test(dueDate)) {
+    validateDate.style.display = "block";
+    validateDate.style.color = "red";
+    dateContainer.style.borderColor = "red";
+    return false;
+  } else {
+    validateDate.style.display = "none";
+    dateContainer.style.borderColor = "$light-blue";
+  }
+  return true;
 }
 
 function handlePriorityClick(element) {
@@ -185,15 +232,38 @@ function addSubtask() {
 function renderSubtasks() {
   const subtasksContainer = document.querySelector(".subtasks");
   subtasksContainer.innerHTML = "";
-  subtasks.forEach((subtask) => {
+  subtasks.forEach((subtask, index) => {
     subtasksContainer.innerHTML += /*html*/ `
-      <div class="subtask">
-        <input type="text" value="${subtask}" readonly> 
+      <div class="subtask" data-index="${index}">
+        <input type="text" value="${subtask}"> 
         <div class="buttons">
-          <button type="button">${returnIcon("pen-outline")}</button>
-          <button type="button">${returnIcon("trash-outline")}</button>
+          <button type="button" onClick="editSubtask(event)">${returnIcon("pen-outline")}</button>
+          <button type="button" onmousedown="deleteSubTask(event)">${returnIcon("trash-outline")}</button>
+          <button type="button" onmousedown="saveSubtask(event)">${returnIcon("check")}</button>
         </div>
       </div>
     `;
   });
+}
+
+function deleteSubtask(event) {
+  const subtask = event.target.closest(".subtask");
+  const index = subtask.dataset.index;
+  subtasks.splice(index, 1);
+  renderSubtasks();
+}
+
+function editSubtask(event) {
+  const subTaskInput = event.target.closest(".subtask").querySelector("input");
+  const value = subTaskInput.value;
+  subTaskInput.value = "";
+  subTaskInput.focus();
+  subTaskInput.value = value;
+}
+
+function saveSubtask(event) {
+  const subtask = event.target.closest(".subtask");
+  const index = subtask.dataset.index;
+  subtasks[index] = subtask.querySelector("input").value;
+  renderSubtasks();
 }
