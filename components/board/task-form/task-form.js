@@ -1,4 +1,4 @@
-import { checkAuth, getContacts, addTask } from "./../../firebase.js";
+import { checkAuth, getContacts, addTask, editTask } from "./../../firebase.js";
 import { returnPath, getInitialsFromName } from "./../../utility-functions.js";
 import returnIcon from "../../icons.js";
 import { showToast } from "../../toast/toast.js";
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   checkAuth();
   contactList = await getContacts();
   if (returnPath() === "/add-task.html") {
-    renderTaskForm();
+    renderTaskPage();
   }
 });
 
@@ -86,7 +86,7 @@ export async function renderTaskForm(className = ".content", slot = "todo", task
                     <p><span class="red-star">*</span>This field is required</p>
                     <div class="buttons">
                       <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon("x")}</button>
-                      <button type="submit" id="submit-task" class="submit-button">Create Task ${returnIcon("check")}</button>
+                      <button type="submit" id="submit-task" class="submit-button">${!task ? 'Create Task' : 'Edit Task'} ${returnIcon("check")}</button>
                     </div>
                   </div>
                 </form>
@@ -94,6 +94,12 @@ export async function renderTaskForm(className = ".content", slot = "todo", task
             </div>
         `;
   }
+}
+
+function renderTaskPage() {
+  const contentRef = document.querySelector(".content");
+  contentRef.innerHTML = /*html*/ `<div class="form-container"></div>`;
+  renderTaskForm(".form-container", "todo", null);
 }
 
 function clearForm() {
@@ -225,7 +231,7 @@ function renderSelectedAssignees() {
 function addSubtask() {
   const subtaskInput = document.querySelector("#subtasks-input");
   if (subtaskInput.value === "") return;
-  subtasks.push(subtaskInput.value);
+  subtasks.push({ title: subtaskInput.value, checked: false });
   subtaskInput.value = "";
   renderSubtasks();
 }
@@ -265,7 +271,7 @@ function editSubtask(event) {
 function saveSubtask(event) {
   const subtask = event.target.closest(".subtask");
   const index = subtask.dataset.index;
-  subtasks[index] = subtask.querySelector("input").value;
+  subtasks[index] = { title: subtask.querySelector("input").value, checked: subtask.querySelector("input").checked };
   renderSubtasks();
 }
 
@@ -280,6 +286,11 @@ function handleSubmitTask(event, slot, id = "") {
   const category = form.category.value;
   const assignees = assignedContacts.map((contact) => contact.id);
 
-  addTask(slot, title, description, category, priority, dueDate, subtasks, assignees);
-  showToast("Task added successfully", "check");
+  if (!task) {
+    addTask(slot, title, description, category, priority, dueDate, subtasks, assignees);
+    showToast("Task added successfully", "check");
+  } else {
+    editTask(slot, id, title, description, category, priority, dueDate, subtasks, assignees);
+    showToast("Task edited successfully", "check");
+  }
 };
