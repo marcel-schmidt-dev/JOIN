@@ -1,6 +1,7 @@
-import { checkAuth, getContacts } from "./../../firebase.js";
+import { checkAuth, getContacts, addTask } from "./../../firebase.js";
 import { returnPath, getInitialsFromName } from "./../../utility-functions.js";
 import returnIcon from "../../icons.js";
+import { showToast } from "../../toast/toast.js";
 
 window.handlePriorityClick = handlePriorityClick;
 window.showDatepicker = showDatepicker;
@@ -13,6 +14,7 @@ window.deleteSubTask = deleteSubtask;
 window.editSubtask = editSubtask;
 window.saveSubtask = saveSubtask;
 window.dateValidation = dateValidation;
+window.handleSubmitTask = handleSubmitTask;
 
 let contactList;
 let assignedContacts = [];
@@ -26,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-export async function renderTaskForm(className = ".content", task = null) {
+export async function renderTaskForm(className = ".content", slot = "todo", task = null) {
   let contentRef;
   while ((contentRef = document.querySelector(className)) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -35,61 +37,60 @@ export async function renderTaskForm(className = ".content", task = null) {
   if (contentRef) {
     contentRef.innerHTML = /*html*/ `
             <div class="task-form">
-            <h1>${task ? "Edit Task" : "Add Task"}</h1>
+              <h1>${task ? "Edit Task" : "Add Task"}</h1>
               <div class="task-form-container">
-              <form id="task-form">
-              <div>
-                <label for="title">Title<span class="red-star">*</span></label>
-                <input type="text" id="title" name="title" placeholder="Enter a title" required>
-                <div class="request-alert">
-                    <p id="request-title" >This field is required</p>
-                </div>
-                <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="Enter a Description" rows="3"></textarea>
-                ${await returnAssigneeInput()}
-                <div class="assignees"></div>
-              </div>
-              <hr />
-              <div>
-                <label for="due-date">Due date<span class="red-star">*</span></label>
-                <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" required>
-                <div class="request-alert">
-                    <p id="request-date" >This field is required</p>
-                </div>
-                <label for="priority">Prio</label>
-                <div class="priorities">
-                  <button type="button" class="priority" onClick="handlePriorityClick(this)" value="urgent">Urgent ${returnIcon("urgent")}</button>
-                  <button type="button" class="priority selected" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon("medium")}</button>
-                  <button type="button" class="priority" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
-                </div>
-                <label for="category">Category<span class="red-star">*</span></label>
-                <select name="category" id="category">
-                  <option value="" disabled selected>Select task category</option>
-                  <option value="User Story">User Story</option>
-                  <option value="Technical Task">Technical Task</option>
-                </select>
-                <div class="request-alert">
-                    <p id="request-category" >This field is required</p>
-                </div>
-                <label for="Subtasks">Subtasks</label>
-                <!-- TODO: Custom Input Field -->
-                <div class="input-container">
-                  <input type="text" id="subtasks-input" name="" placeholder="Add new subtask"/> 
-                  <div class="icon" onclick="addSubtask()">
-                    ${returnIcon("plus")}
+                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ''}')">
+                  <div>
+                    <label for="title">Title<span class="red-star">*</span></label>
+                    <input type="text" id="title" name="title" placeholder="Enter a title">
+                    <div class="request-alert">
+                        <p id="request-title" >This field is required</p>
+                    </div>
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Enter a Description" rows="3"></textarea>
+                    ${await returnAssigneeInput()}
+                    <div class="assignees"></div>
                   </div>
-                </div>
-                 <div class="subtasks"></div> 
-              </div>
-              </div>
-              <div class="footer-buttons">
-                  <p><span class="red-star">*</span>This field is required</p>
-                  <div class="buttons">
-                  <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon("x")}</button>
-                  <button type="submit" id="submit-task" class="submit-button">Create Task ${returnIcon("check")}</button>
+                  <hr />
+                  <div>
+                    <label for="due-date">Due date<span class="red-star">*</span></label>
+                    <input type="date" id="due-date" name="due-date" onClick="showDatepicker()">
+                    <div class="request-alert">
+                        <p id="request-date" >This field is required</p>
+                    </div>
+                    <label for="priority">Prio</label>
+                    <div class="priorities">
+                      <button type="button" class="priority" onClick="handlePriorityClick(this)" value="urgent">Urgent ${returnIcon("urgent")}</button>
+                      <button type="button" class="priority selected" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon("medium")}</button>
+                      <button type="button" class="priority" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
+                    </div>
+                    <label for="category">Category<span class="red-star">*</span></label>
+                    <select name="category" id="category">
+                      <option value="" disabled selected>Select task category</option>
+                      <option value="User Story">User Story</option>
+                      <option value="Technical Task">Technical Task</option>
+                    </select>
+                    <div class="request-alert">
+                        <p id="request-category" >This field is required</p>
+                    </div>
+                    <label for="Subtasks">Subtasks</label>
+                    <div class="input-container">
+                      <input type="text" id="subtasks-input" name="" placeholder="Add new subtask"/> 
+                      <div class="icon" onclick="addSubtask()">
+                        ${returnIcon("plus")}
+                      </div>
+                    </div>
+                    <div class="subtasks"></div> 
                   </div>
-               </div>
-            </form>
+                  <div class="footer-buttons">
+                    <p><span class="red-star">*</span>This field is required</p>
+                    <div class="buttons">
+                      <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon("x")}</button>
+                      <button type="submit" id="submit-task" class="submit-button">Create Task ${returnIcon("check")}</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
         `;
   }
@@ -267,3 +268,18 @@ function saveSubtask(event) {
   subtasks[index] = subtask.querySelector("input").value;
   renderSubtasks();
 }
+
+function handleSubmitTask(event, slot, id = "") {
+  event.preventDefault();
+
+  const form = event.target;
+  const title = form.title.value;
+  const description = form.description.value;
+  const dueDate = form["due-date"].value;
+  const priority = form.querySelector(".priority.selected").value;
+  const category = form.category.value;
+  const assignees = assignedContacts.map((contact) => contact.id);
+
+  addTask(slot, title, description, category, priority, dueDate, subtasks, assignees);
+  showToast("Task added successfully", "check");
+};

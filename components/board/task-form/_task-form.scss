@@ -16,6 +16,7 @@
     #task-form {
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
 
       .request-alert {
         margin-bottom: 10px;
@@ -305,6 +306,9 @@
     justify-content: space-between;
     width: 100%;
     margin-top: 50px;
+    flex: 1 1 100% !important;
+    flex-direction: row !important;
+    align-items: center;
 
     P {
       display: flex;
