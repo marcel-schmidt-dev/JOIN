@@ -1,5 +1,14 @@
 @import "../../../scss/vars";
 
+.form-container {
+  padding-top: 80px;
+  padding-left: 25px;
+  padding-right: 25px;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
 .task-form {
   width: 100%;
   h1 {
