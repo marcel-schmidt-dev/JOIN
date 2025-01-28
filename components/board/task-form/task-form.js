@@ -282,8 +282,6 @@ function renderSubtasks() {
   const subtasksContainer = document.querySelector(".subtasks");
   subtasksContainer.innerHTML = "";
 
-  console.log(subtasks);
-
   if (subtasks && subtasks.length > 0) {
     subtasks.forEach((subtask, index) => {
       subtasksContainer.innerHTML += /*html*/ `

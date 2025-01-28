@@ -334,26 +334,21 @@ export async function moveTaskToSlot(newSlot, id) {
     }
 
     if (!taskData) {
-      console.error(`Task with ID ${id} not found in current slots.`);
       return;
     }
 
     if (currentSlot === newSlot) {
-      console.log(`Task ${id} is already in the ${newSlot} slot.`);
       return;
     }
 
     const newTaskRef = ref(database, `board/${newSlot}/${id}`);
     if (!newTaskRef) {
-      console.error(`New slot ${newSlot} does not exist.`);
       return;
     }
 
     await set(newTaskRef, taskData);
     await remove(taskRef);
-    console.log(`Task ${id} moved to slot ${newSlot}`);
   } catch (error) {
-    console.error("Error moving Task to slot:", error);
     throw error;
   }
 }
@@ -504,8 +499,6 @@ export async function signIn(email, password) {
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    console.log(userCredential.user);
-
     return userCredential.user;
   } catch (error) {
     return false;
