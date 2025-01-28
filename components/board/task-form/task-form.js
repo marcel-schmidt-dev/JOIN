@@ -329,4 +329,5 @@ function handleSubmitTask(event, slot, id = "") {
   }
 
   renderTasks();
+  window.location.href = "/board.html";
 }
