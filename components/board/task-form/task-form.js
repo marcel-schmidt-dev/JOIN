@@ -42,8 +42,8 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
     const assigneesPromises = task.assignee.map((id) => getContact(id));
     assignedContacts = await Promise.all(assigneesPromises);
 
-    if (task.subtasks) {
-      subtasks = task.subtasks;
+    if (task.subTasks) {
+      subtasks = task.subTasks;
     }
   }
 
@@ -281,6 +281,8 @@ function addSubtask() {
 function renderSubtasks() {
   const subtasksContainer = document.querySelector(".subtasks");
   subtasksContainer.innerHTML = "";
+
+  console.log(subtasks);
 
   if (subtasks && subtasks.length > 0) {
     subtasks.forEach((subtask, index) => {

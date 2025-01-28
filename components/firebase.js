@@ -189,7 +189,7 @@ export async function returnTaskById(id) {
     if (board[slot] && board[slot][id]) {
       let task = board[slot][id];
       task.id = id;
-      return task;
+      return board[slot][id];
     }
   }
 
@@ -247,27 +247,9 @@ export function addTask(
     type: type,
     priority: priority,
     dueDate: dueDate,
-    subTasks: returnSubtaskArray(subTasks),
+    subTasks: subTasks,
     assignee: assignee,
   });
-}
-
-/**
- * Converts an array of sub-task titles into an array of sub-task objects with a "checked" property.
- * @param {Array<string>} subTasks - An array of sub-task titles.
- * @returns {Array<Object>} An array of sub-task objects with a "checked" property.
- */
-function returnSubtaskArray(subTasks) {
-  let subTaskArray = [];
-
-  subTasks.forEach((subTask) => {
-    subTaskArray.push({
-      title: subTask,
-      checked: false,
-    });
-  });
-
-  return subTaskArray;
 }
 
 /**
@@ -312,7 +294,7 @@ export function editTask(
     type: type,
     priority: priority,
     dueDate: dueDate,
-    subTasks: returnSubtaskArray(subTasks),
+    subTasks: subTasks,
     assignee: assignee,
   });
 }
