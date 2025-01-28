@@ -1,4 +1,4 @@
-import { checkAuth, getContacts, addTask, editTask } from "./../../firebase.js";
+import { checkAuth, getContacts, addTask, editTask, returnTaskById, getContact } from "./../../firebase.js";
 import { returnPath, getInitialsFromName } from "./../../utility-functions.js";
 import returnIcon from "../../icons.js";
 import { showToast } from "../../toast/toast.js";
@@ -30,8 +30,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-export async function renderTaskForm(slot = "todo", task = null) {
+export async function renderTaskForm(slot = "todo", taskId = null) {
   let contentRef;
+  let task = null;
+  assignedContacts = [];
+  subtasks = [];
+
+  if (taskId) {
+    task = await returnTaskById(taskId);
+
+    const assigneesPromises = task.assignee.map((id) => getContact(id));
+    assignedContacts = await Promise.all(assigneesPromises);
+  }
+
   while ((contentRef = document.querySelector('.form-container')) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
@@ -44,33 +55,35 @@ export async function renderTaskForm(slot = "todo", task = null) {
                 <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ''}')">
                   <div>
                     <label for="title">Title<span class="red-star">*</span></label>
-                    <input type="text" id="title" name="title" placeholder="Enter a title">
+                    <input type="text" id="title" name="title" placeholder="Enter a title" value="${task ? task.title : ''}">
                     <div class="request-alert">
                         <p id="request-title" >This field is required</p>
                     </div>
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" placeholder="Enter a Description" rows="3"></textarea>
+                    <textarea id="description" name="description" placeholder="Enter a Description" rows="3">${task && task.description}</textarea>
                     ${await returnAssigneeInput()}
-                    <div class="assignees"></div>
+                    <div class="assignees">
+                      ${task ? assignedContacts.map((assignee) => `<div class="initials-bubble" style="background-color: #${assignee.userColor}" title="${assignee.fullName}">${getInitialsFromName(assignee.fullName)}</div>`).join('') : ''}
+                    </div>
                   </div>
                   <hr />
                   <div>
                     <label for="due-date">Due date<span class="red-star">*</span></label>
-                    <input type="date" id="due-date" name="due-date" onClick="showDatepicker()">
+                    <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" value="${task ? task.dueDate : ''}">
                     <div class="request-alert">
                         <p id="request-date" >This field is required</p>
                     </div>
                     <label for="priority">Prio</label>
                     <div class="priorities">
-                      <button type="button" class="priority" onClick="handlePriorityClick(this)" value="urgent">Urgent ${returnIcon("urgent")}</button>
-                      <button type="button" class="priority selected" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon("medium")}</button>
-                      <button type="button" class="priority" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
+                      <button type="button" class="priority ${task ? (task.priority === 'urgent' ? 'selected' : '') : ''}" onClick="handlePriorityClick(this)" value="urgent">  Urgent ${returnIcon("urgent")}</button>
+                      <button type="button" class="priority ${task ? (task.priority === 'medium' ? 'selected' : '') : 'selected'}" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon("medium")}</button>
+                      <button type="button" class="priority ${task ? (task.priority === 'low' ? 'selected' : '') : ''}" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
                     </div>
                     <label for="category">Category<span class="red-star">*</span></label>
                     <select name="category" id="category">
-                      <option value="" disabled selected>Select task category</option>
-                      <option value="User Story">User Story</option>
-                      <option value="Technical Task">Technical Task</option>
+                      <option value="" disabled ${!task && 'selected'}>Select task category</option>
+                      <option value="User Story" ${task && task.type === 'User Story' ? 'selected' : ''}>User Story</option>
+                      <option value="Technical Task" ${task && task.type === 'Technical Task' ? 'selected' : ''}>Technical Task</option>
                     </select>
                     <div class="request-alert">
                         <p id="request-category" >This field is required</p>
@@ -82,7 +95,9 @@ export async function renderTaskForm(slot = "todo", task = null) {
                         ${returnIcon("plus")}
                       </div>
                     </div>
-                    <div class="subtasks"></div> 
+                    <div class="subtasks">
+                      ${task && task.subTasks ? task.subTasks.map((subtask) => `<div class="subtask" data-index="${subtask.index}"><input type="text" value="${subtask.title}"><div class="buttons"><button type="button" onClick="editSubtask(event)">${returnIcon("pen-outline")}</button><button type="button" onmousedown="deleteSubTask(event)">${returnIcon("trash-outline")}</button><button type="button" onmousedown="saveSubtask(event)">${returnIcon("check")}</button></div></div>`).join('') : ''}
+                    </div> 
                   </div>
                   <div class="footer-buttons">
                     <p><span class="red-star">*</span>This field is required</p>
@@ -99,6 +114,8 @@ export async function renderTaskForm(slot = "todo", task = null) {
     const modalRef = document.querySelector(".modal");
     if (modalRef) modalRef.classList.add("active");
   }
+
+
 }
 
 function renderTaskPage() {
@@ -316,6 +333,8 @@ function handleSubmitTask(event, slot, id = "") {
     addTask(slot, title, description, category, priority, dueDate, subtasks, assignees);
     showToast("Task added successfully", "check");
   } else {
+    console.log(slot, id);
+
     editTask(slot, id, title, description, category, priority, dueDate, subtasks, assignees);
     showToast("Task edited successfully", "check");
   }

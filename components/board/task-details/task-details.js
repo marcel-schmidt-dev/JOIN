@@ -6,6 +6,7 @@ import returnIcon from "../../icons.js";
 import { getInitialsFromName } from "../../utility-functions.js";
 import { renderBoardTemplate, renderTasks } from "../board.js";
 import { moveTaskToSlot } from "../../firebase.js";
+import { renderTaskForm } from "../task-form/task-form.js";
 
 // Attach the moveTaskToSlot function to the global window object.
 window.moveTaskToSlot = moveTaskToSlot;
@@ -28,9 +29,7 @@ export default async function showTaskDetails(taskId, slot) {
         <div class="task-details-container">
             <div class="task-details" data-task-id=${taskId} data-task-slot=${slot}>
                 <div class="top">
-                    <div class="type" style="background-color: ${
-                      task.type === "Technical Task" ? "#1FD7C1" : "#0038FF"
-                    }">${task.type}</div>
+                    <div class="type" style="background-color: ${task.type === "Technical Task" ? "#1FD7C1" : "#0038FF"}">${task.type}</div>
                     <div class="close" onclick="closeTaskDetails()">✘</div>
                 </div>
                 <h2>${task.title}</h2>
@@ -42,54 +41,39 @@ export default async function showTaskDetails(taskId, slot) {
                     </tr>
                     <tr>
                         <td>Priority:</td>
-                        <td class="${task.priority}"><span>${task.priority}</span>${returnIcon(
-    task.priority
-  )}</td>
+                        <td class="${task.priority}"><span>${task.priority}</span>${returnIcon(task.priority)}</td>
                     </tr>
                 </table>
                 
                 <div class="assignee-list">
                  <p>Assigned To:</p>
                  <div class="assignee-container">
-                     ${assignees
-                       .slice(0, 3)
-                       .map((assignee) => {
-                         return `<div class="assignee">
-                        <div class="bubble" style="background-color: #${
-                          assignee.userColor
-                        }">${getInitialsFromName(assignee.fullName)}</div>
+                     ${assignees.slice(0, 3).map((assignee) => {
+    return `
+                        <div class="assignee">
+                          <div class="bubble" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}</div>
                         <span>${assignee.fullName}</span>
                         </div>`;
-                       })
-                       .join("")}
-                        ${
-                          assignees.length > 3
-                            ? ` 
-                         <div class="assignee extra-assignees" title="${assignees
-                           .slice(3)
-                           .map((a) => a.fullName)
-                           .join(", ")}">
-                         <div class="bubble" style="background-color: #d1d1d1;">+${
-                           assignees.length - 3
-                         }</div>
+  }).join("")}
+                        ${assignees.length > 3 ? `<div class="assignee extra-assignees" title="${assignees.slice(3).map((a) => a.fullName).join(", ")}">
+                         <div class="bubble" style="background-color: #d1d1d1;">+${assignees.length - 3
+      }</div>
                          <span>+ ${assignees.length - 3} more</span>
                          </div>`
-                            : ""
-                        }
+      : ""
+    }
                 </div>
        </div>
 
                 <div class="subtask-list">
                     <p>Subtasks:</p>
                     ${subTasks
-                      .map((subtask) => {
-                        return `<div class="subtask"><input type="checkbox" ${
-                          subtask.checked ? "checked" : ""
-                        } name="${subtask.id}" id="${subtask.id}"><span>${
-                          subtask.title
-                        }</span></div>`;
-                      })
-                      .join("")}
+      .map((subtask) => {
+        return `<div class="subtask"><input type="checkbox" ${subtask.checked ? "checked" : ""
+          } name="${subtask.id}" id="${subtask.id}"><span>${subtask.title
+          }</span></div>`;
+      })
+      .join("")}
                 </div>
                 <div class="move-buttons">
                     <button class="move-btn" data-slot="todo-tasks">To-Do</button>
@@ -100,7 +84,7 @@ export default async function showTaskDetails(taskId, slot) {
                 <div class="buttons">
                     <button class="delete-btn">${returnIcon("trash-outline")}Delete</button>
                     <hr>
-                    <button>${returnIcon("pen")}Edit</button>
+                    <button class="edit-btn">${returnIcon("pen")}Edit</button>
                 </div>
             </div>
         </div>
@@ -126,6 +110,14 @@ export default async function showTaskDetails(taskId, slot) {
       deleteTask(slot, taskId);
       document.querySelector(".task-details-container").remove();
       await renderBoardTemplate();
+    });
+  }
+
+  const editButton = contentRef.querySelector(".edit-btn");
+  if (editButton) {
+    editButton.addEventListener("click", () => {
+      document.querySelector(".task-details-container").remove();
+      renderTaskForm(slot, taskId);
     });
   }
 }

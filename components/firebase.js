@@ -187,7 +187,9 @@ export async function returnTaskById(id) {
 
   for (const slot in board) {
     if (board[slot] && board[slot][id]) {
-      return board[slot][id];
+      let task = board[slot][id];
+      task.id = id;
+      return task;
     }
   }
 
