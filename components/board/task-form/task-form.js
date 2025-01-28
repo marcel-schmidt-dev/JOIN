@@ -2,6 +2,7 @@ import { checkAuth, getContacts, addTask, editTask } from "./../../firebase.js";
 import { returnPath, getInitialsFromName } from "./../../utility-functions.js";
 import returnIcon from "../../icons.js";
 import { showToast } from "../../toast/toast.js";
+import { renderTasks } from "./../board.js";
 
 window.handlePriorityClick = handlePriorityClick;
 window.showDatepicker = showDatepicker;
@@ -15,6 +16,7 @@ window.editSubtask = editSubtask;
 window.saveSubtask = saveSubtask;
 window.dateValidation = dateValidation;
 window.handleSubmitTask = handleSubmitTask;
+window.closeModal = closeModal;
 
 let contactList;
 let assignedContacts = [];
@@ -28,9 +30,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-export async function renderTaskForm(className = ".content", slot = "todo", task = null) {
+export async function renderTaskForm(slot = "todo", task = null) {
   let contentRef;
-  while ((contentRef = document.querySelector(className)) === null) {
+  while ((contentRef = document.querySelector('.form-container')) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
@@ -93,13 +95,34 @@ export async function renderTaskForm(className = ".content", slot = "todo", task
               </div>
             </div>
         `;
+
+    const modalRef = document.querySelector(".modal");
+    if (modalRef) modalRef.classList.add("active");
   }
 }
 
 function renderTaskPage() {
   const contentRef = document.querySelector(".content");
   contentRef.innerHTML = /*html*/ `<div class="form-container"></div>`;
-  renderTaskForm(".form-container", "todo", null);
+  renderTaskForm("todo", null);
+}
+
+export function renderModal() {
+  const contentRef = document.querySelector(".content");
+  const modalRef = document.createElement("div");
+  modalRef.classList.add("modal");
+  modalRef.innerHTML = /*html*/ `
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">${returnIcon("x")}</span>
+      <div class="form-container"></div>
+    </div>
+  `;
+  contentRef.appendChild(modalRef);
+}
+
+function closeModal() {
+  const modalRef = document.querySelector(".modal");
+  modalRef.classList.remove("active");
 }
 
 function clearForm() {
@@ -285,12 +308,17 @@ function handleSubmitTask(event, slot, id = "") {
   const priority = form.querySelector(".priority.selected").value;
   const category = form.category.value;
   const assignees = assignedContacts.map((contact) => contact.id);
+  const modal = document.querySelector(".modal");
 
-  if (!task) {
+  if (modal) modal.classList.remove("active");
+
+  if (!id) {
     addTask(slot, title, description, category, priority, dueDate, subtasks, assignees);
     showToast("Task added successfully", "check");
   } else {
     editTask(slot, id, title, description, category, priority, dueDate, subtasks, assignees);
     showToast("Task edited successfully", "check");
   }
+
+  renderTasks();
 };

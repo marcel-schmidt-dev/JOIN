@@ -3,36 +3,10 @@ import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
 import showTaskDetails from "./task-details/task-details.js";
 import openTaskMenu from "./task-details/task-details.js";
+import { renderModal, renderTaskForm } from "./task-form/task-form.js";
 
 window.openTaskMenu = openTaskMenu;
-window.handleTask = handleTask;
 window.preventDrag = preventDrag;
-
-/**
- * Renders the "Add Task" board as a modal window.
- * @async
- */
-export async function renderAddTaskBoard() {
-  const taskSectionRef = document.querySelector(".content");
-  const modalContainer = document.createElement("div");
-  modalContainer.classList.add("modal-container");
-  modalContainer.innerHTML = /*html*/ `
-    <div class="add-task-board">
-      <div class="button">
-        <svg onclick="handleTask()" class="x">${returnIcon("x")}</svg>
-      </div>
-      <div class="task-content"></div>
-    </div>
-  `;
-  taskSectionRef.appendChild(modalContainer);
-}
-
-/**
- * Toggles the visibility of the task modal container.
- */
-function handleTask() {
-  document.querySelector(".modal-container").classList.toggle("active");
-}
 
 // Initialize the board once the DOM is fully loaded.
 document.addEventListener("DOMContentLoaded", async () => {
@@ -49,8 +23,15 @@ async function initializeBoard() {
 
   const taskButton = document.getElementById("handleTask");
   const coveredButton = document.querySelector(".covered-btn");
-  coveredButton.addEventListener("click", handleTask);
-  taskButton.addEventListener("click", handleTask);
+  coveredButton.addEventListener("click", () => renderTaskForm("todo", null));
+  taskButton.addEventListener("click", () => renderTaskForm("todo", null));
+
+  const buttons = document.querySelectorAll(".btn");
+  const slots = ['todo', 'inProgress', 'awaitFeedback', 'done'];
+
+  buttons.forEach((button, index) => {
+    button.addEventListener("click", () => renderTaskForm(slots[index], null));
+  });
 }
 
 let currentTaskId;
@@ -220,6 +201,7 @@ export async function renderBoardTemplate() {
     `;
 
   renderTasks();
+  renderModal();
 }
 
 function preventDrag(event) {
@@ -238,6 +220,10 @@ export async function renderTasks() {
     awaitFeedback: document.getElementById("awaitFeedback-tasks"),
     done: document.getElementById("done-tasks"),
   };
+
+  for (let slot in slots) {
+    slots[slot].innerHTML = `<div class="placeholder ph d-none" draggable="false" ondragstart="preventDrag(event)"><p>No tasks To do</p></div>`;
+  }
 
   const boardData = await returnBoard();
   for (let status in boardData) {
@@ -298,9 +284,9 @@ if (!isMobile()) {
     renderBoardTemplate();
   };
 } else {
-  window.allowDrop = function () {};
-  window.dragTask = function () {};
-  window.dropTask = function () {};
+  window.allowDrop = function () { };
+  window.dragTask = function () { };
+  window.dropTask = function () { };
 }
 
 /**
@@ -308,9 +294,9 @@ if (!isMobile()) {
  */
 function toggleDragAndDrop() {
   if (window.innerWidth <= 768) {
-    window.allowDrop = () => {};
-    window.dragTask = () => {};
-    window.dropTask = () => {};
+    window.allowDrop = () => { };
+    window.dragTask = () => { };
+    window.dropTask = () => { };
   } else {
     window.allowDrop = (e) => e.preventDefault();
     window.dragTask = (e, taskId) => {
