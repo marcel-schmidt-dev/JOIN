@@ -319,7 +319,7 @@ function saveSubtask(event) {
   const subtask = event.target.closest(".subtask");
   const index = subtask.dataset.index;
 
-  subtasks[index] = { title: subtask.querySelector("input").value, checked: subtask.querySelector("input").checked };
+  subtasks[index] = { title: subtask.querySelector("input").value, checked: subtasks[index].checked };
   renderSubtasks();
 }
 
