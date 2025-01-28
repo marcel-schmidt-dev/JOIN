@@ -41,6 +41,7 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
 
     const assigneesPromises = task.assignee.map((id) => getContact(id));
     assignedContacts = await Promise.all(assigneesPromises);
+    subtasks = task.subTasks;
   }
 
   while ((contentRef = document.querySelector('.form-container')) === null) {
@@ -60,7 +61,7 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                         <p id="request-title" >This field is required</p>
                     </div>
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" placeholder="Enter a Description" rows="3">${task && task.description}</textarea>
+                    <textarea id="description" name="description" placeholder="Enter a Description" rows="3">${task ? task.description : ""}</textarea>
                     ${await returnAssigneeInput()}
                     <div class="assignees">
                       ${task ? assignedContacts.map((assignee) => `<div class="initials-bubble" style="background-color: #${assignee.userColor}" title="${assignee.fullName}">${getInitialsFromName(assignee.fullName)}</div>`).join('') : ''}
@@ -95,9 +96,7 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                         ${returnIcon("plus")}
                       </div>
                     </div>
-                    <div class="subtasks">
-                      ${task && task.subTasks ? task.subTasks.map((subtask) => `<div class="subtask" data-index="${subtask.index}"><input type="text" value="${subtask.title}"><div class="buttons"><button type="button" onClick="editSubtask(event)">${returnIcon("pen-outline")}</button><button type="button" onmousedown="deleteSubTask(event)">${returnIcon("trash-outline")}</button><button type="button" onmousedown="saveSubtask(event)">${returnIcon("check")}</button></div></div>`).join('') : ''}
-                    </div> 
+                    <div class="subtasks"></div> 
                   </div>
                   <div class="footer-buttons">
                     <p><span class="red-star">*</span>This field is required</p>
@@ -110,12 +109,10 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
               </div>
             </div>
         `;
-
+    renderSubtasks();
     const modalRef = document.querySelector(".modal");
     if (modalRef) modalRef.classList.add("active");
   }
-
-
 }
 
 function renderTaskPage() {
@@ -280,18 +277,21 @@ function addSubtask() {
 function renderSubtasks() {
   const subtasksContainer = document.querySelector(".subtasks");
   subtasksContainer.innerHTML = "";
-  subtasks.forEach((subtask, index) => {
-    subtasksContainer.innerHTML += /*html*/ `
-      <div class="subtask" data-index="${index}">
-        <input type="text" value="${subtask}"> 
-        <div class="buttons">
-          <button type="button" onClick="editSubtask(event)">${returnIcon("pen-outline")}</button>
-          <button type="button" onmousedown="deleteSubTask(event)">${returnIcon("trash-outline")}</button>
-          <button type="button" onmousedown="saveSubtask(event)">${returnIcon("check")}</button>
+
+  if (subtasks.length > 0) {
+    subtasks.forEach((subtask, index) => {
+      subtasksContainer.innerHTML += /*html*/ `
+        <div class="subtask" data-index="${index}">
+          <input type="text" value="${subtask.title}"> 
+          <div class="buttons">
+            <button type="button" onClick="editSubtask(event)">${returnIcon("pen-outline")}</button>
+            <button type="button" onmousedown="deleteSubTask(event)">${returnIcon("trash-outline")}</button>
+            <button type="button" onmousedown="saveSubtask(event)">${returnIcon("check")}</button>
+          </div>
         </div>
-      </div>
-    `;
-  });
+      `;
+    });
+  }
 }
 
 function deleteSubtask(event) {
@@ -312,6 +312,7 @@ function editSubtask(event) {
 function saveSubtask(event) {
   const subtask = event.target.closest(".subtask");
   const index = subtask.dataset.index;
+
   subtasks[index] = { title: subtask.querySelector("input").value, checked: subtask.querySelector("input").checked };
   renderSubtasks();
 }
@@ -341,8 +342,6 @@ function handleSubmitTask(event, slot, id = "") {
     addTask(slot, title, description, category, priority, dueDate, subtasks, assignees);
     showToast("Task added successfully", "check");
   } else {
-    console.log(slot, id);
-
     editTask(slot, id, title, description, category, priority, dueDate, subtasks, assignees);
     showToast("Task edited successfully", "check");
   }
