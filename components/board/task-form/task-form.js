@@ -41,7 +41,10 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
 
     const assigneesPromises = task.assignee.map((id) => getContact(id));
     assignedContacts = await Promise.all(assigneesPromises);
-    subtasks = task.subTasks;
+
+    if (task.subtasks) {
+      subtasks = task.subtasks;
+    }
   }
 
   while ((contentRef = document.querySelector('.form-container')) === null) {
@@ -53,7 +56,7 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
             <div class="task-form">
               <h1>${task ? "Edit Task" : "Add Task"}</h1>
               <div class="task-form-container">
-                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ""}')">
+                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ''}')">
                   <div>
                     <label for="title">Title<span class="red-star">*</span></label>
                     <input type="text" id="title" name="title" placeholder="Enter a title" value="${task ? task.title : ''}">
@@ -269,6 +272,7 @@ function renderSelectedAssignees() {
 function addSubtask() {
   const subtaskInput = document.querySelector("#subtasks-input");
   if (subtaskInput.value === "") return;
+
   subtasks.push({ title: subtaskInput.value, checked: false });
   subtaskInput.value = "";
   renderSubtasks();
@@ -278,7 +282,7 @@ function renderSubtasks() {
   const subtasksContainer = document.querySelector(".subtasks");
   subtasksContainer.innerHTML = "";
 
-  if (subtasks.length > 0) {
+  if (subtasks && subtasks.length > 0) {
     subtasks.forEach((subtask, index) => {
       subtasksContainer.innerHTML += /*html*/ `
         <div class="subtask" data-index="${index}">
