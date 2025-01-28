@@ -52,7 +52,7 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
             <div class="task-form">
               <h1>${task ? "Edit Task" : "Add Task"}</h1>
               <div class="task-form-container">
-                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ''}')">
+                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ""}')">
                   <div>
                     <label for="title">Title<span class="red-star">*</span></label>
                     <input type="text" id="title" name="title" placeholder="Enter a title" value="${task ? task.title : ''}">
@@ -103,7 +103,7 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                     <p><span class="red-star">*</span>This field is required</p>
                     <div class="buttons">
                       <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon("x")}</button>
-                      <button type="submit" id="submit-task" class="submit-button">${!task ? 'Create Task' : 'Edit Task'} ${returnIcon("check")}</button>
+                      <button type="submit"  id="submit-task" class="submit-button">${!task ? "Create Task" : "Edit Task"} ${returnIcon("check")} </button>
                     </div>
                   </div>
                 </form>
@@ -163,22 +163,23 @@ function titleValidation(title) {
   const validateTitle = document.querySelector("#request-title");
   const titleContainer = document.querySelector("#title");
 
-  if (title !== "") {
+  if (title === "" || title.length <= 3) {
     validateTitle.style.display = "block";
     validateTitle.style.color = "red";
     titleContainer.style.borderColor = "red";
     return false;
   } else {
     validateTitle.style.display = "none";
-    titleContainer.style.borderColor = "$light-blue";
+    titleContainer.style.borderColor = "#29abe2";
+    return true;
   }
-  return true;
 }
 
 function dateValidation(dueDate) {
   const validateDate = document.querySelector("#request-date");
   const dateContainer = document.querySelector("#due-date");
-  const dateValidation = /^\d{2}\.\d{2}\.\d{4}$/;
+
+  const dateValidation = /^\d{4}-\d{2}-\d{2}$/;
 
   if (!dateValidation.test(dueDate)) {
     validateDate.style.display = "block";
@@ -187,9 +188,9 @@ function dateValidation(dueDate) {
     return false;
   } else {
     validateDate.style.display = "none";
-    dateContainer.style.borderColor = "$light-blue";
+    dateContainer.style.borderColor = "#29abe2";
+    return true;
   }
-  return true;
 }
 
 function handlePriorityClick(element) {
@@ -319,13 +320,20 @@ function handleSubmitTask(event, slot, id = "") {
   event.preventDefault();
 
   const form = event.target;
-  const title = form.title.value;
-  const description = form.description.value;
-  const dueDate = form["due-date"].value;
+  const title = form.title.value.trim();
+  const description = form.description.value.trim();
+  const dueDate = form["due-date"].value.trim();
   const priority = form.querySelector(".priority.selected").value;
   const category = form.category.value;
   const assignees = assignedContacts.map((contact) => contact.id);
   const modal = document.querySelector(".modal");
+
+  const validDate = dateValidation(dueDate);
+  const validTitle = titleValidation(title);
+
+  if (!validDate || !validTitle) {
+    return;
+  }
 
   if (modal) modal.classList.remove("active");
 
@@ -340,4 +348,5 @@ function handleSubmitTask(event, slot, id = "") {
   }
 
   renderTasks();
-};
+  window.location.href = "/board.html";
+}
