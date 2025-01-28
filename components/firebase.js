@@ -134,12 +134,15 @@ export async function deleteContact(id) {
  * @param {string} userColor - The updated user color for the contact.
  */
 export function editContact(id, name, email, phone, userColor) {
-  const { database } = getDatabase();
-  set(ref(database, `contacts/${id}`), {
+  const database = getDatabase();
+  console.log(id, name, email, phone, userColor);
+  return set(ref(database, `contacts/${id}`), {
     fullName: name,
     email: email,
     phone: phone,
     userColor: userColor,
+  }).catch(error => {
+    console.error("Error updating contact:", error);
   });
 }
 

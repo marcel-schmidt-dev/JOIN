@@ -25,13 +25,6 @@ async function initializeBoard() {
   const coveredButton = document.querySelector(".covered-btn");
   coveredButton.addEventListener("click", () => renderTaskForm("todo", null));
   taskButton.addEventListener("click", () => renderTaskForm("todo", null));
-
-  const buttons = document.querySelectorAll(".btn");
-  const slots = ['todo', 'inProgress', 'awaitFeedback', 'done'];
-
-  buttons.forEach((button, index) => {
-    button.addEventListener("click", () => renderTaskForm(slots[index], null));
-  });
 }
 
 let currentTaskId;
@@ -202,6 +195,13 @@ export async function renderBoardTemplate() {
 
   renderTasks();
   renderModal();
+
+  const buttons = document.querySelectorAll(".slots-header .btn");
+  const slots = ['todo', 'inProgress', 'awaitFeedback', 'done'];
+
+  buttons.forEach((button, index) => {
+    button.addEventListener("click", () => renderTaskForm(slots[index], null));
+  });
 }
 
 function preventDrag(event) {

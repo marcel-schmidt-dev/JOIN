@@ -3,6 +3,7 @@ import { returnPath, getInitialsFromName } from "./../../utility-functions.js";
 import returnIcon from "../../icons.js";
 import { showToast } from "../../toast/toast.js";
 import { renderTasks } from "./../board.js";
+import { renderBoardTemplate } from "./../board.js";
 
 window.handlePriorityClick = handlePriorityClick;
 window.showDatepicker = showDatepicker;
@@ -84,7 +85,7 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                       <button type="button" class="priority ${task ? (task.priority === 'low' ? 'selected' : '') : ''}" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
                     </div>
                     <label for="category">Category<span class="red-star">*</span></label>
-                    <select name="category" id="category">
+                    <select name="category" id="category" ${task ? 'disabled' : ''}>
                       <option value="" disabled ${!task && 'selected'}>Select task category</option>
                       <option value="User Story" ${task && task.type === 'User Story' ? 'selected' : ''}>User Story</option>
                       <option value="Technical Task" ${task && task.type === 'Technical Task' ? 'selected' : ''}>Technical Task</option>
@@ -113,9 +114,18 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
             </div>
         `;
     renderSubtasks();
+    preventEnterKeySubmit();
     const modalRef = document.querySelector(".modal");
     if (modalRef) modalRef.classList.add("active");
   }
+}
+
+function preventEnterKeySubmit() {
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" && event.target.tagName !== "TEXTAREA") {
+      event.preventDefault();
+    }
+  });
 }
 
 function renderTaskPage() {
@@ -140,6 +150,7 @@ export function renderModal() {
 function closeModal() {
   const modalRef = document.querySelector(".modal");
   modalRef.classList.remove("active");
+  renderBoardTemplate();
 }
 
 function clearForm() {
@@ -262,11 +273,19 @@ function toggleAssigneeInList(element) {
 function renderSelectedAssignees() {
   const assignees = document.querySelector(".assignees");
   assignees.innerHTML = "";
-  assignedContacts.forEach((contact) => {
+  assignedContacts.slice(0, 3).forEach((contact) => {
     assignees.innerHTML += /*html*/ `
       <div class="initials-bubble" style="background-color: #${contact.userColor}" title="${contact.fullName}">${getInitialsFromName(contact.fullName)}</div>
     `;
   });
+
+  if (assignedContacts.length > 3) {
+    const remainingContacts = assignedContacts.slice(3);
+    const remainingNames = remainingContacts.map(contact => contact.fullName).join(', ');
+    assignees.innerHTML += /*html*/ `
+      <div class="initials-bubble" style="background-color: #222" title="${remainingNames}">+${remainingContacts.length}</div>
+    `;
+  }
 }
 
 function addSubtask() {
