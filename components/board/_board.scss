@@ -49,7 +49,7 @@
   padding-right: 25px;
   width: 100%;
   max-width: 1440px;
-  margin-left: auto;
+
   margin-right: auto;
   .board-heading {
     display: flex;
@@ -124,7 +124,7 @@
         line-height: 120%;
         transition: all 300ms ease-in-out;
 
-        @media (max-width: 710px) {
+        @media (max-width: 780px) {
           display: none;
         }
 
@@ -286,7 +286,7 @@
   }
 }
 
-@media (max-width: 715px) {
+@media (max-width: 770px) {
   .board-heading {
     flex-direction: column;
     gap: 32px;

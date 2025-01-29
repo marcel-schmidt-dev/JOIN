@@ -31,37 +31,10 @@ import { returnTaskTemplate } from "./task-card/task-card.js";
 import returnIcon from "../icons.js";
 import showTaskDetails from "./task-details/task-details.js";
 import openTaskMenu from "./task-details/task-details.js";
-import { getAddTaskTemplate } from "./add-task/add-task.js";
+import { renderModal, renderTaskForm } from "./task-form/task-form.js";
 
 window.openTaskMenu = openTaskMenu;
-window.handleTask = handleTask;
 window.preventDrag = preventDrag;
-
-/**
- * Renders the "Add Task" board as a modal window.
- * @async
- */
-export async function renderAddTaskBoard() {
-  const taskSectionRef = document.querySelector(".content");
-  const modalContainer = document.createElement("div");
-  modalContainer.classList.add("modal-container");
-  modalContainer.innerHTML = /*html*/ `
-    &lt;div class="add-task-board">
-      &lt;div class="button">
-        &lt;svg onclick="handleTask()" class="x">${returnIcon("x")}&lt;/svg>
-      &lt;/div>
-      &lt;div class="task-content">&lt;/div>
-    &lt;/div>
-  `;
-  taskSectionRef.appendChild(modalContainer);
-}
-
-/**
- * Toggles the visibility of the task modal container.
- */
-function handleTask() {
-  document.querySelector(".modal-container").classList.toggle("active");
-}
 
 // Initialize the board once the DOM is fully loaded.
 document.addEventListener("DOMContentLoaded", async () => {
@@ -75,14 +48,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function initializeBoard() {
   checkAuth();
   await renderBoardTemplate();
-  await renderAddTaskBoard();
-
-  await getAddTaskTemplate();
-
-  const taskButton = document.getElementById("handleTask");
-  const coveredButton = document.querySelector(".covered-btn");
-  coveredButton.addEventListener("click", handleTask);
-  taskButton.addEventListener("click", handleTask);
 }
 
 let currentTaskId;
@@ -96,10 +61,7 @@ window.filterTasks = function () {
   allTasks.forEach((task) => {
     const taskTitle = task.querySelector(".heading span").textContent;
     const taskDescription = task.querySelector(".heading p").textContent;
-    if (
-      taskTitle.toLowerCase().includes(searchInput.value.toLowerCase()) ||
-      taskDescription.toLowerCase().includes(searchInput.value.toLowerCase())
-    ) {
+    if (taskTitle.toLowerCase().includes(searchInput.value.toLowerCase()) || taskDescription.toLowerCase().includes(searchInput.value.toLowerCase())) {
       task.classList.remove("d-none");
     } else {
       task.classList.add("d-none");
@@ -215,9 +177,7 @@ export async function renderBoardTemplate() {
                 &lt;button class="covered-btn">${returnIcon("plus")}&lt;/button>
                 &lt;/div>
                 &lt;div>
-                  &lt;div class="search">&lt;input type="text" placeholder="Find Task" oninput="filterTasks()">&lt;span>${returnIcon(
-                    "search"
-                  )}&lt;/span>&lt;/div>
+                  &lt;div class="search">&lt;input type="text" placeholder="Find Task" oninput="filterTasks()">&lt;span>${returnIcon("search")}&lt;/span>&lt;/div>
                   &lt;button id="handleTask">Add task${returnIcon("plus")}&lt;/button>
                 &lt;/div> 
             &lt;/div>
@@ -257,6 +217,18 @@ export async function renderBoardTemplate() {
     `;
 
   renderTasks();
+  renderModal();
+
+  const buttons = document.querySelectorAll(".slots-header .btn");
+  const slots = ['todo', 'inProgress', 'awaitFeedback', 'done'];
+
+  buttons.forEach((button, index) => {
+    button.addEventListener("click", () => renderTaskForm(slots[index], null));
+  });
+  const taskButton = document.getElementById("handleTask");
+  const coveredButton = document.querySelector(".covered-btn");
+  coveredButton.addEventListener("click", () => renderTaskForm("todo", null));
+  taskButton.addEventListener("click", () => renderTaskForm("todo", null));
 }
 
 function preventDrag(event) {
@@ -275,6 +247,10 @@ export async function renderTasks() {
     awaitFeedback: document.getElementById("awaitFeedback-tasks"),
     done: document.getElementById("done-tasks"),
   };
+
+  for (let slot in slots) {
+    slots[slot].innerHTML = `&lt;div class="placeholder ph d-none" draggable="false" ondragstart="preventDrag(event)">&lt;p>No tasks To do&lt;/p>&lt;/div>`;
+  }
 
   const boardData = await returnBoard();
   for (let status in boardData) {
@@ -335,9 +311,9 @@ if (!isMobile()) {
     renderBoardTemplate();
   };
 } else {
-  window.allowDrop = function () {};
-  window.dragTask = function () {};
-  window.dropTask = function () {};
+  window.allowDrop = function () { };
+  window.dragTask = function () { };
+  window.dropTask = function () { };
 }
 
 /**
@@ -345,9 +321,9 @@ if (!isMobile()) {
  */
 function toggleDragAndDrop() {
   if (window.innerWidth &lt;= 768) {
-    window.allowDrop = () => {};
-    window.dragTask = () => {};
-    window.dropTask = () => {};
+    window.allowDrop = () => { };
+    window.dragTask = () => { };
+    window.dropTask = () => { };
   } else {
     window.allowDrop = (e) => e.preventDefault();
     window.dragTask = (e, taskId) => {
@@ -375,13 +351,13 @@ toggleDragAndDrop();
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#createRandomTasks">createRandomTasks</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleTask">handleTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#renderAddTaskBoard">renderAddTaskBoard</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnHeader">returnHeader</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubtaskArray">returnSubtaskArray</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#assignedContacts">assignedContacts</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clearPriority">clearPriority</a></li><li><a href="global.html#closeModal">closeModal</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#contactList">contactList</a></li><li><a href="global.html#createRandomTasks">createRandomTasks</a></li><li><a href="global.html#dateValidation">dateValidation</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handlePriorityClick">handlePriorityClick</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleSubmitTask">handleSubmitTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#preventEnterKeySubmit">preventEnterKeySubmit</a></li><li><a href="global.html#renderAssigneeList">renderAssigneeList</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderModal">renderModal</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSelectedAssignees">renderSelectedAssignees</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTaskForm">renderTaskForm</a></li><li><a href="global.html#renderTaskPage">renderTaskPage</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnAssigneeInput">returnAssigneeInput</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnHeader">returnHeader</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#saveSubtask">saveSubtask</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showDatepicker">showDatepicker</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#subtasks">subtasks</a></li><li><a href="global.html#titleValidation">titleValidation</a></li><li><a href="global.html#toggleAssigneeInList">toggleAssigneeInList</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jan 22 2025 11:25:38 GMT+0100 (Mitteleuropäische Normalzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jan 29 2025 15:35:59 GMT+0100 (Mitteleuropäische Normalzeit)
 </footer>
 
 <script> prettyPrint(); </script>
