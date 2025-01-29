@@ -20,11 +20,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function initializeBoard() {
   checkAuth();
   await renderBoardTemplate();
-
-  const taskButton = document.getElementById("handleTask");
-  const coveredButton = document.querySelector(".covered-btn");
-  coveredButton.addEventListener("click", () => renderTaskForm("todo", null));
-  taskButton.addEventListener("click", () => renderTaskForm("todo", null));
 }
 
 let currentTaskId;
@@ -202,6 +197,10 @@ export async function renderBoardTemplate() {
   buttons.forEach((button, index) => {
     button.addEventListener("click", () => renderTaskForm(slots[index], null));
   });
+  const taskButton = document.getElementById("handleTask");
+  const coveredButton = document.querySelector(".covered-btn");
+  coveredButton.addEventListener("click", () => renderTaskForm("todo", null));
+  taskButton.addEventListener("click", () => renderTaskForm("todo", null));
 }
 
 function preventDrag(event) {
