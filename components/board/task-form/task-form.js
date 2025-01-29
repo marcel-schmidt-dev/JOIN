@@ -18,6 +18,7 @@ window.saveSubtask = saveSubtask;
 window.dateValidation = dateValidation;
 window.handleSubmitTask = handleSubmitTask;
 window.closeModal = closeModal;
+window.categoryValidation = categoryValidation;
 
 let contactList;
 let assignedContacts = [];
@@ -212,6 +213,24 @@ function dateValidation(dueDate) {
   }
 }
 
+function categoryValidation() {
+  const validateCategory = document.querySelector("#request-category");
+  const categoryContainer = document.querySelector("#category");
+  let categoryValidation = categoryContainer.value.trim() !== "";
+
+  if (!categoryValidation) {
+    validateCategory.style.display = "block";
+    validateCategory.style.color = "red";
+    categoryContainer.style.borderColor = "red";
+    return false;
+  } else {
+    validateCategory.style.display = "none";
+    categoryContainer.style.borderColor = "#d1d1d1";
+  }
+
+  return true;
+}
+
 function handlePriorityClick(element) {
   const priorities = document.querySelectorAll(".priority");
   priorities.forEach((priority) => {
@@ -362,8 +381,9 @@ function handleSubmitTask(event, slot, id = "") {
 
   const validDate = dateValidation(dueDate);
   const validTitle = titleValidation(title);
+  const validCategory = categoryValidation(category);
 
-  if (!validDate || !validTitle) {
+  if (!validDate || !validTitle || !validCategory) {
     return;
   }
 
