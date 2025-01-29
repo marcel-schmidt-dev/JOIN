@@ -15,7 +15,6 @@ import { showToast } from "../../toast/toast.js";
 import { renderTasks } from "./../board.js";
 import { renderBoardTemplate } from "./../board.js";
 
-// Assign global window functions
 window.handlePriorityClick = handlePriorityClick;
 window.showDatepicker = showDatepicker;
 window.renderAssigneeList = renderAssigneeList;
@@ -73,17 +72,14 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
   if (taskId) {
     task = await returnTaskById(taskId);
 
-    // Retrieve assigned contacts
     const assigneesPromises = task.assignee.map((id) => getContact(id));
     assignedContacts = await Promise.all(assigneesPromises);
 
-    // Retrieve subtasks if available
     if (task.subTasks) {
       subtasks = task.subTasks;
     }
   }
 
-  // Wait for the form container to be available in the DOM
   while ((contentRef = document.querySelector(".form-container")) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
