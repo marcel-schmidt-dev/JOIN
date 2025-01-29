@@ -524,8 +524,6 @@
     font-size: 16px !important;
   }
   .task-form .task-form-container #task-form .initials-bubble {
-    height: auto;
-    width: 100%;
   }
 
   .task-form .task-form-container #task-form .assignee-input .assignee-dropdown {
@@ -533,16 +531,6 @@
     width: 95%;
     font-size: 12px;
     padding: 8px;
-  }
-
-  .assignee {
-    gap: 8px;
-    padding: 6px;
-
-    img {
-      width: 30px;
-      height: 30px;
-    }
   }
 
   .task-form h1 {
