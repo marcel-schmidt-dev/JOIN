@@ -2,12 +2,13 @@
  * Imports required functions and modules.
  */
 import returnIcon from "../icons.js";
-import { returnBoard, getAuthUser } from "../firebase.js";
+import { returnBoard, getAuthUser, checkAuth } from "../firebase.js";
 
 /**
  * Listens for the DOM content to be fully loaded and then renders the summary template.
  */
 document.addEventListener("DOMContentLoaded", async () => {
+  checkAuth();
   await renderSummaryTemplate();
 });
 
@@ -83,26 +84,23 @@ async function renderSummaryTemplate() {
                         
                         <a href="./board.html" class="summary-card-2">
                             <div class="summary-card-icon">${returnIcon("pen")}</div>
-                            <div class="summary-card-content"><span>${
-                              board["todo"] ? board["todo"].length : 0
-                            }</span><br>To-do</div>
+                            <div class="summary-card-content"><span>${board["todo"] ? board["todo"].length : 0
+    }</span><br>To-do</div>
                         </a>
                         
                         
                         <a href="./board.html" class="summary-card-2">
                             <div class="summary-card-icon">${returnIcon("check")}</div>
-                            <div class="summary-card-content"><span>${
-                              board["done"] ? board["done"].length : 0
-                            }</span><br>Done</div>
+                            <div class="summary-card-content"><span>${board["done"] ? board["done"].length : 0
+    }</span><br>Done</div>
                         </a>
                         
                        
                         <a href="./board.html" class="summary-card-1">
                             <div>
                                 <div class="summary-card-icon">${returnIcon("urgent")}</div>
-                                <div class="summary-card-content"><span>${
-                                  urgentTasks.length
-                                }</span><br>Urgent</div>
+                                <div class="summary-card-content"><span>${urgentTasks.length
+    }</span><br>Urgent</div>
                             </div>
                             <hr>
                             <div>
@@ -117,16 +115,14 @@ async function renderSummaryTemplate() {
 
                         
                         <a href="./board.html" class="summary-card-3">
-                            <span>${
-                              board["inProgress"] ? board["inProgress"].length : 0
-                            }</span>Tasks in Progress
+                            <span>${board["inProgress"] ? board["inProgress"].length : 0
+    }</span>Tasks in Progress
                         </a>
 
                         
                         <a href="./board.html" class="summary-card-3">
-                            <span>${
-                              board["awaitFeedback"] ? board["awaitFeedback"].length : 0
-                            }</span>Awaiting Feedback
+                            <span>${board["awaitFeedback"] ? board["awaitFeedback"].length : 0
+    }</span>Awaiting Feedback
                         </a>
                     </div>
                 </div>
