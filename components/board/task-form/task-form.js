@@ -458,7 +458,6 @@ function handleSubmitTask(event, slot, id = '') {
   const category = form.category.value;
   const assignees = assignedContacts.map((contact) => contact.id);
   const modal = document.querySelector('.modal');
-
   const validDate = dateValidation(dueDate);
   const validTitle = titleValidation(title);
 
