@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: board/task-form/task-form.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: board/task-form/task-form.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Imports necessary functions from various modules.
+ */
+import {
+  checkAuth,
+  getContacts,
+  addTask,
+  editTask,
+  returnTaskById,
+  getContact,
+} from "./../../firebase.js";
+import { returnPath, getInitialsFromName } from "./../../utility-functions.js";
+import returnIcon from "../../icons.js";
+import { showToast } from "../../toast/toast.js";
+import { renderTasks } from "./../board.js";
+import { renderBoardTemplate } from "./../board.js";
+
+// Assign global window functions
+window.handlePriorityClick = handlePriorityClick;
+window.showDatepicker = showDatepicker;
+window.renderAssigneeList = renderAssigneeList;
+window.clearForm = clearForm;
+window.toggleAssigneeInList = toggleAssigneeInList;
+window.addSubtask = addSubtask;
+window.titleValidation = titleValidation;
+window.deleteSubTask = deleteSubtask;
+window.editSubtask = editSubtask;
+window.saveSubtask = saveSubtask;
+window.dateValidation = dateValidation;
+window.handleSubmitTask = handleSubmitTask;
+window.closeModal = closeModal;
+
+/**
+ * Stores the contact list retrieved from the database.
+ * @type {Array}
+ */
+let contactList;
+
+/**
+ * Stores the assigned contacts for a task.
+ * @type {Array}
+ */
+let assignedContacts = [];
+
+/**
+ * Stores the list of subtasks.
+ * @type {Array}
+ */
+let subtasks = [];
+
+/**
+ * Event listener for DOMContentLoaded to check authentication and load contacts.
+ */
+document.addEventListener("DOMContentLoaded", async () => {
+  checkAuth();
+  contactList = await getContacts();
+  if (returnPath() === "/add-task.html") {
+    renderTaskPage();
+  }
+});
+
+/**
+ * Renders the task form with the given slot and optional task ID.
+ * @param {string} [slot="todo"] - The slot where the task should be placed.
+ * @param {string|null} [taskId=null] - The ID of the task to edit (if any).
+ */
+export async function renderTaskForm(slot = "todo", taskId = null) {
+  let contentRef;
+  let task = null;
+  assignedContacts = [];
+  subtasks = [];
+
+  if (taskId) {
+    task = await returnTaskById(taskId);
+
+    // Retrieve assigned contacts
+    const assigneesPromises = task.assignee.map((id) => getContact(id));
+    assignedContacts = await Promise.all(assigneesPromises);
+
+    // Retrieve subtasks if available
+    if (task.subTasks) {
+      subtasks = task.subTasks;
+    }
+  }
+
+  // Wait for the form container to be available in the DOM
+  while ((contentRef = document.querySelector(".form-container")) === null) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
+  if (contentRef) {
+    contentRef.innerHTML = /*html*/ `
+            &lt;div class="task-form">
+              &lt;h1>${task ? "Edit Task" : "Add Task"}&lt;/h1>
+              &lt;div class="task-form-container">
+                &lt;form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${
+      task ? task.id : ""
+    }')">
+                  &lt;div>
+                    &lt;label for="title">Title&lt;span class="red-star">*&lt;/span>&lt;/label>
+                    &lt;input type="text" id="title" name="title" placeholder="Enter a title" value="${
+                      task ? task.title : ""
+                    }">
+                    &lt;div class="request-alert">
+                        &lt;p id="request-title" >This field is required&lt;/p>
+                    &lt;/div>
+                    &lt;label for="description">Description&lt;/label>
+                    &lt;textarea id="description" name="description" placeholder="Enter a Description" rows="3">${
+                      task ? task.description : ""
+                    }&lt;/textarea>
+                    ${await returnAssigneeInput()}
+                    &lt;div class="assignees">
+                    &lt;/div>
+                  &lt;/div>
+                  &lt;hr />
+                  &lt;div>
+                    &lt;label for="due-date">Due date&lt;span class="red-star">*&lt;/span>&lt;/label>
+                    &lt;input type="date" id="due-date" name="due-date" onClick="showDatepicker()" value="${
+                      task ? task.dueDate : ""
+                    }">
+                    &lt;div class="request-alert">
+                        &lt;p id="request-date" >This field is required&lt;/p>
+                    &lt;/div>
+                    &lt;label for="priority">Prio&lt;/label>
+                    &lt;div class="priorities">
+                      &lt;button type="button" class="priority ${
+                        task ? (task.priority === "urgent" ? "selected" : "") : ""
+                      }" onClick="handlePriorityClick(this)" value="urgent">  Urgent ${returnIcon(
+      "urgent"
+    )}&lt;/button>
+                      &lt;button type="button" class="priority ${
+                        task ? (task.priority === "medium" ? "selected" : "") : "selected"
+                      }" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon(
+      "medium"
+    )}&lt;/button>
+                      &lt;button type="button" class="priority ${
+                        task ? (task.priority === "low" ? "selected" : "") : ""
+                      }" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon(
+      "low"
+    )}&lt;/button>
+                    &lt;/div>
+                    &lt;label for="category">Category&lt;span class="red-star">*&lt;/span>&lt;/label>
+                    &lt;select name="category" id="category" ${task ? "disabled" : ""}>
+                      &lt;option value="" disabled ${!task &amp;&amp; "selected"}>Select task category&lt;/option>
+                      &lt;option value="User Story" ${
+                        task &amp;&amp; task.type === "User Story" ? "selected" : ""
+                      }>User Story&lt;/option>
+                      &lt;option value="Technical Task" ${
+                        task &amp;&amp; task.type === "Technical Task" ? "selected" : ""
+                      }>Technical Task&lt;/option>
+                    &lt;/select>
+                    &lt;div class="request-alert">
+                        &lt;p id="request-category" >This field is required&lt;/p>
+                    &lt;/div>
+                    &lt;label for="Subtasks">Subtasks&lt;/label>
+                    &lt;div class="input-container">
+                      &lt;input type="text" id="subtasks-input" name="" placeholder="Add new subtask"/> 
+                      &lt;div class="icon" onclick="addSubtask()">
+                        ${returnIcon("plus")}
+                      &lt;/div>
+                    &lt;/div>
+                    &lt;div class="subtasks">&lt;/div> 
+                  &lt;/div>
+                  &lt;div class="footer-buttons">
+                    &lt;p>&lt;span class="red-star">*&lt;/span>This field is required&lt;/p>
+                    &lt;div class="buttons">
+                      &lt;button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon(
+                        "x"
+                      )}&lt;/button>
+                      &lt;button type="submit"  id="submit-task" class="submit-button">${
+                        !task ? "Create Task" : "Edit Task"
+                      } ${returnIcon("check")} &lt;/button>
+                    &lt;/div>
+                  &lt;/div>
+                &lt;/form>
+              &lt;/div>
+            &lt;/div>
+        `;
+    renderSubtasks();
+    preventEnterKeySubmit();
+    renderSelectedAssignees();
+    const modalRef = document.querySelector(".modal");
+    if (modalRef) modalRef.classList.add("active");
+  }
+}
+
+/**
+ * Prevents the Enter key from submitting the form unless the focus is on a textarea.
+ */
+function preventEnterKeySubmit() {
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" &amp;&amp; event.target.tagName !== "TEXTAREA") {
+      event.preventDefault();
+    }
+  });
+}
+
+/**
+ * Renders the task page by injecting the form container into the content area.
+ */
+function renderTaskPage() {
+  const contentRef = document.querySelector(".content");
+  contentRef.innerHTML = /*html*/ `&lt;div class="form-container">&lt;/div>`;
+  renderTaskForm("todo", null);
+}
+
+/**
+ * Renders a modal containing a task form.
+ */
+export function renderModal() {
+  const contentRef = document.querySelector(".content");
+  const modalRef = document.createElement("div");
+  modalRef.classList.add("modal");
+  modalRef.innerHTML = /*html*/ `
+    &lt;div class="modal-content">
+      &lt;span class="close" onclick="closeModal()">${returnIcon("x")}&lt;/span>
+      &lt;div class="form-container">&lt;/div>
+    &lt;/div>
+  `;
+  contentRef.appendChild(modalRef);
+}
+
+/**
+ * Closes the modal and re-renders the board template.
+ */
+function closeModal() {
+  const modalRef = document.querySelector(".modal");
+  modalRef.classList.remove("active");
+  renderBoardTemplate();
+}
+
+/**
+ * Clears the task form fields and resets selections.
+ */
+function clearForm() {
+  clearPriority();
+  document.querySelector("#title").value = "";
+  document.querySelector("#description").value = "";
+  assignedContacts = [];
+  document.querySelector("#due-date").value = "";
+  document.querySelector("#category").value = "";
+  document.querySelector("#subtasks-input").value = "";
+  subtasks = [];
+  document.querySelector(".subtasks").innerHTML = "";
+  renderSelectedAssignees();
+}
+
+/**
+ * Clears the priority selection and sets default priority.
+ */
+function clearPriority() {
+  const buttons = document.querySelectorAll(".priorities .priority");
+  buttons.forEach((button) => button.classList.remove("selected"));
+  buttons[1].classList.add("selected");
+}
+
+/**
+ * Validates the task title input.
+ * @param {string} title - The title input to validate.
+ * @returns {boolean} True if valid, otherwise false.
+ */
+function titleValidation(title) {
+  const validateTitle = document.querySelector("#request-title");
+  const titleContainer = document.querySelector("#title");
+
+  if (title === "" || title.length &lt;= 3) {
+    validateTitle.style.display = "block";
+    validateTitle.style.color = "red";
+    titleContainer.style.borderColor = "red";
+    return false;
+  } else {
+    validateTitle.style.display = "none";
+    titleContainer.style.borderColor = "#29abe2";
+    return true;
+  }
+}
+
+/**
+ * Validates the given due date.
+ * @param {string} dueDate - The due date in the format YYYY-MM-DD.
+ * @returns {boolean} - Returns true if the date is valid, otherwise false.
+ */
+function dateValidation(dueDate) {
+  const validateDate = document.querySelector("#request-date");
+  const dateContainer = document.querySelector("#due-date");
+
+  const dateValidation = /^\d{4}-\d{2}-\d{2}$/;
+
+  if (!dateValidation.test(dueDate)) {
+    validateDate.style.display = "block";
+    validateDate.style.color = "red";
+    dateContainer.style.borderColor = "red";
+    return false;
+  } else {
+    validateDate.style.display = "none";
+    dateContainer.style.borderColor = "#29abe2";
+    return true;
+  }
+}
+
+/**
+ * Handles the priority button click event.
+ * @param {HTMLElement} element - The clicked priority button.
+ */
+function handlePriorityClick(element) {
+  const priorities = document.querySelectorAll(".priority");
+  priorities.forEach((priority) => {
+    priority.classList.remove("selected");
+  });
+  element.classList.add("selected");
+}
+
+/**
+ * Displays the date picker and sets the minimum selectable date to today.
+ */
+function showDatepicker() {
+  const dueDateRef = document.getElementById("due-date");
+  const today = new Date().toISOString().split("T")[0];
+  dueDateRef.setAttribute("min", today);
+  dueDateRef.showPicker();
+}
+
+/**
+ * Returns the HTML string for the assignee input field.
+ * @returns {Promise&lt;string>} - The HTML structure for the assignee input field.
+ */
+async function returnAssigneeInput() {
+  return /*html*/ `
+  &lt;div class="assignee-input">
+  &lt;label for="assigned-input">Assigned to&lt;/label>
+      &lt;input type="text" id="assignee-input" name="assigned-input" placeholder="Select contacts to assign" onClick="renderAssigneeList()" oninput="renderAssigneeList()">
+    &lt;div class="assignee-dropdown">
+    &lt;/div>
+  &lt;/div>
+  `;
+}
+
+/**
+ * Renders a filtered list of assignees based on user input.
+ */
+async function renderAssigneeList() {
+  const filterInput = document.getElementById("assignee-input");
+  const filteredContacts = contactList.filter((contact) =>
+    contact.fullName.toLowerCase().includes(filterInput.value.toLowerCase())
+  );
+  filteredContacts.sort((a, b) => a.fullName.localeCompare(b.fullName));
+  const assigneeDropdown = document.querySelector(".assignee-dropdown");
+
+  let contactsList = "";
+
+  filteredContacts.forEach((contact) => {
+    const isChecked = assignedContacts.find((assignedContact) => assignedContact.id === contact.id);
+
+    contactsList += /*html*/ `
+    &lt;div class="assignee ${isChecked ? "selected" : ""}" onClick="toggleAssigneeInList(this)">
+      &lt;div class="initials-bubble" style="background-color: #${
+        contact.userColor
+      }">${getInitialsFromName(contact.fullName)} &lt;/div>
+      &lt;span>${contact.fullName}&lt;/span>
+      &lt;input ${isChecked &amp;&amp; "checked"} type="checkbox" name="assignee" data-id="${
+      contact.id
+    }" data-fullname="${contact.fullName}" data-usercolor="${contact.userColor}" />
+  &lt;/div>
+    `;
+  });
+
+  assigneeDropdown.innerHTML = "";
+  assigneeDropdown.innerHTML =
+    filteredContacts.length > 0 ? contactsList : "&lt;span>No contacts found&lt;/span>";
+}
+
+/**
+ * Toggles the selection of an assignee in the list.
+ * @param {HTMLElement} element - The clicked assignee element.
+ */
+function toggleAssigneeInList(element) {
+  const checkBox = element.querySelector("input");
+
+  if (!checkBox.checked) {
+    assignedContacts.push({
+      id: checkBox.dataset.id,
+      fullName: checkBox.dataset.fullname,
+      userColor: checkBox.dataset.usercolor,
+    });
+    checkBox.checked = true;
+    element.classList.add("selected");
+  } else {
+    assignedContacts = assignedContacts.filter((contact) => contact.id !== checkBox.dataset.id);
+    checkBox.checked = false;
+    element.classList.remove("selected");
+  }
+
+  renderSelectedAssignees();
+}
+
+/**
+ * Renders the selected assignees' initials bubbles.
+ */
+function renderSelectedAssignees() {
+  const assignees = document.querySelector(".assignees");
+  assignees.innerHTML = "";
+  assignedContacts.slice(0, 3).forEach((contact) => {
+    assignees.innerHTML += /*html*/ `
+      &lt;div class="initials-bubble" style="background-color: #${contact.userColor}" title="${
+      contact.fullName
+    }">${getInitialsFromName(contact.fullName)}&lt;/div>
+    `;
+  });
+
+  if (assignedContacts.length > 3) {
+    const remainingContacts = assignedContacts.slice(3);
+    const remainingNames = remainingContacts.map((contact) => contact.fullName).join(", ");
+    assignees.innerHTML += /*html*/ `
+      &lt;div class="initials-bubble" style="background-color: #222" title="${remainingNames}">+${remainingContacts.length}&lt;/div>
+    `;
+  }
+}
+
+/**
+ * Adds a new subtask to the list.
+ */
+function addSubtask() {
+  const subtaskInput = document.querySelector("#subtasks-input");
+  if (subtaskInput.value === "") return;
+
+  subtasks.push({ title: subtaskInput.value, checked: false });
+  subtaskInput.value = "";
+  renderSubtasks();
+}
+
+/**
+ * Renders the list of subtasks.
+ */
+function renderSubtasks() {
+  const subtasksContainer = document.querySelector(".subtasks");
+  subtasksContainer.innerHTML = "";
+
+  if (subtasks &amp;&amp; subtasks.length > 0) {
+    subtasks.forEach((subtask, index) => {
+      subtasksContainer.innerHTML += /*html*/ `
+        &lt;div class="subtask" data-index="${index}">
+          &lt;input type="text" class="subtask-container" value="${subtask.title}"> 
+          &lt;div class="buttons">
+            &lt;button type="button" onClick="editSubtask(event)">${returnIcon("pen-outline")}&lt;/button>
+            &lt;button type="button" onmousedown="deleteSubTask(event)">${returnIcon(
+              "trash-outline"
+            )}&lt;/button>
+            &lt;button type="button" onmousedown="saveSubtask(event)">${returnIcon("check")}&lt;/button>
+          &lt;/div>
+        &lt;/div>
+      `;
+    });
+  }
+}
+
+/**
+ * Deletes a subtask from the list.
+ * @param {Event} event - The event triggered by the delete button.
+ */
+function deleteSubtask(event) {
+  const subtask = event.target.closest(".subtask");
+  const index = subtask.dataset.index;
+  subtasks.splice(index, 1);
+  renderSubtasks();
+}
+
+/**
+ * Edits a subtask by clearing and refocusing the input field.
+ * @param {Event} event - The event triggered by the edit button.
+ */
+function editSubtask(event) {
+  const subTaskInput = event.target.closest(".subtask").querySelector("input");
+  const value = subTaskInput.value;
+  subTaskInput.value = "";
+  subTaskInput.focus();
+  subTaskInput.value = value;
+}
+
+/**
+ * Saves a subtask after editing.
+ * @param {Event} event - The event triggered by the save button.
+ */
+function saveSubtask(event) {
+  const subtask = event.target.closest(".subtask");
+  const index = subtask.dataset.index;
+
+  subtasks[index] = {
+    title: subtask.querySelector("input").value,
+    checked: subtasks[index].checked,
+  };
+  renderSubtasks();
+}
+
+/**
+ * Handles the submission of a task form.
+ * @param {Event} event - The event triggered by form submission.
+ * @param {string} slot - The slot where the task will be stored.
+ * @param {string} [id=""] - The ID of the task (optional for editing existing tasks).
+ */
+function handleSubmitTask(event, slot, id = "") {
+  event.preventDefault();
+
+  const form = event.target;
+  const title = form.title.value.trim();
+  const description = form.description.value.trim();
+  const dueDate = form["due-date"].value.trim();
+  const priority = form.querySelector(".priority.selected").value;
+  const category = form.category.value;
+  const assignees = assignedContacts.map((contact) => contact.id);
+  const modal = document.querySelector(".modal");
+
+  const validDate = dateValidation(dueDate);
+  const validTitle = titleValidation(title);
+
+  if (!validDate || !validTitle) {
+    return;
+  }
+
+  if (modal) modal.classList.remove("active");
+
+  if (!id) {
+    addTask(slot, title, description, category, priority, dueDate, subtasks, assignees);
+    showToast("Task added successfully", "check");
+  } else {
+    editTask(slot, id, title, description, category, priority, dueDate, subtasks, assignees);
+    showToast("Task edited successfully", "check");
+  }
+
+  renderTasks();
+  window.location.href = "/board.html";
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#assignedContacts">assignedContacts</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clearPriority">clearPriority</a></li><li><a href="global.html#closeModal">closeModal</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#contactList">contactList</a></li><li><a href="global.html#createRandomTasks">createRandomTasks</a></li><li><a href="global.html#dateValidation">dateValidation</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handlePriorityClick">handlePriorityClick</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleSubmitTask">handleSubmitTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#preventEnterKeySubmit">preventEnterKeySubmit</a></li><li><a href="global.html#renderAssigneeList">renderAssigneeList</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderModal">renderModal</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSelectedAssignees">renderSelectedAssignees</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTaskForm">renderTaskForm</a></li><li><a href="global.html#renderTaskPage">renderTaskPage</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnAssigneeInput">returnAssigneeInput</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnHeader">returnHeader</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#saveSubtask">saveSubtask</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showDatepicker">showDatepicker</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#subtasks">subtasks</a></li><li><a href="global.html#titleValidation">titleValidation</a></li><li><a href="global.html#toggleAssigneeInList">toggleAssigneeInList</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jan 29 2025 15:35:59 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
