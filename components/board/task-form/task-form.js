@@ -242,7 +242,7 @@ async function renderAssigneeList() {
     const isChecked = assignedContacts.find((assignedContact) => assignedContact.id === contact.id);
 
     contactsList += /*html*/ `
-    <div class="assignee ${isChecked && "selected"}" onClick="toggleAssigneeInList(this)">
+    <div class="assignee ${isChecked ? "selected" : ""}" onClick="toggleAssigneeInList(this)">
       <div class="initials-bubble" style="background-color: #${contact.userColor}">${getInitialsFromName(contact.fullName)} </div>
       <span>${contact.fullName}</span>
       <input ${isChecked && "checked"} type="checkbox" name="assignee" data-id="${contact.id}" data-fullname="${contact.fullName}" data-usercolor="${contact.userColor}" />
