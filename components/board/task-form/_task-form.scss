@@ -496,14 +496,6 @@
     padding: 15px;
   }
 
-  input,
-  textarea,
-  select {
-    width: 100%;
-    font-size: 12px;
-    padding: 10px;
-  }
-
   .priorities {
     display: flex;
     flex-direction: column;
@@ -522,8 +514,6 @@
   textarea,
   select {
     font-size: 16px !important;
-  }
-  .task-form .task-form-container #task-form .initials-bubble {
   }
 
   .task-form .task-form-container #task-form .assignee-input .assignee-dropdown {
