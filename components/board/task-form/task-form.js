@@ -68,7 +68,6 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                     <textarea id="description" name="description" placeholder="Enter a Description" rows="3">${task ? task.description : ""}</textarea>
                     ${await returnAssigneeInput()}
                     <div class="assignees">
-                      ${task ? assignedContacts.map((assignee) => `<div class="initials-bubble" style="background-color: #${assignee.userColor}" title="${assignee.fullName}">${getInitialsFromName(assignee.fullName)}</div>`).join('') : ''}
                     </div>
                   </div>
                   <hr />
@@ -115,6 +114,7 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
         `;
     renderSubtasks();
     preventEnterKeySubmit();
+    renderSelectedAssignees();
     const modalRef = document.querySelector(".modal");
     if (modalRef) modalRef.classList.add("active");
   }
