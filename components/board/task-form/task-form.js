@@ -48,7 +48,7 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
     }
   }
 
-  while ((contentRef = document.querySelector('.form-container')) === null) {
+  while ((contentRef = document.querySelector(".form-container")) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
@@ -57,10 +57,10 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
             <div class="task-form">
               <h1>${task ? "Edit Task" : "Add Task"}</h1>
               <div class="task-form-container">
-                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ''}')">
+                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ""}')">
                   <div>
                     <label for="title">Title<span class="red-star">*</span></label>
-                    <input type="text" id="title" name="title" placeholder="Enter a title" value="${task ? task.title : ''}">
+                    <input type="text" id="title" name="title" placeholder="Enter a title" value="${task ? task.title : ""}">
                     <div class="request-alert">
                         <p id="request-title" >This field is required</p>
                     </div>
@@ -73,21 +73,27 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                   <hr />
                   <div>
                     <label for="due-date">Due date<span class="red-star">*</span></label>
-                    <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" value="${task ? task.dueDate : ''}">
+                    <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" value="${task ? task.dueDate : ""}">
                     <div class="request-alert">
                         <p id="request-date" >This field is required</p>
                     </div>
                     <label for="priority">Prio</label>
                     <div class="priorities">
-                      <button type="button" class="priority ${task ? (task.priority === 'urgent' ? 'selected' : '') : ''}" onClick="handlePriorityClick(this)" value="urgent">  Urgent ${returnIcon("urgent")}</button>
-                      <button type="button" class="priority ${task ? (task.priority === 'medium' ? 'selected' : '') : 'selected'}" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon("medium")}</button>
-                      <button type="button" class="priority ${task ? (task.priority === 'low' ? 'selected' : '') : ''}" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
+                      <button type="button" class="priority ${
+                        task ? (task.priority === "urgent" ? "selected" : "") : ""
+                      }" onClick="handlePriorityClick(this)" value="urgent">  Urgent ${returnIcon("urgent")}</button>
+                      <button type="button" class="priority ${
+                        task ? (task.priority === "medium" ? "selected" : "") : "selected"
+                      }" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon("medium")}</button>
+                      <button type="button" class="priority ${
+                        task ? (task.priority === "low" ? "selected" : "") : ""
+                      }" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
                     </div>
                     <label for="category">Category<span class="red-star">*</span></label>
-                    <select name="category" id="category" ${task ? 'disabled' : ''}>
-                      <option value="" disabled ${!task && 'selected'}>Select task category</option>
-                      <option value="User Story" ${task && task.type === 'User Story' ? 'selected' : ''}>User Story</option>
-                      <option value="Technical Task" ${task && task.type === 'Technical Task' ? 'selected' : ''}>Technical Task</option>
+                    <select name="category" id="category" ${task ? "disabled" : ""}>
+                      <option value="" disabled ${!task && "selected"}>Select task category</option>
+                      <option value="User Story" ${task && task.type === "User Story" ? "selected" : ""}>User Story</option>
+                      <option value="Technical Task" ${task && task.type === "Technical Task" ? "selected" : ""}>Technical Task</option>
                     </select>
                     <div class="request-alert">
                         <p id="request-category" >This field is required</p>
@@ -161,6 +167,8 @@ function clearForm() {
   document.querySelector("#due-date").value = "";
   document.querySelector("#category").value = "";
   document.querySelector("#subtasks-input").value = "";
+  subtasks = [];
+  document.querySelector(".subtasks").innerHTML = "";
   renderSelectedAssignees();
 }
 
@@ -281,7 +289,7 @@ function renderSelectedAssignees() {
 
   if (assignedContacts.length > 3) {
     const remainingContacts = assignedContacts.slice(3);
-    const remainingNames = remainingContacts.map(contact => contact.fullName).join(', ');
+    const remainingNames = remainingContacts.map((contact) => contact.fullName).join(", ");
     assignees.innerHTML += /*html*/ `
       <div class="initials-bubble" style="background-color: #222" title="${remainingNames}">+${remainingContacts.length}</div>
     `;
@@ -305,7 +313,7 @@ function renderSubtasks() {
     subtasks.forEach((subtask, index) => {
       subtasksContainer.innerHTML += /*html*/ `
         <div class="subtask" data-index="${index}">
-          <input type="text" value="${subtask.title}"> 
+          <input type="text" class="subtask-container" value="${subtask.title}"> 
           <div class="buttons">
             <button type="button" onClick="editSubtask(event)">${returnIcon("pen-outline")}</button>
             <button type="button" onmousedown="deleteSubTask(event)">${returnIcon("trash-outline")}</button>
