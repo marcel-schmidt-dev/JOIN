@@ -1,10 +1,21 @@
-import { checkAuth, getContacts, addTask, editTask, returnTaskById, getContact } from "./../../firebase.js";
+/**
+ * Imports necessary functions from various modules.
+ */
+import {
+  checkAuth,
+  getContacts,
+  addTask,
+  editTask,
+  returnTaskById,
+  getContact,
+} from "./../../firebase.js";
 import { returnPath, getInitialsFromName } from "./../../utility-functions.js";
 import returnIcon from "../../icons.js";
 import { showToast } from "../../toast/toast.js";
 import { renderTasks } from "./../board.js";
 import { renderBoardTemplate } from "./../board.js";
 
+// Assign global window functions
 window.handlePriorityClick = handlePriorityClick;
 window.showDatepicker = showDatepicker;
 window.renderAssigneeList = renderAssigneeList;
@@ -19,10 +30,27 @@ window.dateValidation = dateValidation;
 window.handleSubmitTask = handleSubmitTask;
 window.closeModal = closeModal;
 
+/**
+ * Stores the contact list retrieved from the database.
+ * @type {Array}
+ */
 let contactList;
+
+/**
+ * Stores the assigned contacts for a task.
+ * @type {Array}
+ */
 let assignedContacts = [];
+
+/**
+ * Stores the list of subtasks.
+ * @type {Array}
+ */
 let subtasks = [];
 
+/**
+ * Event listener for DOMContentLoaded to check authentication and load contacts.
+ */
 document.addEventListener("DOMContentLoaded", async () => {
   checkAuth();
   contactList = await getContacts();
@@ -31,6 +59,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+/**
+ * Renders the task form with the given slot and optional task ID.
+ * @param {string} [slot="todo"] - The slot where the task should be placed.
+ * @param {string|null} [taskId=null] - The ID of the task to edit (if any).
+ */
 export async function renderTaskForm(slot = "todo", taskId = null) {
   let contentRef;
   let task = null;
@@ -40,14 +73,17 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
   if (taskId) {
     task = await returnTaskById(taskId);
 
+    // Retrieve assigned contacts
     const assigneesPromises = task.assignee.map((id) => getContact(id));
     assignedContacts = await Promise.all(assigneesPromises);
 
+    // Retrieve subtasks if available
     if (task.subTasks) {
       subtasks = task.subTasks;
     }
   }
 
+  // Wait for the form container to be available in the DOM
   while ((contentRef = document.querySelector(".form-container")) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
@@ -57,15 +93,21 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
             <div class="task-form">
               <h1>${task ? "Edit Task" : "Add Task"}</h1>
               <div class="task-form-container">
-                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ""}')">
+                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${
+      task ? task.id : ""
+    }')">
                   <div>
                     <label for="title">Title<span class="red-star">*</span></label>
-                    <input type="text" id="title" name="title" placeholder="Enter a title" value="${task ? task.title : ""}">
+                    <input type="text" id="title" name="title" placeholder="Enter a title" value="${
+                      task ? task.title : ""
+                    }">
                     <div class="request-alert">
                         <p id="request-title" >This field is required</p>
                     </div>
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" placeholder="Enter a Description" rows="3">${task ? task.description : ""}</textarea>
+                    <textarea id="description" name="description" placeholder="Enter a Description" rows="3">${
+                      task ? task.description : ""
+                    }</textarea>
                     ${await returnAssigneeInput()}
                     <div class="assignees">
                     </div>
@@ -73,7 +115,9 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                   <hr />
                   <div>
                     <label for="due-date">Due date<span class="red-star">*</span></label>
-                    <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" value="${task ? task.dueDate : ""}">
+                    <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" value="${
+                      task ? task.dueDate : ""
+                    }">
                     <div class="request-alert">
                         <p id="request-date" >This field is required</p>
                     </div>
@@ -81,19 +125,29 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                     <div class="priorities">
                       <button type="button" class="priority ${
                         task ? (task.priority === "urgent" ? "selected" : "") : ""
-                      }" onClick="handlePriorityClick(this)" value="urgent">  Urgent ${returnIcon("urgent")}</button>
+                      }" onClick="handlePriorityClick(this)" value="urgent">  Urgent ${returnIcon(
+      "urgent"
+    )}</button>
                       <button type="button" class="priority ${
                         task ? (task.priority === "medium" ? "selected" : "") : "selected"
-                      }" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon("medium")}</button>
+                      }" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon(
+      "medium"
+    )}</button>
                       <button type="button" class="priority ${
                         task ? (task.priority === "low" ? "selected" : "") : ""
-                      }" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
+                      }" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon(
+      "low"
+    )}</button>
                     </div>
                     <label for="category">Category<span class="red-star">*</span></label>
                     <select name="category" id="category" ${task ? "disabled" : ""}>
                       <option value="" disabled ${!task && "selected"}>Select task category</option>
-                      <option value="User Story" ${task && task.type === "User Story" ? "selected" : ""}>User Story</option>
-                      <option value="Technical Task" ${task && task.type === "Technical Task" ? "selected" : ""}>Technical Task</option>
+                      <option value="User Story" ${
+                        task && task.type === "User Story" ? "selected" : ""
+                      }>User Story</option>
+                      <option value="Technical Task" ${
+                        task && task.type === "Technical Task" ? "selected" : ""
+                      }>Technical Task</option>
                     </select>
                     <div class="request-alert">
                         <p id="request-category" >This field is required</p>
@@ -110,8 +164,12 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                   <div class="footer-buttons">
                     <p><span class="red-star">*</span>This field is required</p>
                     <div class="buttons">
-                      <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon("x")}</button>
-                      <button type="submit"  id="submit-task" class="submit-button">${!task ? "Create Task" : "Edit Task"} ${returnIcon("check")} </button>
+                      <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon(
+                        "x"
+                      )}</button>
+                      <button type="submit"  id="submit-task" class="submit-button">${
+                        !task ? "Create Task" : "Edit Task"
+                      } ${returnIcon("check")} </button>
                     </div>
                   </div>
                 </form>
@@ -126,6 +184,9 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
   }
 }
 
+/**
+ * Prevents the Enter key from submitting the form unless the focus is on a textarea.
+ */
 function preventEnterKeySubmit() {
   document.addEventListener("keydown", function (event) {
     if (event.key === "Enter" && event.target.tagName !== "TEXTAREA") {
@@ -134,12 +195,18 @@ function preventEnterKeySubmit() {
   });
 }
 
+/**
+ * Renders the task page by injecting the form container into the content area.
+ */
 function renderTaskPage() {
   const contentRef = document.querySelector(".content");
   contentRef.innerHTML = /*html*/ `<div class="form-container"></div>`;
   renderTaskForm("todo", null);
 }
 
+/**
+ * Renders a modal containing a task form.
+ */
 export function renderModal() {
   const contentRef = document.querySelector(".content");
   const modalRef = document.createElement("div");
@@ -153,12 +220,18 @@ export function renderModal() {
   contentRef.appendChild(modalRef);
 }
 
+/**
+ * Closes the modal and re-renders the board template.
+ */
 function closeModal() {
   const modalRef = document.querySelector(".modal");
   modalRef.classList.remove("active");
   renderBoardTemplate();
 }
 
+/**
+ * Clears the task form fields and resets selections.
+ */
 function clearForm() {
   clearPriority();
   document.querySelector("#title").value = "";
@@ -172,12 +245,20 @@ function clearForm() {
   renderSelectedAssignees();
 }
 
+/**
+ * Clears the priority selection and sets default priority.
+ */
 function clearPriority() {
   const buttons = document.querySelectorAll(".priorities .priority");
   buttons.forEach((button) => button.classList.remove("selected"));
   buttons[1].classList.add("selected");
 }
 
+/**
+ * Validates the task title input.
+ * @param {string} title - The title input to validate.
+ * @returns {boolean} True if valid, otherwise false.
+ */
 function titleValidation(title) {
   const validateTitle = document.querySelector("#request-title");
   const titleContainer = document.querySelector("#title");
@@ -194,6 +275,11 @@ function titleValidation(title) {
   }
 }
 
+/**
+ * Validates the given due date.
+ * @param {string} dueDate - The due date in the format YYYY-MM-DD.
+ * @returns {boolean} - Returns true if the date is valid, otherwise false.
+ */
 function dateValidation(dueDate) {
   const validateDate = document.querySelector("#request-date");
   const dateContainer = document.querySelector("#due-date");
@@ -212,6 +298,10 @@ function dateValidation(dueDate) {
   }
 }
 
+/**
+ * Handles the priority button click event.
+ * @param {HTMLElement} element - The clicked priority button.
+ */
 function handlePriorityClick(element) {
   const priorities = document.querySelectorAll(".priority");
   priorities.forEach((priority) => {
@@ -220,6 +310,9 @@ function handlePriorityClick(element) {
   element.classList.add("selected");
 }
 
+/**
+ * Displays the date picker and sets the minimum selectable date to today.
+ */
 function showDatepicker() {
   const dueDateRef = document.getElementById("due-date");
   const today = new Date().toISOString().split("T")[0];
@@ -227,6 +320,10 @@ function showDatepicker() {
   dueDateRef.showPicker();
 }
 
+/**
+ * Returns the HTML string for the assignee input field.
+ * @returns {Promise<string>} - The HTML structure for the assignee input field.
+ */
 async function returnAssigneeInput() {
   return /*html*/ `
   <div class="assignee-input">
@@ -238,9 +335,14 @@ async function returnAssigneeInput() {
   `;
 }
 
+/**
+ * Renders a filtered list of assignees based on user input.
+ */
 async function renderAssigneeList() {
   const filterInput = document.getElementById("assignee-input");
-  const filteredContacts = contactList.filter((contact) => contact.fullName.toLowerCase().includes(filterInput.value.toLowerCase()));
+  const filteredContacts = contactList.filter((contact) =>
+    contact.fullName.toLowerCase().includes(filterInput.value.toLowerCase())
+  );
   filteredContacts.sort((a, b) => a.fullName.localeCompare(b.fullName));
   const assigneeDropdown = document.querySelector(".assignee-dropdown");
 
@@ -251,22 +353,35 @@ async function renderAssigneeList() {
 
     contactsList += /*html*/ `
     <div class="assignee ${isChecked ? "selected" : ""}" onClick="toggleAssigneeInList(this)">
-      <div class="initials-bubble" style="background-color: #${contact.userColor}">${getInitialsFromName(contact.fullName)} </div>
+      <div class="initials-bubble" style="background-color: #${
+        contact.userColor
+      }">${getInitialsFromName(contact.fullName)} </div>
       <span>${contact.fullName}</span>
-      <input ${isChecked && "checked"} type="checkbox" name="assignee" data-id="${contact.id}" data-fullname="${contact.fullName}" data-usercolor="${contact.userColor}" />
+      <input ${isChecked && "checked"} type="checkbox" name="assignee" data-id="${
+      contact.id
+    }" data-fullname="${contact.fullName}" data-usercolor="${contact.userColor}" />
   </div>
     `;
   });
 
   assigneeDropdown.innerHTML = "";
-  assigneeDropdown.innerHTML = filteredContacts.length > 0 ? contactsList : "<span>No contacts found</span>";
+  assigneeDropdown.innerHTML =
+    filteredContacts.length > 0 ? contactsList : "<span>No contacts found</span>";
 }
 
+/**
+ * Toggles the selection of an assignee in the list.
+ * @param {HTMLElement} element - The clicked assignee element.
+ */
 function toggleAssigneeInList(element) {
   const checkBox = element.querySelector("input");
 
   if (!checkBox.checked) {
-    assignedContacts.push({ id: checkBox.dataset.id, fullName: checkBox.dataset.fullname, userColor: checkBox.dataset.usercolor });
+    assignedContacts.push({
+      id: checkBox.dataset.id,
+      fullName: checkBox.dataset.fullname,
+      userColor: checkBox.dataset.usercolor,
+    });
     checkBox.checked = true;
     element.classList.add("selected");
   } else {
@@ -278,12 +393,17 @@ function toggleAssigneeInList(element) {
   renderSelectedAssignees();
 }
 
+/**
+ * Renders the selected assignees' initials bubbles.
+ */
 function renderSelectedAssignees() {
   const assignees = document.querySelector(".assignees");
   assignees.innerHTML = "";
   assignedContacts.slice(0, 3).forEach((contact) => {
     assignees.innerHTML += /*html*/ `
-      <div class="initials-bubble" style="background-color: #${contact.userColor}" title="${contact.fullName}">${getInitialsFromName(contact.fullName)}</div>
+      <div class="initials-bubble" style="background-color: #${contact.userColor}" title="${
+      contact.fullName
+    }">${getInitialsFromName(contact.fullName)}</div>
     `;
   });
 
@@ -296,6 +416,9 @@ function renderSelectedAssignees() {
   }
 }
 
+/**
+ * Adds a new subtask to the list.
+ */
 function addSubtask() {
   const subtaskInput = document.querySelector("#subtasks-input");
   if (subtaskInput.value === "") return;
@@ -305,6 +428,9 @@ function addSubtask() {
   renderSubtasks();
 }
 
+/**
+ * Renders the list of subtasks.
+ */
 function renderSubtasks() {
   const subtasksContainer = document.querySelector(".subtasks");
   subtasksContainer.innerHTML = "";
@@ -316,7 +442,9 @@ function renderSubtasks() {
           <input type="text" class="subtask-container" value="${subtask.title}"> 
           <div class="buttons">
             <button type="button" onClick="editSubtask(event)">${returnIcon("pen-outline")}</button>
-            <button type="button" onmousedown="deleteSubTask(event)">${returnIcon("trash-outline")}</button>
+            <button type="button" onmousedown="deleteSubTask(event)">${returnIcon(
+              "trash-outline"
+            )}</button>
             <button type="button" onmousedown="saveSubtask(event)">${returnIcon("check")}</button>
           </div>
         </div>
@@ -325,6 +453,10 @@ function renderSubtasks() {
   }
 }
 
+/**
+ * Deletes a subtask from the list.
+ * @param {Event} event - The event triggered by the delete button.
+ */
 function deleteSubtask(event) {
   const subtask = event.target.closest(".subtask");
   const index = subtask.dataset.index;
@@ -332,6 +464,10 @@ function deleteSubtask(event) {
   renderSubtasks();
 }
 
+/**
+ * Edits a subtask by clearing and refocusing the input field.
+ * @param {Event} event - The event triggered by the edit button.
+ */
 function editSubtask(event) {
   const subTaskInput = event.target.closest(".subtask").querySelector("input");
   const value = subTaskInput.value;
@@ -340,14 +476,27 @@ function editSubtask(event) {
   subTaskInput.value = value;
 }
 
+/**
+ * Saves a subtask after editing.
+ * @param {Event} event - The event triggered by the save button.
+ */
 function saveSubtask(event) {
   const subtask = event.target.closest(".subtask");
   const index = subtask.dataset.index;
 
-  subtasks[index] = { title: subtask.querySelector("input").value, checked: subtasks[index].checked };
+  subtasks[index] = {
+    title: subtask.querySelector("input").value,
+    checked: subtasks[index].checked,
+  };
   renderSubtasks();
 }
 
+/**
+ * Handles the submission of a task form.
+ * @param {Event} event - The event triggered by form submission.
+ * @param {string} slot - The slot where the task will be stored.
+ * @param {string} [id=""] - The ID of the task (optional for editing existing tasks).
+ */
 function handleSubmitTask(event, slot, id = "") {
   event.preventDefault();
 
