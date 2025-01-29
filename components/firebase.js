@@ -135,7 +135,6 @@ export async function deleteContact(id) {
  */
 export function editContact(id, name, email, phone, userColor) {
   const database = getDatabase();
-  console.log(id, name, email, phone, userColor);
   return set(ref(database, `contacts/${id}`), {
     fullName: name,
     email: email,
