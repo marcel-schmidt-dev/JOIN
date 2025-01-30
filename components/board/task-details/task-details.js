@@ -1,12 +1,12 @@
 /**
  * Imports necessary functions and icons for task details.
  */
-import { returnTaskById, getContact, returnSubTasks, deleteTask } from "../../firebase.js";
-import returnIcon from "../../icons.js";
-import { getInitialsFromName } from "../../utility-functions.js";
-import { renderBoardTemplate, renderTasks } from "../board.js";
-import { moveTaskToSlot } from "../../firebase.js";
-import { renderTaskForm } from "../task-form/task-form.js";
+import { returnTaskById, getContact, returnSubTasks, deleteTask } from '../../firebase.js';
+import returnIcon from '../../icons.js';
+import { getInitialsFromName } from '../../utility-functions.js';
+import { renderBoardTemplate, renderTasks } from '../board.js';
+import { moveTaskToSlot } from '../../firebase.js';
+import { renderTaskForm } from '../task-form/task-form.js';
 
 // Attach the moveTaskToSlot function to the global window object.
 window.moveTaskToSlot = moveTaskToSlot;
@@ -19,17 +19,15 @@ window.moveTaskToSlot = moveTaskToSlot;
  */
 export default async function showTaskDetails(taskId, slot) {
   const task = await returnTaskById(taskId);
-  const contentRef = document.querySelector(".content");
-  const assignees = task.assignee
-    ? await Promise.all(task.assignee.map((id) => getContact(id)))
-    : [];
+  const contentRef = document.querySelector('.content');
+  const assignees = task.assignee ? await Promise.all(task.assignee.map((id) => getContact(id))) : [];
   const subTasks = await returnSubTasks(taskId, slot);
 
   contentRef.innerHTML += /*html*/ `
         <div class="task-details-container">
             <div class="task-details" data-task-id=${taskId} data-task-slot=${slot}>
                 <div class="top">
-                    <div class="type" style="background-color: ${task.type === "Technical Task" ? "#1FD7C1" : "#0038FF"}">${task.type}</div>
+                    <div class="type" style="background-color: ${task.type === 'Technical Task' ? '#1FD7C1' : '#0038FF'}">${task.type}</div>
                     <div class="close" onclick="closeTaskDetails()">✘</div>
                 </div>
                 <h2>${task.title}</h2>
@@ -48,32 +46,39 @@ export default async function showTaskDetails(taskId, slot) {
                 <div class="assignee-list">
                  <p>Assigned To:</p>
                  <div class="assignee-container">
-                     ${assignees.slice(0, 3).map((assignee) => {
-    return `
+                     ${assignees
+                       .slice(0, 3)
+                       .map((assignee) => {
+                         return `
                         <div class="assignee">
                           <div class="bubble" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}</div>
                         <span>${assignee.fullName}</span>
                         </div>`;
-  }).join("")}
-                        ${assignees.length > 3 ? `<div class="assignee extra-assignees" title="${assignees.slice(3).map((a) => a.fullName).join(", ")}">
-                         <div class="bubble" style="background-color: #d1d1d1;">+${assignees.length - 3
-      }</div>
-                         <span>+ ${assignees.length - 3} more</span>
-                         </div>`
-      : ""
-    }
-                </div>
-       </div>
+                       })
+                       .join('')}
+                        ${
+                          assignees.length > 3
+                            ? `<div class="assignee extra-assignees" title="${assignees
+                                .slice(3)
+                                .map((a) => a.fullName)
+                                .join(', ')}">
+                                <div class="bubble" style="background-color: #d1d1d1;">+${assignees.length - 3}</div>
+                                  <span>+ ${assignees.length - 3} more</span>
+                                </div>`
+                            : ''
+                        }
+                    </div>
+                  </div>
 
                 <div class="subtask-list">
                     <p>Subtasks:</p>
+                    <div class="subtask-container">
                     ${subTasks
-      .map((subtask) => {
-        return `<div class="subtask"><input type="checkbox" ${subtask.checked ? "checked" : ""
-          } name="${subtask.id}" id="${subtask.id}"><span>${subtask.title
-          }</span></div>`;
-      })
-      .join("")}
+                      .map((subtask) => {
+                        return `<div class="subtask"><input type="checkbox" ${subtask.checked ? 'checked' : ''} name="${subtask.id}" id="${subtask.id}"><span>${subtask.title}</span></div>`;
+                      })
+                      .join('')}
+                    </div>
                 </div>
                 <div class="move-buttons">
                     <button class="move-btn" data-slot="todo-tasks">To-Do</button>
@@ -82,41 +87,41 @@ export default async function showTaskDetails(taskId, slot) {
                     <button class="move-btn" data-slot="done-tasks">Done</button>
                 </div>
                 <div class="buttons">
-                    <button class="delete-btn">${returnIcon("trash-outline")}Delete</button>
+                    <button class="delete-btn">${returnIcon('trash-outline')}Delete</button>
                     <hr>
-                    <button class="edit-btn">${returnIcon("pen")}Edit</button>
+                    <button class="edit-btn">${returnIcon('pen')}Edit</button>
                 </div>
             </div>
         </div>
     `;
 
-  const moveButtons = contentRef.querySelectorAll(".move-btn");
+  const moveButtons = contentRef.querySelectorAll('.move-btn');
   moveButtons.forEach((button) => {
-    button.addEventListener("click", async (event) => {
+    button.addEventListener('click', async (event) => {
       const slot = event.target.dataset.slot;
       try {
         await moveTaskToSlot(slot, taskId);
         closeTaskDetails();
         await renderBoardTemplate();
       } catch (error) {
-        console.error("Error moving task:", error);
+        console.error('Error moving task:', error);
       }
     });
   });
 
-  const deleteButton = contentRef.querySelector(".delete-btn");
+  const deleteButton = contentRef.querySelector('.delete-btn');
   if (deleteButton) {
-    deleteButton.addEventListener("click", async () => {
+    deleteButton.addEventListener('click', async () => {
       deleteTask(slot, taskId);
-      document.querySelector(".task-details-container").remove();
+      document.querySelector('.task-details-container').remove();
       await renderBoardTemplate();
     });
   }
 
-  const editButton = contentRef.querySelector(".edit-btn");
+  const editButton = contentRef.querySelector('.edit-btn');
   if (editButton) {
-    editButton.addEventListener("click", () => {
-      document.querySelector(".task-details-container").remove();
+    editButton.addEventListener('click', () => {
+      document.querySelector('.task-details-container').remove();
       renderTaskForm(slot, taskId);
     });
   }
@@ -126,5 +131,5 @@ export default async function showTaskDetails(taskId, slot) {
  * Closes the task details view.
  */
 export function closeTaskDetails() {
-  document.querySelector(".task-details-container").remove();
+  document.querySelector('.task-details-container').remove();
 }
