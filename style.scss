@@ -1,22 +1,22 @@
-@import "./scss/vars.scss";
-@import "./components/header/header.scss";
-@import "./components/sidebar/sidebar.scss";
-@import "./components/contacts/contacts.scss";
-@import "./components/contacts/contact-list/contact-list.scss";
-@import "./components/contacts/contact-details/contact-details.scss";
-@import "./components/contacts/contact-overlay/contact-overlay.scss";
-@import "./components/toast/toast.scss";
-@import "./components/board/board.scss";
-@import "./components/board/task-card/task-card.scss";
-@import "./components/board/task-details/task-details.scss";
-@import "./components/home/home.scss";
-@import "./components/summary/summary.scss";
-@import "./components/help-privacy-legal/help-privacy-legal.scss";
-@import "./components/board/task-form/task-form.scss";
+@import './scss/vars.scss';
+@import './components/header/header.scss';
+@import './components/sidebar/sidebar.scss';
+@import './components/contacts/contacts.scss';
+@import './components/contacts/contact-list/contact-list.scss';
+@import './components/contacts/contact-details/contact-details.scss';
+@import './components/contacts/contact-overlay/contact-overlay.scss';
+@import './components/toast/toast.scss';
+@import './components/board/board.scss';
+@import './components/board/task-card/task-card.scss';
+@import './components/board/task-details/task-details.scss';
+@import './components/home/home.scss';
+@import './components/summary/summary.scss';
+@import './components/help-privacy-legal/help-privacy-legal.scss';
+@import './components/board/task-form/task-form.scss';
 
 @font-face {
-  font-family: "Inter";
-  src: url("./fonts/Inter.ttf") format("truetype");
+  font-family: 'Inter';
+  src: url('./fonts/Inter.ttf') format('truetype');
 }
 
 * {
@@ -28,7 +28,7 @@
 body {
   background-color: $background;
   font-size: 16px;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .app {

@@ -1,4 +1,4 @@
-@import "../../../scss/vars.scss";
+@import '../../../scss/vars.scss';
 
 .task-details-container {
   display: flex;
@@ -148,12 +148,16 @@
         margin-bottom: 8px;
       }
 
-      .subtask {
-        display: flex;
-        gap: 20px;
+      .subtask-container {
+        max-height: 100px;
+        overflow-y: auto;
+        .subtask {
+          display: flex;
+          gap: 20px;
 
-        span {
-          font-size: 1rem;
+          span {
+            font-size: 1rem;
+          }
         }
       }
     }
