@@ -1,7 +1,14 @@
 /**
  * Imports necessary functions from various modules.
  */
-import { checkAuth, getContacts, addTask, editTask, returnTaskById, getContact } from "./../../firebase.js";
+import {
+  checkAuth,
+  getContacts,
+  addTask,
+  editTask,
+  returnTaskById,
+  getContact,
+} from "./../../firebase.js";
 import { returnPath, getInitialsFromName } from "./../../utility-functions.js";
 import returnIcon from "../../icons.js";
 import { showToast } from "../../toast/toast.js";
@@ -83,15 +90,21 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
             <div class="task-form">
               <h1>${task ? "Edit Task" : "Add Task"}</h1>
               <div class="task-form-container">
-                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ""}')">
+                <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${
+      task ? task.id : ""
+    }')">
                   <div>
                     <label for="title">Title<span class="red-star">*</span></label>
-                    <input type="text" id="title" name="title" placeholder="Enter a title" value="${task ? task.title : ""}">
+                    <input type="text" id="title" name="title" placeholder="Enter a title" value="${
+                      task ? task.title : ""
+                    }">
                     <div class="request-alert">
                         <p id="request-title" >This field is required</p>
                     </div>
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" placeholder="Enter a Description" rows="3">${task ? task.description : ""}</textarea>
+                    <textarea id="description" name="description" placeholder="Enter a Description" rows="3">${
+                      task ? task.description : ""
+                    }</textarea>
                     ${await returnAssigneeInput()}
                     <div class="assignees">
                     </div>
@@ -99,7 +112,9 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                   <hr />
                   <div>
                     <label for="due-date">Due date<span class="red-star">*</span></label>
-                    <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" value="${task ? task.dueDate : ""}">
+                    <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" value="${
+                      task ? task.dueDate : ""
+                    }">
                     <div class="request-alert">
                         <p id="request-date" >This field is required</p>
                     </div>
@@ -107,19 +122,29 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                     <div class="priorities">
                       <button type="button" class="priority ${
                         task ? (task.priority === "urgent" ? "selected" : "") : ""
-                      }" onClick="handlePriorityClick(this)" value="urgent">Urgent ${returnIcon("urgent")}</button>
+                      }" onClick="handlePriorityClick(this)" value="urgent">Urgent ${returnIcon(
+      "urgent"
+    )}</button>
                       <button type="button" class="priority ${
                         task ? (task.priority === "medium" ? "selected" : "") : "selected"
-                      }" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon("medium")}</button>
+                      }" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon(
+      "medium"
+    )}</button>
                       <button type="button" class="priority ${
                         task ? (task.priority === "low" ? "selected" : "") : ""
-                      }" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
+                      }" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon(
+      "low"
+    )}</button>
                     </div>
                     <label for="category">Category<span class="red-star">*</span></label>
                     <select name="category" id="category" ${task ? "disabled" : ""}>
                       <option value="" disabled ${!task && "selected"}>Select task category</option>
-                      <option value="User Story" ${task && task.type === "User Story" ? "selected" : ""}>User Story</option>
-                      <option value="Technical Task" ${task && task.type === "Technical Task" ? "selected" : ""}>Technical Task</option>
+                      <option value="User Story" ${
+                        task && task.type === "User Story" ? "selected" : ""
+                      }>User Story</option>
+                      <option value="Technical Task" ${
+                        task && task.type === "Technical Task" ? "selected" : ""
+                      }>Technical Task</option>
                     </select>
                     <div class="request-alert">
                         <p id="request-category" >This field is required</p>
@@ -136,8 +161,12 @@ export async function renderTaskForm(slot = "todo", taskId = null) {
                   <div class="footer-buttons">
                     <p><span class="red-star">*</span>This field is required</p>
                     <div class="buttons">
-                      <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon("x")}</button>
-                      <button type="submit"  id="submit-task" class="submit-button">${!task ? "Create Task" : "Edit Task"} ${returnIcon("check")} </button>
+                      <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon(
+                        "x"
+                      )}</button>
+                      <button type="submit"  id="submit-task" class="submit-button">${
+                        !task ? "Create Task" : "Edit Task"
+                      } ${returnIcon("check")} </button>
                     </div>
                   </div>
                 </form>
@@ -326,7 +355,9 @@ async function returnAssigneeInput() {
  */
 async function renderAssigneeList() {
   const filterInput = document.getElementById("assignee-input");
-  const filteredContacts = contactList.filter((contact) => contact.fullName.toLowerCase().includes(filterInput.value.toLowerCase()));
+  const filteredContacts = contactList.filter((contact) =>
+    contact.fullName.toLowerCase().includes(filterInput.value.toLowerCase())
+  );
   filteredContacts.sort((a, b) => a.fullName.localeCompare(b.fullName));
   const assigneeDropdown = document.querySelector(".assignee-dropdown");
 
@@ -337,15 +368,20 @@ async function renderAssigneeList() {
 
     contactsList += /*html*/ `
     <div class="assignee ${isChecked ? "selected" : ""}" onClick="toggleAssigneeInList(this)">
-      <div class="initials-bubble" style="background-color: #${contact.userColor}">${getInitialsFromName(contact.fullName)} </div>
+      <div class="initials-bubble" style="background-color: #${
+        contact.userColor
+      }">${getInitialsFromName(contact.fullName)} </div>
       <span>${contact.fullName}</span>
-      <input ${isChecked && "checked"} type="checkbox" name="assignee" data-id="${contact.id}" data-fullname="${contact.fullName}" data-usercolor="${contact.userColor}" />
+      <input ${isChecked && "checked"} type="checkbox" name="assignee" data-id="${
+      contact.id
+    }" data-fullname="${contact.fullName}" data-usercolor="${contact.userColor}" />
   </div>
     `;
   });
 
   assigneeDropdown.innerHTML = "";
-  assigneeDropdown.innerHTML = filteredContacts.length > 0 ? contactsList : "<span>No contacts found</span>";
+  assigneeDropdown.innerHTML =
+    filteredContacts.length > 0 ? contactsList : "<span>No contacts found</span>";
 }
 
 /**
@@ -380,7 +416,9 @@ function renderSelectedAssignees() {
   assignees.innerHTML = "";
   assignedContacts.slice(0, 3).forEach((contact) => {
     assignees.innerHTML += /*html*/ `
-      <div class="initials-bubble" style="background-color: #${contact.userColor}" title="${contact.fullName}">${getInitialsFromName(contact.fullName)}</div>
+      <div class="initials-bubble" style="background-color: #${contact.userColor}" title="${
+      contact.fullName
+    }">${getInitialsFromName(contact.fullName)}</div>
     `;
   });
 
@@ -419,7 +457,9 @@ function renderSubtasks() {
           <input type="text" class="subtask-container" value="${subtask.title}"> 
           <div class="buttons">
             <button type="button" onClick="editSubtask(event)">${returnIcon("pen-outline")}</button>
-            <button type="button" onmousedown="deleteSubTask(event)">${returnIcon("trash-outline")}</button>
+            <button type="button" onmousedown="deleteSubTask(event)">${returnIcon(
+              "trash-outline"
+            )}</button>
             <button type="button" onmousedown="saveSubtask(event)">${returnIcon("check")}</button>
           </div>
         </div>
@@ -474,33 +514,57 @@ function saveSubtask(event) {
  */
 function handleSubmitTask(event, slot, id = "") {
   event.preventDefault();
+  const taskData = getTaskData(event.target);
+  if (!isValidTask(taskData)) return;
+  id ? updateTask(slot, id, taskData) : createTask(slot, taskData);
+  finalizeTask();
+}
 
-  const form = event.target;
-  const title = form.title.value.trim();
-  const description = form.description.value.trim();
-  const dueDate = form["due-date"].value.trim();
-  const priority = form.querySelector(".priority.selected").value;
-  const category = form.category.value;
-  const assignees = assignedContacts.map((contact) => contact.id);
-  const modal = document.querySelector(".modal");
-  const validDate = dateValidation(dueDate);
-  const validTitle = titleValidation(title);
-  const validCategory = categoryValidation(category);
+function getTaskData(form) {
+  return {
+    title: form.title.value.trim(),
+    description: form.description.value.trim(),
+    dueDate: form["due-date"].value.trim(),
+    priority: form.querySelector(".priority.selected").value,
+    category: form.category.value,
+    assignees: assignedContacts.map((c) => c.id),
+  };
+}
 
-  if (!validDate || !validTitle || !validCategory) {
-    return;
-  }
+function isValidTask({ title, dueDate, category }) {
+  return dateValidation(dueDate) && titleValidation(title) && categoryValidation(category);
+}
 
-  if (modal) modal.classList.remove("active");
+function createTask(slot, taskData) {
+  addTask(
+    slot,
+    taskData.title,
+    taskData.description,
+    taskData.category,
+    taskData.priority,
+    taskData.dueDate,
+    subtasks,
+    taskData.assignees
+  );
+  showToast("Task added successfully", "check");
+}
 
-  if (!id) {
-    addTask(slot, title, description, category, priority, dueDate, subtasks, assignees);
-    showToast("Task added successfully", "check");
-  } else {
-    editTask(slot, id, title, description, category, priority, dueDate, subtasks, assignees);
-    showToast("Task edited successfully", "check");
-  }
+function updateTask(slot, id, taskData) {
+  editTask(
+    slot,
+    id,
+    taskData.title,
+    taskData.description,
+    taskData.category,
+    taskData.priority,
+    taskData.dueDate,
+    subtasks,
+    taskData.assignees
+  );
+  showToast("Task edited successfully", "check");
+}
 
+function finalizeTask() {
   renderTasks();
   window.location.href = "/board.html";
 }
