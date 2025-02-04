@@ -1,19 +1,12 @@
 /**
  * Imports necessary functions from various modules.
  */
-import {
-  checkAuth,
-  getContacts,
-  addTask,
-  editTask,
-  returnTaskById,
-  getContact,
-} from "./../../firebase.js";
-import { returnPath, getInitialsFromName } from "./../../utility-functions.js";
-import returnIcon from "../../icons.js";
-import { showToast } from "../../toast/toast.js";
-import { renderTasks } from "./../board.js";
-import { renderBoardTemplate } from "./../board.js";
+import { checkAuth, getContacts, addTask, editTask, returnTaskById, getContact } from './../../firebase.js';
+import { returnPath, getInitialsFromName } from './../../utility-functions.js';
+import returnIcon from '../../icons.js';
+import { showToast } from '../../toast/toast.js';
+import { renderTasks } from './../board.js';
+import { renderBoardTemplate } from './../board.js';
 
 window.handlePriorityClick = handlePriorityClick;
 window.showDatepicker = showDatepicker;
@@ -51,10 +44,10 @@ let subtasks = [];
 /**
  * Event listener for DOMContentLoaded to check authentication and load contacts.
  */
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener('DOMContentLoaded', async () => {
   checkAuth();
   contactList = await getContacts();
-  if (returnPath() === "/add-task.html") {
+  if (returnPath() === '/add-task.html') {
     renderTaskPage();
   }
 });
@@ -69,13 +62,13 @@ document.addEventListener("DOMContentLoaded", async () => {
  * @param {string} slot - The slot where the task should be rendered.
  * @param {string|null} taskId - The ID of the task to be loaded (optional).
  */
-export async function renderTaskForm(slot = "todo", taskId = null) {
+export async function renderTaskForm(slot = 'todo', taskId = null) {
   let task = taskId ? await returnTaskById(taskId) : null;
   assignedContacts = task ? await Promise.all(task.assignee.map(getContact)) : [];
   subtasks = task?.subTasks || [];
 
-  await waitForElement(".form-container");
-  document.querySelector(".form-container").innerHTML = await returnTaskForm(task, slot);
+  await waitForElement('.form-container');
+  document.querySelector('.form-container').innerHTML = await returnTaskForm(task, slot);
 
   initializeForm();
   activateModal();
@@ -102,15 +95,15 @@ function initializeForm() {
  * Activates the modal if it exists.
  */
 function activateModal() {
-  document.querySelector(".modal")?.classList.add("active");
+  document.querySelector('.modal')?.classList.add('active');
 }
 
 /**
  * Prevents the Enter key from submitting the form unless the focus is on a textarea.
  */
 function preventEnterKeySubmit() {
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Enter" && event.target.tagName !== "TEXTAREA") {
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
       event.preventDefault();
     }
   });
@@ -120,21 +113,21 @@ function preventEnterKeySubmit() {
  * Renders the task page by injecting the form container into the content area.
  */
 function renderTaskPage() {
-  const contentRef = document.querySelector(".content");
+  const contentRef = document.querySelector('.content');
   contentRef.innerHTML = /*html*/ `<div class="form-container"></div>`;
-  renderTaskForm("todo", null);
+  renderTaskForm('todo', null);
 }
 
 /**
  * Renders a modal containing a task form.
  */
 export function renderModal() {
-  const contentRef = document.querySelector(".content");
-  const modalRef = document.createElement("div");
-  modalRef.classList.add("modal");
+  const contentRef = document.querySelector('.content');
+  const modalRef = document.createElement('div');
+  modalRef.classList.add('modal');
   modalRef.innerHTML = /*html*/ `
     <div class="modal-content">
-      <span class="close" onclick="closeModal()">${returnIcon("x")}</span>
+      <span class="close" onclick="closeModal()">${returnIcon('x')}</span>
       <div class="form-container"></div>
     </div>
   `;
@@ -145,8 +138,8 @@ export function renderModal() {
  * Closes the modal and re-renders the board template.
  */
 function closeModal() {
-  const modalRef = document.querySelector(".modal");
-  modalRef.classList.remove("active");
+  const modalRef = document.querySelector('.modal');
+  modalRef.classList.remove('active');
   renderBoardTemplate();
 }
 
@@ -155,14 +148,14 @@ function closeModal() {
  */
 function clearForm() {
   clearPriority();
-  document.querySelector("#title").value = "";
-  document.querySelector("#description").value = "";
+  document.querySelector('#title').value = '';
+  document.querySelector('#description').value = '';
   assignedContacts = [];
-  document.querySelector("#due-date").value = "";
-  document.querySelector("#category").value = "";
-  document.querySelector("#subtasks-input").value = "";
+  document.querySelector('#due-date').value = '';
+  document.querySelector('#category').value = '';
+  document.querySelector('#subtasks-input').value = '';
   subtasks = [];
-  document.querySelector(".subtasks").innerHTML = "";
+  document.querySelector('.subtasks').innerHTML = '';
   renderSelectedAssignees();
 }
 
@@ -170,9 +163,9 @@ function clearForm() {
  * Clears the priority selection and sets default priority.
  */
 function clearPriority() {
-  const buttons = document.querySelectorAll(".priorities .priority");
-  buttons.forEach((button) => button.classList.remove("selected"));
-  buttons[1].classList.add("selected");
+  const buttons = document.querySelectorAll('.priorities .priority');
+  buttons.forEach((button) => button.classList.remove('selected'));
+  buttons[1].classList.add('selected');
 }
 
 /**
@@ -181,17 +174,17 @@ function clearPriority() {
  * @returns {boolean} True if valid, otherwise false.
  */
 function titleValidation(title) {
-  const validateTitle = document.querySelector("#request-title");
-  const titleContainer = document.querySelector("#title");
+  const validateTitle = document.querySelector('#request-title');
+  const titleContainer = document.querySelector('#title');
 
-  if (title === "" || title.length <= 3) {
-    validateTitle.style.display = "block";
-    validateTitle.style.color = "red";
-    titleContainer.style.borderColor = "red";
+  if (title === '' || title.length <= 3) {
+    validateTitle.style.display = 'block';
+    validateTitle.style.color = 'red';
+    titleContainer.style.borderColor = 'red';
     return false;
   } else {
-    validateTitle.style.display = "none";
-    titleContainer.style.borderColor = "#29abe2";
+    validateTitle.style.display = 'none';
+    titleContainer.style.borderColor = '#29abe2';
     return true;
   }
 }
@@ -202,36 +195,36 @@ function titleValidation(title) {
  * @returns {boolean} - Returns true if the date is valid, otherwise false.
  */
 function dateValidation(dueDate) {
-  const validateDate = document.querySelector("#request-date");
-  const dateContainer = document.querySelector("#due-date");
+  const validateDate = document.querySelector('#request-date');
+  const dateContainer = document.querySelector('#due-date');
 
   const dateValidation = /^\d{4}-\d{2}-\d{2}$/;
 
   if (!dateValidation.test(dueDate)) {
-    validateDate.style.display = "block";
-    validateDate.style.color = "red";
-    dateContainer.style.borderColor = "red";
+    validateDate.style.display = 'block';
+    validateDate.style.color = 'red';
+    dateContainer.style.borderColor = 'red';
     return false;
   } else {
-    validateDate.style.display = "none";
-    dateContainer.style.borderColor = "#29abe2";
+    validateDate.style.display = 'none';
+    dateContainer.style.borderColor = '#29abe2';
     return true;
   }
 }
 
 function categoryValidation() {
-  const validateCategory = document.querySelector("#request-category");
-  const categoryContainer = document.querySelector("#category");
-  let categoryValidation = categoryContainer.value.trim() !== "";
+  const validateCategory = document.querySelector('#request-category');
+  const categoryContainer = document.querySelector('#category');
+  let categoryValidation = categoryContainer.value.trim() !== '';
 
   if (!categoryValidation) {
-    validateCategory.style.display = "block";
-    validateCategory.style.color = "red";
-    categoryContainer.style.borderColor = "red";
+    validateCategory.style.display = 'block';
+    validateCategory.style.color = 'red';
+    categoryContainer.style.borderColor = 'red';
     return false;
   } else {
-    validateCategory.style.display = "none";
-    categoryContainer.style.borderColor = "#d1d1d1";
+    validateCategory.style.display = 'none';
+    categoryContainer.style.borderColor = '#d1d1d1';
   }
 
   return true;
@@ -242,20 +235,20 @@ function categoryValidation() {
  * @param {HTMLElement} element - The clicked priority button.
  */
 function handlePriorityClick(element) {
-  const priorities = document.querySelectorAll(".priority");
+  const priorities = document.querySelectorAll('.priority');
   priorities.forEach((priority) => {
-    priority.classList.remove("selected");
+    priority.classList.remove('selected');
   });
-  element.classList.add("selected");
+  element.classList.add('selected');
 }
 
 /**
  * Displays the date picker and sets the minimum selectable date to today.
  */
 function showDatepicker() {
-  const dueDateRef = document.getElementById("due-date");
-  const today = new Date().toISOString().split("T")[0];
-  dueDateRef.setAttribute("min", today);
+  const dueDateRef = document.getElementById('due-date');
+  const today = new Date().toISOString().split('T')[0];
+  dueDateRef.setAttribute('min', today);
   dueDateRef.showPicker();
 }
 
@@ -278,34 +271,41 @@ async function returnAssigneeInput() {
  * Renders a filtered list of assignees based on user input.
  */
 async function renderAssigneeList() {
-  const filterInput = document.getElementById("assignee-input");
-  const filteredContacts = contactList.filter((contact) =>
-    contact.fullName.toLowerCase().includes(filterInput.value.toLowerCase())
-  );
+  const filterInput = document.getElementById('assignee-input');
+  const filteredContacts = contactList.filter((contact) => contact.fullName.toLowerCase().includes(filterInput.value.toLowerCase()));
   filteredContacts.sort((a, b) => a.fullName.localeCompare(b.fullName));
-  const assigneeDropdown = document.querySelector(".assignee-dropdown");
+  const assigneeDropdown = document.querySelector('.assignee-dropdown');
 
-  let contactsList = "";
+  let contactsList = '';
 
   filteredContacts.forEach((contact) => {
     const isChecked = assignedContacts.find((assignedContact) => assignedContact.id === contact.id);
 
-    contactsList += /*html*/ `
-    <div class="assignee ${isChecked ? "selected" : ""}" onClick="toggleAssigneeInList(this)">
-      <div class="initials-bubble" style="background-color: #${
-        contact.userColor
-      }">${getInitialsFromName(contact.fullName)} </div>
-      <span>${contact.fullName}</span>
-      <input ${isChecked && "checked"} type="checkbox" name="assignee" data-id="${
-      contact.id
-    }" data-fullname="${contact.fullName}" data-usercolor="${contact.userColor}" />
-  </div>
-    `;
+    contactsList += returnAssigneeTemplate(isChecked, contact);
   });
 
-  assigneeDropdown.innerHTML = "";
-  assigneeDropdown.innerHTML =
-    filteredContacts.length > 0 ? contactsList : "<span>No contacts found</span>";
+  assigneeDropdown.innerHTML = '';
+  assigneeDropdown.innerHTML = filteredContacts.length > 0 ? contactsList : '<span>No contacts found</span>';
+}
+
+/**
+ * Generates an HTML template for an assignee element.
+ *
+ * @param {boolean} isChecked - Indicates whether the assignee is selected.
+ * @param {Object} contact - The contact object containing assignee details.
+ * @param {string} contact.userColor - The color associated with the user.
+ * @param {string} contact.fullName - The full name of the contact.
+ * @param {number} contact.id - The unique identifier of the contact.
+ * @returns {string} The HTML template string for the assignee element.
+ */
+function returnAssigneeTemplate(isChecked, contact) {
+  return /*html*/ `
+ <div class="assignee ${isChecked ? 'selected' : ''}" onClick="toggleAssigneeInList(this)">
+   <div class="initials-bubble" style="background-color: #${contact.userColor}">${getInitialsFromName(contact.fullName)} </div>
+   <span>${contact.fullName}</span>
+   <input ${isChecked && 'checked'} type="checkbox" name="assignee" data-id="${contact.id}" data-fullname="${contact.fullName}" data-usercolor="${contact.userColor}" />
+  </div>
+ `;
 }
 
 /**
@@ -313,7 +313,7 @@ async function renderAssigneeList() {
  * @param {HTMLElement} element - The clicked assignee element.
  */
 function toggleAssigneeInList(element) {
-  const checkBox = element.querySelector("input");
+  const checkBox = element.querySelector('input');
 
   if (!checkBox.checked) {
     assignedContacts.push({
@@ -322,11 +322,11 @@ function toggleAssigneeInList(element) {
       userColor: checkBox.dataset.usercolor,
     });
     checkBox.checked = true;
-    element.classList.add("selected");
+    element.classList.add('selected');
   } else {
     assignedContacts = assignedContacts.filter((contact) => contact.id !== checkBox.dataset.id);
     checkBox.checked = false;
-    element.classList.remove("selected");
+    element.classList.remove('selected');
   }
 
   renderSelectedAssignees();
@@ -336,19 +336,17 @@ function toggleAssigneeInList(element) {
  * Renders the selected assignees' initials bubbles.
  */
 function renderSelectedAssignees() {
-  const assignees = document.querySelector(".assignees");
-  assignees.innerHTML = "";
+  const assignees = document.querySelector('.assignees');
+  assignees.innerHTML = '';
   assignedContacts.slice(0, 3).forEach((contact) => {
     assignees.innerHTML += /*html*/ `
-      <div class="initials-bubble" style="background-color: #${contact.userColor}" title="${
-      contact.fullName
-    }">${getInitialsFromName(contact.fullName)}</div>
+      <div class="initials-bubble" style="background-color: #${contact.userColor}" title="${contact.fullName}">${getInitialsFromName(contact.fullName)}</div>
     `;
   });
 
   if (assignedContacts.length > 3) {
     const remainingContacts = assignedContacts.slice(3);
-    const remainingNames = remainingContacts.map((contact) => contact.fullName).join(", ");
+    const remainingNames = remainingContacts.map((contact) => contact.fullName).join(', ');
     assignees.innerHTML += /*html*/ `
       <div class="initials-bubble" style="background-color: #222" title="${remainingNames}">+${remainingContacts.length}</div>
     `;
@@ -359,11 +357,11 @@ function renderSelectedAssignees() {
  * Adds a new subtask to the list.
  */
 function addSubtask() {
-  const subtaskInput = document.querySelector("#subtasks-input");
-  if (subtaskInput.value === "") return;
+  const subtaskInput = document.querySelector('#subtasks-input');
+  if (subtaskInput.value === '') return;
 
   subtasks.push({ title: subtaskInput.value, checked: false });
-  subtaskInput.value = "";
+  subtaskInput.value = '';
   renderSubtasks();
 }
 
@@ -371,8 +369,8 @@ function addSubtask() {
  * Renders the list of subtasks.
  */
 function renderSubtasks() {
-  const subtasksContainer = document.querySelector(".subtasks");
-  subtasksContainer.innerHTML = "";
+  const subtasksContainer = document.querySelector('.subtasks');
+  subtasksContainer.innerHTML = '';
 
   if (subtasks && subtasks.length > 0) {
     subtasks.forEach((subtask, index) => {
@@ -380,11 +378,9 @@ function renderSubtasks() {
         <div class="subtask" data-index="${index}">
           <input type="text" class="subtask-container" value="${subtask.title}"> 
           <div class="buttons">
-            <button type="button" onClick="editSubtask(event)">${returnIcon("pen-outline")}</button>
-            <button type="button" onmousedown="deleteSubTask(event)">${returnIcon(
-              "trash-outline"
-            )}</button>
-            <button type="button" onmousedown="saveSubtask(event)">${returnIcon("check")}</button>
+            <button type="button" onClick="editSubtask(event)">${returnIcon('pen-outline')}</button>
+            <button type="button" onmousedown="deleteSubTask(event)">${returnIcon('trash-outline')}</button>
+            <button type="button" onmousedown="saveSubtask(event)">${returnIcon('check')}</button>
           </div>
         </div>
       `;
@@ -397,7 +393,7 @@ function renderSubtasks() {
  * @param {Event} event - The event triggered by the delete button.
  */
 function deleteSubtask(event) {
-  const subtask = event.target.closest(".subtask");
+  const subtask = event.target.closest('.subtask');
   const index = subtask.dataset.index;
   subtasks.splice(index, 1);
   renderSubtasks();
@@ -408,9 +404,9 @@ function deleteSubtask(event) {
  * @param {Event} event - The event triggered by the edit button.
  */
 function editSubtask(event) {
-  const subTaskInput = event.target.closest(".subtask").querySelector("input");
+  const subTaskInput = event.target.closest('.subtask').querySelector('input');
   const value = subTaskInput.value;
-  subTaskInput.value = "";
+  subTaskInput.value = '';
   subTaskInput.focus();
   subTaskInput.value = value;
 }
@@ -420,11 +416,11 @@ function editSubtask(event) {
  * @param {Event} event - The event triggered by the save button.
  */
 function saveSubtask(event) {
-  const subtask = event.target.closest(".subtask");
+  const subtask = event.target.closest('.subtask');
   const index = subtask.dataset.index;
 
   subtasks[index] = {
-    title: subtask.querySelector("input").value,
+    title: subtask.querySelector('input').value,
     checked: subtasks[index].checked,
   };
   renderSubtasks();
@@ -436,7 +432,7 @@ function saveSubtask(event) {
  * @param {string} slot - The slot where the task will be stored.
  * @param {string} [id=""] - The ID of the task (optional for editing existing tasks).
  */
-function handleSubmitTask(event, slot, id = "") {
+function handleSubmitTask(event, slot, id = '') {
   event.preventDefault();
   const taskData = getTaskData(event.target);
   if (!isValidTask(taskData)) return;
@@ -448,8 +444,8 @@ function getTaskData(form) {
   return {
     title: form.title.value.trim(),
     description: form.description.value.trim(),
-    dueDate: form["due-date"].value.trim(),
-    priority: form.querySelector(".priority.selected").value,
+    dueDate: form['due-date'].value.trim(),
+    priority: form.querySelector('.priority.selected').value,
     category: form.category.value,
     assignees: assignedContacts.map((c) => c.id),
   };
@@ -460,96 +456,55 @@ function isValidTask({ title, dueDate, category }) {
 }
 
 function createTask(slot, taskData) {
-  addTask(
-    slot,
-    taskData.title,
-    taskData.description,
-    taskData.category,
-    taskData.priority,
-    taskData.dueDate,
-    subtasks,
-    taskData.assignees
-  );
-  showToast("Task added successfully", "check");
+  addTask(slot, taskData.title, taskData.description, taskData.category, taskData.priority, taskData.dueDate, subtasks, taskData.assignees);
+  showToast('Task added successfully', 'check');
 }
 
 function updateTask(slot, id, taskData) {
-  editTask(
-    slot,
-    id,
-    taskData.title,
-    taskData.description,
-    taskData.category,
-    taskData.priority,
-    taskData.dueDate,
-    subtasks,
-    taskData.assignees
-  );
-  showToast("Task edited successfully", "check");
+  editTask(slot, id, taskData.title, taskData.description, taskData.category, taskData.priority, taskData.dueDate, subtasks, taskData.assignees);
+  showToast('Task edited successfully', 'check');
 }
 
 function finalizeTask() {
   renderTasks();
-  window.location.href = "/board.html";
+  window.location.href = '/board.html';
 }
 
 async function returnTaskForm(task, slot) {
   return /*html*/ `
     <div class="task-form">
-      <h1>${task ? "Edit Task" : "Add Task"}</h1>
+      <h1>${task ? 'Edit Task' : 'Add Task'}</h1>
       <div class="task-form-container">
-        <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${
-    task ? task.id : ""
-  }')">
+        <form id="task-form" onsubmit="handleSubmitTask(event, '${slot}', '${task ? task.id : ''}')">
           <div>
             <label for="title">Title<span class="red-star">*</span></label>
-            <input type="text" id="title" name="title" placeholder="Enter a title" value="${
-              task ? task.title : ""
-            }">
+            <input type="text" id="title" name="title" placeholder="Enter a title" value="${task ? task.title : ''}">
             <div class="request-alert">
               <p id="request-title" >This field is required</p>
             </div>
             <label for="description">Description</label>
-            <textarea id="description" name="description" placeholder="Enter a Description" rows="3">${
-              task ? task.description : ""
-            }</textarea>
+            <textarea id="description" name="description" placeholder="Enter a Description" rows="3">${task ? task.description : ''}</textarea>
             ${await returnAssigneeInput()}
             <div class="assignees"></div>
           </div>
           <hr />
           <div>
             <label for="due-date">Due date<span class="red-star">*</span></label>
-            <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" value="${
-              task ? task.dueDate : ""
-            }">
+            <input type="date" id="due-date" name="due-date" onClick="showDatepicker()" value="${task ? task.dueDate : ''}">
             <div class="request-alert">
               <p id="request-date" >This field is required</p>
             </div>
             <label for="priority">Prio</label>
             <div class="priorities">
-              <button type="button" class="priority ${
-                task ? (task.priority === "urgent" ? "selected" : "") : ""
-              }" onClick="handlePriorityClick(this)" value="urgent">Urgent ${returnIcon(
-    "urgent"
-  )}</button>
-              <button type="button" class="priority ${
-                task ? (task.priority === "medium" ? "selected" : "") : "selected"
-              }" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon(
-    "medium"
-  )}</button>
-              <button type="button" class="priority ${
-                task ? (task.priority === "low" ? "selected" : "") : ""
-              }" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon("low")}</button>
+              <button type="button" class="priority ${task ? (task.priority === 'urgent' ? 'selected' : '') : ''}" onClick="handlePriorityClick(this)" value="urgent">Urgent ${returnIcon('urgent')}</button>
+              <button type="button" class="priority ${task ? (task.priority === 'medium' ? 'selected' : '') : 'selected'}" onClick="handlePriorityClick(this)" value="medium">Medium ${returnIcon('medium')}</button>
+              <button type="button" class="priority ${task ? (task.priority === 'low' ? 'selected' : '') : ''}" onClick="handlePriorityClick(this)" value="low">Low ${returnIcon('low')}</button>
             </div>
             <label for="category">Category<span class="red-star">*</span></label>
-            <select name="category" id="category" ${task ? "disabled" : ""}>
-              <option value="" disabled ${!task && "selected"}>Select task category</option>
-              <option value="User Story" ${
-                task && task.type === "User Story" ? "selected" : ""
-              }>User Story</option>
-              <option value="Technical Task" ${
-                task && task.type === "Technical Task" ? "selected" : ""
-              }>Technical Task</option>
+            <select name="category" id="category" ${task ? 'disabled' : ''}>
+              <option value="" disabled ${!task && 'selected'}>Select task category</option>
+              <option value="User Story" ${task && task.type === 'User Story' ? 'selected' : ''}>User Story</option>
+              <option value="Technical Task" ${task && task.type === 'Technical Task' ? 'selected' : ''}>Technical Task</option>
             </select>
             <div class="request-alert">
                 <p id="request-category" >This field is required</p>
@@ -558,7 +513,7 @@ async function returnTaskForm(task, slot) {
             <div class="input-container">
               <input type="text" id="subtasks-input" name="" placeholder="Add new subtask"/> 
               <div class="icon" onclick="addSubtask()">
-                ${returnIcon("plus")}
+                ${returnIcon('plus')}
               </div>
             </div>
             <div class="subtasks"></div> 
@@ -566,12 +521,8 @@ async function returnTaskForm(task, slot) {
           <div class="footer-buttons">
             <p><span class="red-star">*</span>This field is required</p>
             <div class="buttons">
-              <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon(
-                "x"
-              )}</button>
-              <button type="submit"  id="submit-task" class="submit-button">${
-                !task ? "Create Task" : "Edit Task"
-              } ${returnIcon("check")} </button>
+              <button type="button" onclick="clearForm()" id="clear-form" class="clear-button">Clear ${returnIcon('x')}</button>
+              <button type="submit"  id="submit-task" class="submit-button">${!task ? 'Create Task' : 'Edit Task'} ${returnIcon('check')} </button>
             </div>
           </div>
         </form>
