@@ -33,7 +33,6 @@
     left: 50%;
     transform: translate(-50%, -50%);
     max-height: 100dvh;
-    overflow: auto;
 
     .close {
       cursor: pointer;
@@ -496,7 +495,6 @@
     }
   }
   .form-container {
-    max-width: 90%;
     padding: 15px;
   }
 
