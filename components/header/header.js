@@ -1,6 +1,6 @@
-import returnIcon from "../icons.js";
-import { getAuthUser, signOutUser } from "../firebase.js";
-import { getInitialsFromName } from "../utility-functions.js";
+import returnIcon from '../icons.js';
+import { getAuthUser, signOutUser } from '../firebase.js';
+import { getInitialsFromName } from '../utility-functions.js';
 
 window.signOutUser = signOutUser;
 window.toggleMenu = toggleMenu;
@@ -12,30 +12,28 @@ window.toggleMenu = toggleMenu;
  */
 export default async function returnHeader() {
   const user = await getAuthUser();
-  const displayName = user?.displayName || "Guest";
+  const displayName = user?.displayName || 'Guest';
 
   return /*html*/ `
     <header>
       <span>Kanban Projekt Management Tool</span>
       
-      ${returnIcon("logo-dark")}
+      ${returnIcon('logo-dark')}
       
       <div>
         ${
           user
             ? /*html*/ `
-            <a href="./help.html">${returnIcon("help")}</a>
-            <div class="user">
-              <button onclick="toggleMenu(event)">
-                ${getInitialsFromName(displayName)}
-              </button>
-              <div class="user-menu">
-                <a href="./legal-notice.html">Legal Notice</a>
-                <a href="./privacy-policy.html">Privacy Policy</a>
-                <span onclick="signOutUser()">Logout</span>
-              </div>
-            </div>`
-            : ""
+          <a href="./help.html">${returnIcon('help')}</a>
+          <div class="user">
+            <button onclick="toggleMenu(event)">${getInitialsFromName(displayName)}</button>
+            <div class="user-menu">
+              <a href="./legal-notice.html">Legal Notice</a>
+              <a href="./privacy-policy.html">Privacy Policy</a>
+              <span onclick="signOutUser()">Logout</span>
+            </div>
+          </div>`
+            : ''
         }
       </div>
     </header>
@@ -48,5 +46,5 @@ export default async function returnHeader() {
  */
 function toggleMenu(e) {
   const userRef = e.target.parentElement;
-  userRef.classList.toggle("open");
+  userRef.classList.toggle('open');
 }

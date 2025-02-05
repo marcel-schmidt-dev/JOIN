@@ -212,6 +212,10 @@ function dateValidation(dueDate) {
   }
 }
 
+/**
+ * Validates the category input field.
+ * @returns {boolean} True if the category is valid, otherwise false.
+ */
 function categoryValidation() {
   const validateCategory = document.querySelector('#request-category');
   const categoryContainer = document.querySelector('#category');
@@ -374,16 +378,7 @@ function renderSubtasks() {
 
   if (subtasks && subtasks.length > 0) {
     subtasks.forEach((subtask, index) => {
-      subtasksContainer.innerHTML += /*html*/ `
-        <div class="subtask" data-index="${index}">
-          <input type="text" class="subtask-container" value="${subtask.title}"> 
-          <div class="buttons">
-            <button type="button" onClick="editSubtask(event)">${returnIcon('pen-outline')}</button>
-            <button type="button" onmousedown="deleteSubTask(event)">${returnIcon('trash-outline')}</button>
-            <button type="button" onmousedown="saveSubtask(event)">${returnIcon('check')}</button>
-          </div>
-        </div>
-      `;
+      subtasksContainer.innerHTML += returnSubTasksTemplate(subtask, index);
     });
   }
 }
@@ -440,6 +435,17 @@ function handleSubmitTask(event, slot, id = '') {
   finalizeTask();
 }
 
+/**
+ * Retrieves the task data from the form.
+ * @param {HTMLFormElement} form - The form element containing the task data.
+ * @returns {Object} An object containing the task data.
+ * @returns {string} title - The title of the task.
+ * @returns {string} description - The description of the task.
+ * @returns {string} dueDate - The due date of the task.
+ * @returns {string} priority - The priority of the task.
+ * @returns {string} category - The category of the task.
+ * @returns {Array<number>} assignees - The IDs of the assigned contacts.
+ */
 function getTaskData(form) {
   return {
     title: form.title.value.trim(),
@@ -451,25 +457,73 @@ function getTaskData(form) {
   };
 }
 
+/**
+ * Validates the task data.
+ * @param {Object} task - The task object containing the data to validate.
+ * @param {string} task.title - The title of the task.
+ * @param {string} task.dueDate - The due date of the task.
+ * @param {string} task.category - The category of the task.
+ * @returns {boolean} True if the task data is valid, otherwise false.
+ */
 function isValidTask({ title, dueDate, category }) {
   return dateValidation(dueDate) && titleValidation(title) && categoryValidation(category);
 }
 
+/**
+ * Creates a new task and adds it to the specified slot.
+ * @param {string} slot - The slot where the task will be added.
+ * @param {Object} taskData - The data of the task to be created.
+ * @param {string} taskData.title - The title of the task.
+ * @param {string} taskData.description - The description of the task.
+ * @param {string} taskData.category - The category of the task.
+ * @param {string} taskData.priority - The priority of the task.
+ * @param {string} taskData.dueDate - The due date of the task.
+ * @param {Array<Object>} subtasks - The subtasks associated with the task.
+ * @param {Array<number>} taskData.assignees - The IDs of the assigned contacts.
+ */
 function createTask(slot, taskData) {
   addTask(slot, taskData.title, taskData.description, taskData.category, taskData.priority, taskData.dueDate, subtasks, taskData.assignees);
   showToast('Task added successfully', 'check');
 }
 
+/**
+ * Updates an existing task with new data.
+ * @param {string} slot - The slot where the task is located.
+ * @param {number} id - The ID of the task to be updated.
+ * @param {Object} taskData - The new data for the task.
+ * @param {string} taskData.title - The title of the task.
+ * @param {string} taskData.description - The description of the task.
+ * @param {string} taskData.category - The category of the task.
+ * @param {string} taskData.priority - The priority of the task.
+ * @param {string} taskData.dueDate - The due date of the task.
+ * @param {Array<Object>} subtasks - The subtasks associated with the task.
+ * @param {Array<number>} taskData.assignees - The IDs of the assigned contacts.
+ */
 function updateTask(slot, id, taskData) {
   editTask(slot, id, taskData.title, taskData.description, taskData.category, taskData.priority, taskData.dueDate, subtasks, taskData.assignees);
   showToast('Task edited successfully', 'check');
 }
 
+/**
+ * Finalizes the task creation or update process by rendering the tasks and redirecting to the board page.
+ */
 function finalizeTask() {
   renderTasks();
   window.location.href = '/board.html';
 }
 
+/**
+ * Generates the HTML template for the task form.
+ * @param {Object} task - The task object containing the data to populate the form (optional).
+ * @param {string} task.id - The ID of the task (optional).
+ * @param {string} task.title - The title of the task (optional).
+ * @param {string} task.description - The description of the task (optional).
+ * @param {string} task.dueDate - The due date of the task (optional).
+ * @param {string} task.priority - The priority of the task (optional).
+ * @param {string} task.type - The type/category of the task (optional).
+ * @param {string} slot - The slot where the task will be added or edited.
+ * @returns {Promise<string>} The HTML string for the task form template.
+ */
 async function returnTaskForm(task, slot) {
   return /*html*/ `
     <div class="task-form">
@@ -526,6 +580,26 @@ async function returnTaskForm(task, slot) {
             </div>
           </div>
         </form>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Generates the HTML template for a subtask.
+ * @param {Object} subtask - The subtask object.
+ * @param {string} subtask.title - The title of the subtask.
+ * @param {number} index - The index of the subtask.
+ * @returns {string} The HTML string for the subtask template.
+ */
+function returnSubTasksTemplate(subtask, index) {
+  return /*html*/ `
+    <div class="subtask" data-index="${index}">
+      <input type="text" class="subtask-container" value="${subtask.title}"> 
+      <div class="buttons">
+        <button type="button" onClick="editSubtask(event)">${returnIcon('pen-outline')}</button>
+        <button type="button" onmousedown="deleteSubTask(event)">${returnIcon('trash-outline')}</button>
+        <button type="button" onmousedown="saveSubtask(event)">${returnIcon('check')}</button>
       </div>
     </div>
   `;
