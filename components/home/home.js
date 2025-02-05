@@ -26,13 +26,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /**
  * Renders the login form and optionally displays additional buttons.
- * @param {boolean} [displayBtns] - Whether to display buttons for toggling views.
+ * @param {boolean} [displayButtons] - Whether to display buttons for toggling views.
  */
-function renderLogin(displayBtns) {
+function renderLogin(displayButtons) {
   const formRef = document.querySelector('.form-container');
   const btnContainerRef = document.querySelectorAll('.btn-container');
 
-  if (displayBtns) {
+  if (displayButtons) {
     btnContainerRef.forEach((btn) => (btn.style.display = ''));
   }
 
@@ -97,12 +97,8 @@ async function handleRegister(e) {
     return;
   }
 
-  try {
-    const user = await signUp(name, email, password);
-    if (user) renderLogin(), showToast('You Signed Up successfully');
-  } catch (error) {
-    throw error;
-  }
+  const user = await signUp(name, email, password);
+  if (user) renderLogin(), showToast('You Signed Up successfully');
 }
 
 /**
