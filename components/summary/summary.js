@@ -50,20 +50,16 @@ function getRelevantDueDate(tasks) {
 async function renderSummaryTemplate() {
   const board = await returnBoard();
   const user = await getAuthUser();
-
   let urgentTasks = [];
   let allTasks = [];
+  let contentRef;
 
   Object.keys(board).forEach((key) => {
     board[key].forEach((task) => {
       allTasks.push(task);
-      if (task.priority === 'urgent') {
-        urgentTasks.push(task);
-      }
+      if (task.priority === 'urgent') urgentTasks.push(task);
     });
   });
-
-  let contentRef;
 
   while ((contentRef = document.querySelector('.content')) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -72,6 +68,15 @@ async function renderSummaryTemplate() {
   contentRef.innerHTML = returnSummaryTemplate(user, board, allTasks, urgentTasks);
 }
 
+/**
+ * Generates the HTML template for the summary page.
+ * @param {Object} user - The user object containing user information.
+ * @param {string} user.displayName - The display name of the user.
+ * @param {Object} board - The board object containing task information.
+ * @param {Array<Object>} allTasks - The array of all tasks.
+ * @param {Array<Object>} urgentTasks - The array of urgent tasks.
+ * @returns {string} The HTML string for the summary template.
+ */
 function returnSummaryTemplate(user, board, allTasks, urgentTasks) {
   return /*html*/ `
   <div class="summary-container">
