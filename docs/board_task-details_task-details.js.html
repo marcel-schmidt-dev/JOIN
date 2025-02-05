@@ -51,108 +51,32 @@ export default async function showTaskDetails(taskId, slot) {
   const assignees = task.assignee ? await Promise.all(task.assignee.map((id) => getContact(id))) : [];
   const subTasks = await returnSubTasks(taskId, slot);
 
-  contentRef.innerHTML += /*html*/ `
-        &lt;div class="task-details-container">
-            &lt;div class="task-details" data-task-id=${taskId} data-task-slot=${slot}>
-                &lt;div class="top">
-                    &lt;div class="type" style="background-color: ${task.type === 'Technical Task' ? '#1FD7C1' : '#0038FF'}">${task.type}&lt;/div>
-                    &lt;div class="close" onclick="closeTaskDetails()">✘&lt;/div>
-                &lt;/div>
-                &lt;h2>${task.title}&lt;/h2>
-                &lt;p class="description">${task.description}&lt;/p>
-                &lt;table>
-                    &lt;tr>
-                        &lt;td>Due date:&lt;/td>
-                        &lt;td>${task.dueDate}&lt;/td>
-                    &lt;/tr>
-                    &lt;tr>
-                        &lt;td>Priority:&lt;/td>
-                        &lt;td class="${task.priority}">&lt;span>${task.priority}&lt;/span>${returnIcon(task.priority)}&lt;/td>
-                    &lt;/tr>
-                &lt;/table>
-                
-                &lt;div class="assignee-list">
-                 &lt;p>Assigned To:&lt;/p>
-                 &lt;div class="assignee-container">
-                     ${assignees
-                       .slice(0, 3)
-                       .map((assignee) => {
-                         return `
-                        &lt;div class="assignee">
-                          &lt;div class="bubble" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}&lt;/div>
-                        &lt;span>${assignee.fullName}&lt;/span>
-                        &lt;/div>`;
-                       })
-                       .join('')}
-                        ${
-                          assignees.length > 3
-                            ? `&lt;div class="assignee extra-assignees" title="${assignees
-                                .slice(3)
-                                .map((a) => a.fullName)
-                                .join(', ')}">
-                                &lt;div class="bubble" style="background-color: #d1d1d1;">+${assignees.length - 3}&lt;/div>
-                                  &lt;span>+ ${assignees.length - 3} more&lt;/span>
-                                &lt;/div>`
-                            : ''
-                        }
-                    &lt;/div>
-                  &lt;/div>
-
-                &lt;div class="subtask-list">
-                    &lt;p>Subtasks:&lt;/p>
-                    &lt;div class="subtask-container">
-                    ${subTasks
-                      .map((subtask) => {
-                        return `&lt;div class="subtask">&lt;input type="checkbox" ${subtask.checked ? 'checked' : ''} name="${subtask.id}" id="${subtask.id}">&lt;span>${subtask.title}&lt;/span>&lt;/div>`;
-                      })
-                      .join('')}
-                    &lt;/div>
-                &lt;/div>
-                &lt;div class="move-buttons">
-                    &lt;button class="move-btn" data-slot="todo-tasks">To-Do&lt;/button>
-                    &lt;button class="move-btn" data-slot="inProgress-tasks">In Progress&lt;/button>
-                    &lt;button class="move-btn" data-slot="awaitFeedback-tasks">Awaiting Feedback&lt;/button>
-                    &lt;button class="move-btn" data-slot="done-tasks">Done&lt;/button>
-                &lt;/div>
-                &lt;div class="buttons">
-                    &lt;button class="delete-btn">${returnIcon('trash-outline')}Delete&lt;/button>
-                    &lt;hr>
-                    &lt;button class="edit-btn">${returnIcon('pen')}Edit&lt;/button>
-                &lt;/div>
-            &lt;/div>
-        &lt;/div>
-    `;
+  contentRef.innerHTML += returnTaskDetailsTemplate(taskId, task, slot, assignees, subTasks);
 
   const moveButtons = contentRef.querySelectorAll('.move-btn');
   moveButtons.forEach((button) => {
     button.addEventListener('click', async (event) => {
       const slot = event.target.dataset.slot;
-      try {
-        await moveTaskToSlot(slot, taskId);
-        closeTaskDetails();
-        await renderBoardTemplate();
-      } catch (error) {
-        console.error('Error moving task:', error);
-      }
+      await moveTaskToSlot(slot, taskId);
+      closeTaskDetails();
+      await renderBoardTemplate();
     });
   });
 
-  const deleteButton = contentRef.querySelector('.delete-btn');
-  if (deleteButton) {
-    deleteButton.addEventListener('click', async () => {
-      deleteTask(slot, taskId);
-      document.querySelector('.task-details-container').remove();
-      await renderBoardTemplate();
-    });
-  }
-
-  const editButton = contentRef.querySelector('.edit-btn');
-  if (editButton) {
-    editButton.addEventListener('click', () => {
-      document.querySelector('.task-details-container').remove();
-      renderTaskForm(slot, taskId);
-    });
-  }
+  ['delete-btn', 'edit-btn'].forEach((className) => {
+    const button = contentRef.querySelector(`.${className}`);
+    if (button) {
+      button.addEventListener('click', async () => {
+        if (className === 'delete-btn') {
+          deleteTask(slot, taskId);
+        } else {
+          document.querySelector('.task-details-container').remove();
+          renderTaskForm(slot, taskId);
+        }
+        await renderBoardTemplate();
+      });
+    }
+  });
 }
 
 /**
@@ -160,6 +84,80 @@ export default async function showTaskDetails(taskId, slot) {
  */
 export function closeTaskDetails() {
   document.querySelector('.task-details-container').remove();
+}
+
+function returnTaskDetailsTemplate(taskId, task, slot, assignees, subTasks) {
+  return /*html*/ `
+  &lt;div class="task-details-container">
+      &lt;div class="task-details" data-task-id=${taskId} data-task-slot=${slot}>
+          &lt;div class="top">
+              &lt;div class="type" style="background-color: ${task.type === 'Technical Task' ? '#1FD7C1' : '#0038FF'}">${task.type}&lt;/div>
+              &lt;div class="close" onclick="closeTaskDetails()">✘&lt;/div>
+          &lt;/div>
+          &lt;h2>${task.title}&lt;/h2>
+          &lt;p class="description">${task.description}&lt;/p>
+          &lt;table>
+              &lt;tr>
+                  &lt;td>Due date:&lt;/td>
+                  &lt;td>${task.dueDate}&lt;/td>
+              &lt;/tr>
+              &lt;tr>
+                  &lt;td>Priority:&lt;/td>
+                  &lt;td class="${task.priority}">&lt;span>${task.priority}&lt;/span>${returnIcon(task.priority)}&lt;/td>
+              &lt;/tr>
+          &lt;/table>
+          
+          &lt;div class="assignee-list">
+           &lt;p>Assigned To:&lt;/p>
+           &lt;div class="assignee-container">
+               ${assignees
+                 .slice(0, 3)
+                 .map((assignee) => {
+                   return `
+                  &lt;div class="assignee">
+                    &lt;div class="bubble" style="background-color: #${assignee.userColor}">${getInitialsFromName(assignee.fullName)}&lt;/div>
+                  &lt;span>${assignee.fullName}&lt;/span>
+                  &lt;/div>`;
+                 })
+                 .join('')}
+                  ${
+                    assignees.length > 3
+                      ? `&lt;div class="assignee extra-assignees" title="${assignees
+                          .slice(3)
+                          .map((a) => a.fullName)
+                          .join(', ')}">
+                          &lt;div class="bubble" style="background-color: #d1d1d1;">+${assignees.length - 3}&lt;/div>
+                            &lt;span>+ ${assignees.length - 3} more&lt;/span>
+                          &lt;/div>`
+                      : ''
+                  }
+              &lt;/div>
+            &lt;/div>
+
+          &lt;div class="subtask-list">
+              &lt;p>Subtasks:&lt;/p>
+              &lt;div class="subtask-container">
+              ${subTasks
+                .map((subtask) => {
+                  return `&lt;div class="subtask">&lt;input type="checkbox" ${subtask.checked ? 'checked' : ''} name="${subtask.id}" id="${subtask.id}">&lt;span>${subtask.title}&lt;/span>&lt;/div>`;
+                })
+                .join('')}
+              &lt;/div>
+          &lt;/div>
+          &lt;div class="move-buttons">
+              &lt;button class="move-btn" data-slot="todo-tasks">To-Do&lt;/button>
+              &lt;button class="move-btn" data-slot="inProgress-tasks">In Progress&lt;/button>
+              &lt;button class="move-btn" data-slot="awaitFeedback-tasks">Awaiting Feedback&lt;/button>
+              &lt;button class="move-btn" data-slot="done-tasks">Done&lt;/button>
+          &lt;/div>
+          &lt;div class="buttons">
+              &lt;button class="delete-btn">${returnIcon('trash-outline')}Delete&lt;/button>
+              &lt;hr>
+              &lt;button class="edit-btn">${returnIcon('pen')}Edit&lt;/button>
+          &lt;/div>
+      &lt;/div>
+  &lt;/div>
+`;
 }
 </code></pre>
         </article>
@@ -171,13 +169,13 @@ export function closeTaskDetails() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateModal">activateModal</a></li><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#assignedContacts">assignedContacts</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clearPriority">clearPriority</a></li><li><a href="global.html#closeModal">closeModal</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#contactList">contactList</a></li><li><a href="global.html#createRandomTasks">createRandomTasks</a></li><li><a href="global.html#dateValidation">dateValidation</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handlePriorityClick">handlePriorityClick</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleSubmitTask">handleSubmitTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#initializeForm">initializeForm</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#preventEnterKeySubmit">preventEnterKeySubmit</a></li><li><a href="global.html#renderAssigneeList">renderAssigneeList</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderModal">renderModal</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSelectedAssignees">renderSelectedAssignees</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTaskForm">renderTaskForm</a></li><li><a href="global.html#renderTaskPage">renderTaskPage</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnAssigneeInput">returnAssigneeInput</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnHeader">returnHeader</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#saveSubtask">saveSubtask</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showDatepicker">showDatepicker</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#subtasks">subtasks</a></li><li><a href="global.html#titleValidation">titleValidation</a></li><li><a href="global.html#toggleAssigneeInList">toggleAssigneeInList</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li><li><a href="global.html#waitForElement">waitForElement</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateModal">activateModal</a></li><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#assignedContacts">assignedContacts</a></li><li><a href="global.html#categoryValidation">categoryValidation</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clearPriority">clearPriority</a></li><li><a href="global.html#closeModal">closeModal</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#contactList">contactList</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#dateValidation">dateValidation</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#finalizeTask">finalizeTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#getTaskData">getTaskData</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handlePriorityClick">handlePriorityClick</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleSubmitTask">handleSubmitTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#initializeForm">initializeForm</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#isValidTask">isValidTask</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#preventDrag">preventDrag</a></li><li><a href="global.html#preventEnterKeySubmit">preventEnterKeySubmit</a></li><li><a href="global.html#renderAssigneeList">renderAssigneeList</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderModal">renderModal</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSelectedAssignees">renderSelectedAssignees</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTaskForm">renderTaskForm</a></li><li><a href="global.html#renderTaskPage">renderTaskPage</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnAssigneeInput">returnAssigneeInput</a></li><li><a href="global.html#returnAssigneeTemplate">returnAssigneeTemplate</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnBoardTemplate">returnBoardTemplate</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnFieldValues">returnFieldValues</a></li><li><a href="global.html#returnHeaderTemplate">returnHeaderTemplate</a></li><li><a href="global.html#returnLoginTemplate">returnLoginTemplate</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnRegisterTemplate">returnRegisterTemplate</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubTasksTemplate">returnSubTasksTemplate</a></li><li><a href="global.html#returnSummaryTemplate">returnSummaryTemplate</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskForm">returnTaskForm</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#saveSubtask">saveSubtask</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showDatepicker">showDatepicker</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#subtasks">subtasks</a></li><li><a href="global.html#titleValidation">titleValidation</a></li><li><a href="global.html#toggleAssigneeInList">toggleAssigneeInList</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#updateTask">updateTask</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li><li><a href="global.html#waitForElement">waitForElement</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Feb 03 2025 12:30:18 GMT+0100 (Mitteleuropäische Normalzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Feb 05 2025 14:22:51 GMT+0100 (Mitteleuropäische Normalzeit)
 </footer>
 
 <script> prettyPrint(); </script>

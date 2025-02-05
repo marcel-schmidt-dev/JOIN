@@ -29,9 +29,9 @@
             <pre class="prettyprint source linenums"><code>/**
  * Imports required modules and functions.
  */
-import returnIcon from "../icons.js";
-import { signIn, signInAnonymouslyUser, signUp } from "../firebase.js";
-import { showToast } from "../toast/toast.js";
+import returnIcon from '../icons.js';
+import { signIn, signInAnonymouslyUser, signUp } from '../firebase.js';
+import { showToast } from '../toast/toast.js';
 
 window.anonymouslyLogin = anonymouslyLogin;
 window.renderRegister = renderRegister;
@@ -42,151 +42,40 @@ window.handleRegister = handleRegister;
 /**
  * Initializes the app and sets up the default UI on DOMContentLoaded.
  */
-document.addEventListener("DOMContentLoaded", function () {
-  const contentRef = document.querySelector(".content");
-  contentRef.innerHTML = /*html*/ `
-        &lt;div class="home">
-            ${returnHeader()}
-            &lt;div class="content-container">
-                &lt;div class="form-container">&lt;/div>
-                &lt;div class="btn-container">
-                    &lt;span>Not a Join user?&lt;/span>
-                    &lt;button onclick="renderRegister()">Sign up&lt;/button>
-                &lt;/div>
-                &lt;div class="sublinks">
-                &lt;a href="/privacy-policy.html">Privacy Policy&lt;/a>
-                &lt;a href="/legal-notice.html">Legal notice&lt;/a>
-            &lt;/div>
-            &lt;/div>
-        &lt;/div>
-    `;
+document.addEventListener('DOMContentLoaded', function () {
+  const contentRef = document.querySelector('.content');
+  contentRef.innerHTML = returnHeaderTemplate();
   renderLogin();
 
   setTimeout(() => {
-    document.querySelector(".logo-background").style.display = "none";
+    document.querySelector('.logo-background').style.display = 'none';
   }, 2000);
 });
 
 /**
- * Renders the header section of the page.
- * @returns {string} - The HTML string for the header.
- */
-function returnHeader() {
-  return /*html*/ `
-        &lt;div class="head">
-            &lt;div class="logo-container">
-                &lt;div class="logo">
-                    ${returnIcon("logo-dark")}
-                &lt;/div>
-                &lt;div class="logo-background">&lt;/div>
-            &lt;/div>
-            
-            &lt;div class="btn-container">
-                &lt;span>Not a Join user?&lt;/span>
-                &lt;button onclick="renderRegister()">Sign up&lt;/button>
-            &lt;/div>
-        &lt;/div>
-    `;
-}
-
-/**
  * Renders the login form and optionally displays additional buttons.
- * @param {boolean} [displayBtns] - Whether to display buttons for toggling views.
+ * @param {boolean} [displayButtons] - Whether to display buttons for toggling views.
  */
-function renderLogin(displayBtns) {
-  const formRef = document.querySelector(".form-container");
-  const btnContainerRef = document.querySelectorAll(".btn-container");
+function renderLogin(displayButtons) {
+  const formRef = document.querySelector('.form-container');
+  const btnContainerRef = document.querySelectorAll('.btn-container');
 
-  if (displayBtns) {
-    btnContainerRef.forEach((btn) => (btn.style.display = ""));
+  if (displayButtons) {
+    btnContainerRef.forEach((btn) => (btn.style.display = ''));
   }
 
-  formRef.innerHTML = /*html*/ `
-            &lt;div class="login">
-                &lt;div class="header">
-                    &lt;h1>Log in&lt;hr>&lt;/h1>
-                &lt;/div>
-                &lt;form class="form" onsubmit=handleLogin(event)>
-                    &lt;div class="inputs">
-                        &lt;div class="input-container">
-                            &lt;input type="email" id="email" placeholder="Email" />
-                            &lt;span>
-                                ${returnIcon("mail-outline")}
-                            &lt;/span>
-                        &lt;/div>
-                        &lt;div class="input-container">
-                            &lt;input type="password" id="password" placeholder="Password" />
-                            &lt;span>
-                                ${returnIcon("lock")}
-                            &lt;/span>
-                        &lt;/div>
-                    &lt;/div>
-                    &lt;div class="error-message">Check your email and password. Please try again.&lt;/div>
-                    &lt;div class="remember-me">
-                        &lt;input type="checkbox" id="remember-me" />
-                        &lt;label for="remember-me">Remember me&lt;/label>
-                    &lt;/div>
-                    &lt;div class="button-container">
-                        &lt;button class="btn" type="submit">Log in&lt;/button>
-                        &lt;span class="btn" onclick="anonymouslyLogin()">Guest Log in&lt;/span>
-                    &lt;/div>
-                &lt;/form>
-            &lt;/div>
-    `;
+  formRef.innerHTML = returnLoginTemplate();
 }
 
 /**
  * Renders the registration form and hides toggle buttons.
  */
 function renderRegister() {
-  const formRef = document.querySelector(".form-container");
-  const btnContainerRef = document.querySelectorAll(".btn-container");
-  btnContainerRef.forEach((btn) => (btn.style.display = "none"));
+  const formRef = document.querySelector('.form-container');
+  const btnContainerRef = document.querySelectorAll('.btn-container');
+  btnContainerRef.forEach((btn) => (btn.style.display = 'none'));
 
-  formRef.innerHTML = /*html*/ `
-            &lt;div class="register">
-                &lt;div class="header">
-                    &lt;h1>Sign up&lt;hr>&lt;/h1>
-                    &lt;button onclick="renderLogin(true)">${returnIcon("arrow-left")}&lt;/button>
-                &lt;/div>
-                &lt;form class="form" onsubmit=handleRegister(event)>
-                    &lt;div class="inputs">
-                        &lt;div class="input-container">
-                            &lt;input type="text" id="name" placeholder="Name" />
-                            &lt;span>
-                                ${returnIcon("user-outline")}
-                            &lt;/span>
-                        &lt;/div>
-                        &lt;div class="input-container">
-                            &lt;input type="email" id="email" placeholder="Email" />
-                            &lt;span>
-                                ${returnIcon("mail-outline")}
-                            &lt;/span>
-                        &lt;/div>
-                        &lt;div class="input-container">
-                            &lt;input type="password" id="password" placeholder="Password" />
-                            &lt;span>
-                                ${returnIcon("lock")}
-                            &lt;/span>
-                        &lt;/div>
-                        &lt;div class="input-container">
-                            &lt;input type="password" id="confirm-password" placeholder="Confirm Password" />
-                            &lt;span>
-                                ${returnIcon("lock")}
-                            &lt;/span>
-                        &lt;/div>
-                    &lt;/div>
-                    &lt;div class="error-message">Check your email and password. Please try again.&lt;/div>
-                    &lt;div class="remember-me">
-                        &lt;input type="checkbox" id="check-privacy" />
-                        &lt;label for="check-privacy">I accept the &lt;a href="/privacy-policy.html">Privacy Policy&lt;/a>&lt;/label>
-                    &lt;/div>
-                    &lt;div class="button-container">
-                        &lt;button class="btn" type="submit">Sign up&lt;/button>
-                    &lt;/div>
-                &lt;/form>
-            &lt;/div>
-    `;
+  formRef.innerHTML = returnRegisterTemplate();
 }
 
 /**
@@ -195,14 +84,14 @@ function renderRegister() {
  */
 async function handleLogin(e) {
   e.preventDefault();
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
   const user = await signIn(email, password);
 
-  if (user) window.location.href = "/summary.html";
+  if (user) window.location.href = '/summary.html';
   else {
-    const formRef = document.querySelector(".form");
-    formRef.classList.add("error");
+    const formRef = document.querySelector('.form');
+    formRef.classList.add('error');
   }
 }
 
@@ -212,7 +101,7 @@ async function handleLogin(e) {
 async function anonymouslyLogin() {
   try {
     const user = await signInAnonymouslyUser();
-    if (user) window.location.href = "/summary.html";
+    if (user) window.location.href = '/summary.html';
   } catch (error) {
     throw error;
   }
@@ -224,35 +113,40 @@ async function anonymouslyLogin() {
  */
 async function handleRegister(e) {
   e.preventDefault();
-  const getField = (id) => document.getElementById(id).value;
-  const name = getField("name"),
-    email = getField("email");
-  const password = getField("password"),
-    confirmPassword = getField("confirm-password");
-  const checkPrivacy = document.getElementById("check-privacy").checked;
-  const errorRef = document.querySelector(".form .error-message");
-  errorRef.innerText = "";
+  const { name, email, password, confirmPassword, checkPrivacy } = returnFieldValues();
+  const errorRef = document.querySelector('.form .error-message');
+  errorRef.innerText = '';
 
-  const { errorMessages, returnState } = validateRegister(
-    name,
-    email,
-    password,
-    confirmPassword,
-    checkPrivacy
-  );
+  const { errorMessages, returnState } = validateRegister(name, email, password, confirmPassword, checkPrivacy);
 
   if (!returnState) {
     errorRef.innerHTML = errorMessages;
-    document.querySelector(".form").classList.add("error");
+    document.querySelector('.form').classList.add('error');
     return;
   }
 
-  try {
-    const user = await signUp(name, email, password);
-    if (user) renderLogin(), showToast("You Signed Up successfully");
-  } catch (error) {
-    throw error;
-  }
+  const user = await signUp(name, email, password);
+  if (user) renderLogin(), showToast('You Signed Up successfully');
+}
+
+/**
+ * Retrieves the values of the form fields.
+ * @returns {Object} An object containing the values of the form fields.
+ * @returns {string} name - The value of the name field.
+ * @returns {string} email - The value of the email field.
+ * @returns {string} password - The value of the password field.
+ * @returns {string} confirmPassword - The value of the confirm password field.
+ * @returns {boolean} checkPrivacy - The value of the privacy policy checkbox.
+ */
+function returnFieldValues() {
+  const getField = (id) => document.getElementById(id).value;
+  const name = getField('name');
+  const email = getField('email');
+  const password = getField('password');
+  const confirmPassword = getField('confirm-password');
+  const checkPrivacy = document.getElementById('check-privacy').checked;
+
+  return { name, email, password, confirmPassword, checkPrivacy };
 }
 
 /**
@@ -265,30 +159,140 @@ async function handleRegister(e) {
  * @returns {{ errorMessages: string, returnState: boolean }} - Validation results.
  */
 function validateRegister(name, email, password, confirmPassword, checkPrivacy) {
-  let errorMessages = "",
+  let errorMessages = '',
     returnState = true;
-  if (![name, email, password, confirmPassword].every(Boolean)) {
-    errorMessages += "Fill all fields.&lt;br>";
-    returnState = false;
-  }
-  if (!checkPrivacy) {
-    errorMessages += "Accept the privacy policy.&lt;br>";
-    returnState = false;
-  }
-  if (email &amp;&amp; !/@/.test(email)) {
-    errorMessages += "Enter a valid email.&lt;br>";
-    returnState = false;
-  }
-  if (password.length &lt; 6) {
-    errorMessages += "Password must be at least 6 characters.&lt;br>";
-    returnState = false;
-  }
-  if (password !== confirmPassword) {
-    errorMessages += "Passwords do not match.&lt;br>";
-    returnState = false;
-  }
+
+  if (![name, email, password, confirmPassword].every(Boolean)) (errorMessages += 'Fill all fields.&lt;br>'), (returnState = false);
+  if (!checkPrivacy) (errorMessages += 'Accept the privacy policy.&lt;br>'), (returnState = false);
+  if (email &amp;&amp; !/@/.test(email)) (errorMessages += 'Enter a valid email.&lt;br>'), (returnState = false);
+  if (password.length &lt; 6) (errorMessages += 'Password must be at least 6 characters.&lt;br>'), (returnState = false);
+  if (password !== confirmPassword) (errorMessages += 'Passwords do not match.&lt;br>'), (returnState = false);
 
   return { errorMessages, returnState };
+}
+
+/**
+ * Generates the header template for the home page.
+ * @returns {string} The HTML string for the header template.
+ */
+function returnHeaderTemplate() {
+  return /*html*/ `
+    &lt;div class="home">
+      &lt;div class="head">
+        &lt;div class="logo-container">
+          &lt;div class="logo">
+            ${returnIcon('logo-dark')}
+          &lt;/div>
+        &lt;div class="logo-background">&lt;/div>
+      &lt;/div>
+      &lt;div class="btn-container">
+        &lt;span>Not a Join user?&lt;/span>
+        &lt;button onclick="renderRegister()">Sign up&lt;/button>
+      &lt;/div>
+    &lt;/div>
+    &lt;div class="content-container">
+      &lt;div class="form-container">&lt;/div>
+      &lt;div class="btn-container">
+        &lt;span>Not a Join user?&lt;/span>
+        &lt;button onclick="renderRegister()">Sign up&lt;/button>
+      &lt;/div>
+      &lt;div class="sublinks">
+      &lt;a href="/privacy-policy.html">Privacy Policy&lt;/a>
+        &lt;a href="/legal-notice.html">Legal notice&lt;/a>
+      &lt;/div>
+    &lt;/div>
+  &lt;/div>
+`;
+}
+
+/**
+ * Generates the login template for the login page.
+ * @returns {string} The HTML string for the login template.
+ */
+function returnLoginTemplate() {
+  return /*html*/ `
+    &lt;div class="login">
+        &lt;div class="header">
+            &lt;h1>Log in&lt;hr>&lt;/h1>
+        &lt;/div>
+        &lt;form class="form" onsubmit=handleLogin(event)>
+            &lt;div class="inputs">
+                &lt;div class="input-container">
+                    &lt;input type="email" id="email" placeholder="Email" />
+                    &lt;span>
+                        ${returnIcon('mail-outline')}
+                    &lt;/span>
+                &lt;/div>
+                &lt;div class="input-container">
+                    &lt;input type="password" id="password" placeholder="Password" />
+                    &lt;span>
+                        ${returnIcon('lock')}
+                    &lt;/span>
+                &lt;/div>
+            &lt;/div>
+            &lt;div class="error-message">Check your email and password. Please try again.&lt;/div>
+            &lt;div class="remember-me">
+                &lt;input type="checkbox" id="remember-me" />
+                &lt;label for="remember-me">Remember me&lt;/label>
+            &lt;/div>
+            &lt;div class="button-container">
+                &lt;button class="btn" type="submit">Log in&lt;/button>
+                &lt;span class="btn" onclick="anonymouslyLogin()">Guest Log in&lt;/span>
+            &lt;/div>
+        &lt;/form>
+    &lt;/div>
+`;
+}
+
+/**
+ * Generates the register template for the register page.
+ * @returns {string} The HTML string for the register template.
+ */
+function returnRegisterTemplate() {
+  return /*html*/ `
+    &lt;div class="register">
+      &lt;div class="header">
+        &lt;h1>Sign up&lt;hr>&lt;/h1>
+        &lt;button onclick="renderLogin(true)">${returnIcon('arrow-left')}&lt;/button>
+      &lt;/div>
+      &lt;form class="form" onsubmit=handleRegister(event)>
+        &lt;div class="inputs">
+          &lt;div class="input-container">
+            &lt;input type="text" id="name" placeholder="Name" />
+            &lt;span>
+                ${returnIcon('user-outline')}
+            &lt;/span>
+          &lt;/div>
+          &lt;div class="input-container">
+              &lt;input type="email" id="email" placeholder="Email" />
+              &lt;span>
+                  ${returnIcon('mail-outline')}
+              &lt;/span>
+          &lt;/div>
+          &lt;div class="input-container">
+              &lt;input type="password" id="password" placeholder="Password" />
+              &lt;span>
+                  ${returnIcon('lock')}
+              &lt;/span>
+          &lt;/div>
+          &lt;div class="input-container">
+              &lt;input type="password" id="confirm-password" placeholder="Confirm Password" />
+              &lt;span>
+                  ${returnIcon('lock')}
+              &lt;/span>
+          &lt;/div>
+        &lt;/div>
+        &lt;div class="error-message">Check your email and password. Please try again.&lt;/div>
+        &lt;div class="remember-me">
+            &lt;input type="checkbox" id="check-privacy" />
+            &lt;label for="check-privacy">I accept the &lt;a href="/privacy-policy.html">Privacy Policy&lt;/a>&lt;/label>
+        &lt;/div>
+        &lt;div class="button-container">
+            &lt;button class="btn" type="submit">Sign up&lt;/button>
+        &lt;/div>
+      &lt;/form>
+    &lt;/div>
+    `;
 }
 </code></pre>
         </article>
@@ -300,13 +304,13 @@ function validateRegister(name, email, password, confirmPassword, checkPrivacy) 
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateModal">activateModal</a></li><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#assignedContacts">assignedContacts</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clearPriority">clearPriority</a></li><li><a href="global.html#closeModal">closeModal</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#contactList">contactList</a></li><li><a href="global.html#createRandomTasks">createRandomTasks</a></li><li><a href="global.html#dateValidation">dateValidation</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handlePriorityClick">handlePriorityClick</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleSubmitTask">handleSubmitTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#initializeForm">initializeForm</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#preventEnterKeySubmit">preventEnterKeySubmit</a></li><li><a href="global.html#renderAssigneeList">renderAssigneeList</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderModal">renderModal</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSelectedAssignees">renderSelectedAssignees</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTaskForm">renderTaskForm</a></li><li><a href="global.html#renderTaskPage">renderTaskPage</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnAssigneeInput">returnAssigneeInput</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnHeader">returnHeader</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#saveSubtask">saveSubtask</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showDatepicker">showDatepicker</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#subtasks">subtasks</a></li><li><a href="global.html#titleValidation">titleValidation</a></li><li><a href="global.html#toggleAssigneeInList">toggleAssigneeInList</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li><li><a href="global.html#waitForElement">waitForElement</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateModal">activateModal</a></li><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#assignedContacts">assignedContacts</a></li><li><a href="global.html#categoryValidation">categoryValidation</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clearPriority">clearPriority</a></li><li><a href="global.html#closeModal">closeModal</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#contactList">contactList</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#dateValidation">dateValidation</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#finalizeTask">finalizeTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#getTaskData">getTaskData</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handlePriorityClick">handlePriorityClick</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleSubmitTask">handleSubmitTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#initializeForm">initializeForm</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#isValidTask">isValidTask</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#preventDrag">preventDrag</a></li><li><a href="global.html#preventEnterKeySubmit">preventEnterKeySubmit</a></li><li><a href="global.html#renderAssigneeList">renderAssigneeList</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderModal">renderModal</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSelectedAssignees">renderSelectedAssignees</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTaskForm">renderTaskForm</a></li><li><a href="global.html#renderTaskPage">renderTaskPage</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnAssigneeInput">returnAssigneeInput</a></li><li><a href="global.html#returnAssigneeTemplate">returnAssigneeTemplate</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnBoardTemplate">returnBoardTemplate</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnFieldValues">returnFieldValues</a></li><li><a href="global.html#returnHeaderTemplate">returnHeaderTemplate</a></li><li><a href="global.html#returnLoginTemplate">returnLoginTemplate</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnRegisterTemplate">returnRegisterTemplate</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubTasksTemplate">returnSubTasksTemplate</a></li><li><a href="global.html#returnSummaryTemplate">returnSummaryTemplate</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskForm">returnTaskForm</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#saveSubtask">saveSubtask</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showDatepicker">showDatepicker</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#subtasks">subtasks</a></li><li><a href="global.html#titleValidation">titleValidation</a></li><li><a href="global.html#toggleAssigneeInList">toggleAssigneeInList</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#updateTask">updateTask</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li><li><a href="global.html#waitForElement">waitForElement</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Feb 03 2025 12:30:18 GMT+0100 (Mitteleuropäische Normalzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Feb 05 2025 14:22:51 GMT+0100 (Mitteleuropäische Normalzeit)
 </footer>
 
 <script> prettyPrint(); </script>
