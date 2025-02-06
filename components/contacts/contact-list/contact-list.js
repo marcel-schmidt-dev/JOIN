@@ -10,9 +10,7 @@ export default function returnContactListTemplate(contactList) {
   return /*html*/ `
         <div class="contact-list">
             <div class="button-container">
-                <button onclick="handleContactOverlayTemplate()"><span>Add new contact</span> ${returnIcon(
-                  "add-user"
-                )}</button>
+                <button onclick="handleContactOverlayTemplate()"><span>Add new contact</span> ${returnIcon("add-user")}</button>
             </div>
             <div class="list-content">
                 ${returnContactList(contactList)}
@@ -45,9 +43,7 @@ function returnContactList(contactList) {
       htmlList += `<div class="letter">${currentLetter}</div><hr>`;
     }
     htmlList += /*html*/ `
-            <div class="contact" onclick="showContactDetails('${contact.id}')" data-id="${
-      contact.id
-    }">
+            <div class="contact" onclick="showContactDetails('${contact.id}')" data-id="${contact.id}">
                 <div class="initials-bubble" style="background-color: ${"#" + contact.userColor}">
                     ${getInitialsFromName(contact.fullName)}
                 </div>

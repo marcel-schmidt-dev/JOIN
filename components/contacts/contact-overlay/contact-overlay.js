@@ -85,11 +85,11 @@ export default function getContactOverlayTemplate(contactInfos) {
 }
 
 /**
- * Validates the form fields for adding/editing a contact.
- * @param {string} fullName - The full name of the contact.
- * @param {string} email - The email address of the contact.
- * @param {string} phone - The phone number of the contact.
- * @returns {boolean} True if the form is valid, otherwise false.
+ * Validates the form input fields.
+ * @param {string} fullName - The full name input.
+ * @param {string} email - The email input.
+ * @param {string} phone - The phone number input.
+ * @returns {boolean} True if all fields are valid, otherwise false.
  */
 function validateForm(fullName, email, phone) {
   const formValidations = [
@@ -97,19 +97,26 @@ function validateForm(fullName, email, phone) {
     { value: email, regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, element: "email" },
     { value: phone, regex: /^(\+49[1-9][0-9]{8,11}|0[1-9][0-9]{8,11})$/, minLength: 10, element: "phone" },
   ];
+
   for (let { value, regex, minLength, element } of formValidations) {
     const request = document.getElementById(`${element}-requested`);
     const input = document.getElementById(`input-container-${element}`);
-    if (!regex.test(value) || (minLength && value.length < minLength)) {
-      request.style.display = "block";
-      input.style.borderColor = "red";
-      return false;
-    } else {
-      request.style.display = "none";
-      input.style.borderColor = "#d1d1d1";
-    }
+    const isValid = regex.test(value) && (!minLength || value.length >= minLength);
+    updateValidationUI(request, input, isValid);
+    if (!isValid) return false;
   }
   return true;
+}
+
+/**
+ * Updates the UI based on validation results.
+ * @param {HTMLElement} request - The request message element.
+ * @param {HTMLElement} input - The input container element.
+ * @param {boolean} isValid - Whether the input is valid.
+ */
+function updateValidationUI(request, input, isValid) {
+  request.style.display = isValid ? "none" : "block";
+  input.style.borderColor = isValid ? "#d1d1d1" : "red";
 }
 
 /**

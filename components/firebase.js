@@ -1,7 +1,15 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js';
-import { getDatabase, ref, get, push, remove, set } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js';
-import { returnRandomUserColor, returnRandomContact } from './utility-functions.js';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, createUserWithEmailAndPassword, updateProfile, signOut } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+import { getDatabase, ref, get, push, remove, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+import { returnRandomUserColor, returnRandomContact } from "./utility-functions.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInAnonymously,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
 /**
  * Initializes and returns the Firebase app, database, and authentication instance.
@@ -9,19 +17,17 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymou
  */
 function getFirebase() {
   const firebaseConfig = {
-    apiKey: 'AIzaSyBDHRtmOAgzYOtLRS0haC7KvV_AQO-HodA',
-    authDomain: 'join-d177e.firebaseapp.com',
-    databaseURL: 'https://join-d177e-default-rtdb.europe-west1.firebasedatabase.app',
-    projectId: 'join-d177e',
-    storageBucket: 'join-d177e.appspot.com',
-    messagingSenderId: '224091284746',
-    appId: '1:224091284746:web:22cd033dcc6f13c23146f3',
+    apiKey: "AIzaSyBDHRtmOAgzYOtLRS0haC7KvV_AQO-HodA",
+    authDomain: "join-d177e.firebaseapp.com",
+    databaseURL: "https://join-d177e-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "join-d177e",
+    storageBucket: "join-d177e.appspot.com",
+    messagingSenderId: "224091284746",
+    appId: "1:224091284746:web:22cd033dcc6f13c23146f3",
   };
-
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
   const auth = getAuth(app);
-
   return { database, auth };
 }
 
@@ -30,28 +36,50 @@ function getFirebase() {
  * If there are fewer than 20 contacts, it generates and adds dummy contacts.
  * @returns {Promise<Array>} A promise that resolves to an array of contacts.
  */
+/**
+ * Retrieves the contact list from the Firebase database.
+ * If there are fewer than 20 contacts, it fills the list with random contacts.
+ * @returns {Promise<Array>} A promise that resolves to an array of contacts.
+ */
 export async function getContacts() {
+  const contacts = await fetchContacts();
+  return contacts.length < 20 ? fillContacts(contacts) : contacts;
+}
+
+/**
+ * Fetches contacts from the Firebase database.
+ * @returns {Promise<Array>} A promise that resolves to an array of contacts.
+ */
+async function fetchContacts() {
   const { database } = getFirebase();
-  const contactsRef = ref(database, 'contacts');
+  const snapshot = await get(ref(database, "contacts"));
+  return snapshot.exists() ? snapshotToArray(snapshot) : [];
+}
 
-  return get(contactsRef).then((snapshot) => {
-    const contacts = [];
-    const minLen = 20;
-    if (snapshot.size < minLen) {
-      for (let index = snapshot.size; index < minLen; index++) {
-        const contact = returnRandomContact();
-        addContact(contact[0], contact[1], contact[2]);
-      }
-    }
-
-    snapshot.forEach((childSnapshot) => {
-      const contact = childSnapshot.val();
-      contact.id = childSnapshot.key;
-      contacts.push(contact);
-    });
-
-    return contacts;
+/**
+ * Converts a Firebase snapshot into an array of contact objects.
+ * @param {Object} snapshot - The Firebase snapshot containing contact data.
+ * @returns {Array} An array of contact objects.
+ */
+function snapshotToArray(snapshot) {
+  const contacts = [];
+  snapshot.forEach((childSnapshot) => {
+    contacts.push({ id: childSnapshot.key, ...childSnapshot.val() });
   });
+  return contacts;
+}
+
+/**
+ * Fills the contact list with randomly generated contacts until it reaches 20 entries.
+ * @param {Array} contacts - The current list of contacts.
+ * @returns {Array} The updated list of contacts.
+ */
+function fillContacts(contacts) {
+  while (contacts.length < 20) {
+    const contact = returnRandomContact();
+    addContact(contact[0], contact[1], contact[2]);
+  }
+  return contacts;
 }
 
 /**
@@ -83,7 +111,7 @@ export function addContact(fullName, email, phone) {
   };
 
   const { database } = getFirebase();
-  const contactsRef = ref(database, 'contacts');
+  const contactsRef = ref(database, "contacts");
 
   const newContactRef = push(contactsRef, userObject);
   return newContactRef.key;
@@ -96,12 +124,11 @@ export function addContact(fullName, email, phone) {
 export async function deleteContact(id) {
   const { database } = getFirebase();
   const contactsRef = ref(database, `contacts/${id}`);
-  const boardSnap = await get(ref(database, 'board/'));
-
+  const boardSnap = await get(ref(database, "board/"));
   boardSnap.forEach((slot) => {
     slot.forEach((task) => {
       const taskRef = task.val();
-      if (taskRef.assignee.includes(id)) {
+      if (Array.isArray(taskRef.assignee) && taskRef.assignee.includes(id)) {
         taskRef.assignee = taskRef.assignee.filter((assignee) => assignee !== id);
         set(ref(database, `board/${slot.key}/${task.key}`), taskRef);
       }
@@ -126,35 +153,50 @@ export function editContact(id, name, email, phone, userColor) {
     phone: phone,
     userColor: userColor,
   }).catch((error) => {
-    console.error('Error updating contact:', error);
+    console.error("Error updating contact:", error);
   });
 }
 
 /**
- * Retrieves the entire task board or a specific slot of tasks.
- * @param {string} [slot] - The specific slot to retrieve (e.g., "todo", "done").
- * @returns {Promise<Object>} A promise that resolves to an object representing the board or a specific slot.
+ * Fetches the board data from the Firebase database.
+ *
+ * @returns {Promise<Object>} The board object from the database.
+ */
+async function fetchBoardData() {
+  const { database } = getFirebase();
+  const snapshot = await get(ref(database, "board/"));
+  return snapshot.val();
+}
+
+/**
+ * Processes the board data by adding an ID to each task.
+ *
+ * @param {Object} board - The board object to be processed.
+ * @returns {Object} The processed board object with tasks that have an ID.
+ */
+function processBoardData(board) {
+  for (let slot in board) {
+    board[slot] = Object.entries(board[slot]).map(([key, task]) => {
+      task.id = key;
+      return task;
+    });
+  }
+  return board;
+}
+
+/**
+ * Returns the entire board or a specific slot from the board.
+ *
+ * @param {string} [slot] - The specific slot to fetch from the board.
+ * @returns {Promise<Object>} The board or the specific slot data.
  */
 export async function returnBoard(slot) {
-  const { database } = getFirebase();
-
   try {
-    const snapshot = await get(ref(database, 'board/'));
-    const board = snapshot.val();
-
-    if (snapshot) {
-      for (let slot in board) {
-        board[slot] = Object.entries(board[slot]).map(([key, task]) => {
-          task.id = key;
-          return task;
-        });
-      }
+    const board = await fetchBoardData();
+    if (board) {
+      const processedBoard = processBoardData(board);
+      return slot === undefined ? processedBoard : processedBoard[slot];
     }
-
-    if (slot === undefined) {
-      return board;
-    }
-    return board[slot];
   } catch (error) {
     console.error(error);
   }
@@ -168,10 +210,8 @@ export async function returnBoard(slot) {
 export async function returnTaskById(id) {
   const { database } = getFirebase();
   const boardRef = ref(database, `board/`);
-
   const boardSnapshot = await get(boardRef);
   const board = boardSnapshot.val();
-
   for (const slot in board) {
     if (board[slot] && board[slot][id]) {
       let task = board[slot][id];
@@ -179,7 +219,6 @@ export async function returnTaskById(id) {
       return board[slot][id];
     }
   }
-
   return null;
 }
 
@@ -215,7 +254,7 @@ export async function returnSubTasks(id, slot) {
  * @param {Array<string>} subTasks - An array of sub-task titles.
  * @param {Array<string>} assignee - An array of user IDs assigned to the task.
  */
-export function addTask(slot = 'todo', title, description, type, priority, dueDate, subTasks, assignee) {
+export function addTask(slot = "todo", title, description, type, priority, dueDate, subTasks, assignee) {
   const { database } = getFirebase();
   const taskRef = ref(database, `board/${slot}`);
 
@@ -276,49 +315,46 @@ export function editTask(slot, id, title, description, type, priority, dueDate, 
  */
 export async function moveTaskToSlot(newSlot, id) {
   try {
-    newSlot = newSlot.replace('-tasks', '');
-
+    const cleanSlot = sanitizeSlotName(newSlot);
     const { database } = getFirebase();
-    let taskRef = null;
-    let taskData = null;
-    let currentSlot = null;
+    const board = await fetchBoard(database);
 
-    const boardRef = ref(database, 'board/');
+    const { taskRef, taskData, currentSlot } = await findTask(board, id, database);
+    if (!taskData || currentSlot === cleanSlot) return;
 
-    const boardSnapshot = await get(boardRef);
-    const board = boardSnapshot.val();
-
-    for (const slot in board) {
-      if (board[slot] && board[slot][id]) {
-        currentSlot = slot;
-        taskRef = ref(database, `board/${slot}/${id}`);
-        const taskSnapshot = await get(taskRef);
-
-        if (taskSnapshot.exists()) {
-          taskData = taskSnapshot.val();
-          break;
-        }
-      }
-    }
-
-    if (!taskData) {
-      return;
-    }
-
-    if (currentSlot === newSlot) {
-      return;
-    }
-
-    const newTaskRef = ref(database, `board/${newSlot}/${id}`);
-    if (!newTaskRef) {
-      return;
-    }
-
-    await set(newTaskRef, taskData);
-    await remove(taskRef);
+    await transferTask(database, cleanSlot, id, taskRef, taskData);
   } catch (error) {
     throw error;
   }
+}
+
+function sanitizeSlotName(slot) {
+  return slot.replace("-tasks", "");
+}
+
+async function fetchBoard(database) {
+  const boardRef = ref(database, "board/");
+  const boardSnapshot = await get(boardRef);
+  return boardSnapshot.val();
+}
+
+async function findTask(board, id, database) {
+  for (const slot in board) {
+    if (board[slot]?.[id]) {
+      const taskRef = ref(database, `board/${slot}/${id}`);
+      const taskSnapshot = await get(taskRef);
+      if (taskSnapshot.exists()) {
+        return { taskRef, taskData: taskSnapshot.val(), currentSlot: slot };
+      }
+    }
+  }
+  return { taskRef: null, taskData: null, currentSlot: null };
+}
+
+async function transferTask(database, newSlot, id, oldTaskRef, taskData) {
+  const newTaskRef = ref(database, `board/${newSlot}/${id}`);
+  await set(newTaskRef, taskData);
+  await remove(oldTaskRef);
 }
 
 /**
@@ -338,7 +374,7 @@ export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked, ti
   try {
     await set(subTaskRef, { checked: isChecked, title: title });
   } catch (error) {
-    console.error('Error updating subtask status:', error);
+    console.error("Error updating subtask status:", error);
     throw error;
   }
 }
@@ -374,7 +410,7 @@ export async function getAuthUser() {
 export async function checkAuth() {
   const user = await getAuthUser();
   if (!user) {
-    window.location.href = '/index.html';
+    window.location.href = "/index.html";
   }
 }
 
@@ -407,9 +443,9 @@ export async function signOutUser() {
   const { auth } = getFirebase();
   try {
     await signOut(auth);
-    window.location.href = '/';
+    window.location.href = "/";
   } catch (error) {
-    console.error('Error signing out:', error);
+    console.error("Error signing out:", error);
     throw error;
   }
 }
@@ -424,7 +460,7 @@ export async function signInAnonymouslyUser() {
   const { auth } = getFirebase();
   try {
     const userCredential = await signInAnonymously(auth);
-    userCredential.user.displayName = 'Guest';
+    userCredential.user.displayName = "Guest";
 
     return userCredential.user;
   } catch (error) {

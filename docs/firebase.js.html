@@ -26,10 +26,18 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js';
-import { getDatabase, ref, get, push, remove, set } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js';
-import { returnRandomUserColor, returnRandomContact } from './utility-functions.js';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, createUserWithEmailAndPassword, updateProfile, signOut } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js';
+            <pre class="prettyprint source linenums"><code>import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+import { getDatabase, ref, get, push, remove, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+import { returnRandomUserColor, returnRandomContact } from "./utility-functions.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInAnonymously,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
 /**
  * Initializes and returns the Firebase app, database, and authentication instance.
@@ -37,19 +45,17 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymou
  */
 function getFirebase() {
   const firebaseConfig = {
-    apiKey: 'AIzaSyBDHRtmOAgzYOtLRS0haC7KvV_AQO-HodA',
-    authDomain: 'join-d177e.firebaseapp.com',
-    databaseURL: 'https://join-d177e-default-rtdb.europe-west1.firebasedatabase.app',
-    projectId: 'join-d177e',
-    storageBucket: 'join-d177e.appspot.com',
-    messagingSenderId: '224091284746',
-    appId: '1:224091284746:web:22cd033dcc6f13c23146f3',
+    apiKey: "AIzaSyBDHRtmOAgzYOtLRS0haC7KvV_AQO-HodA",
+    authDomain: "join-d177e.firebaseapp.com",
+    databaseURL: "https://join-d177e-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "join-d177e",
+    storageBucket: "join-d177e.appspot.com",
+    messagingSenderId: "224091284746",
+    appId: "1:224091284746:web:22cd033dcc6f13c23146f3",
   };
-
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
   const auth = getAuth(app);
-
   return { database, auth };
 }
 
@@ -58,28 +64,50 @@ function getFirebase() {
  * If there are fewer than 20 contacts, it generates and adds dummy contacts.
  * @returns {Promise&lt;Array>} A promise that resolves to an array of contacts.
  */
+/**
+ * Retrieves the contact list from the Firebase database.
+ * If there are fewer than 20 contacts, it fills the list with random contacts.
+ * @returns {Promise&lt;Array>} A promise that resolves to an array of contacts.
+ */
 export async function getContacts() {
+  const contacts = await fetchContacts();
+  return contacts.length &lt; 20 ? fillContacts(contacts) : contacts;
+}
+
+/**
+ * Fetches contacts from the Firebase database.
+ * @returns {Promise&lt;Array>} A promise that resolves to an array of contacts.
+ */
+async function fetchContacts() {
   const { database } = getFirebase();
-  const contactsRef = ref(database, 'contacts');
+  const snapshot = await get(ref(database, "contacts"));
+  return snapshot.exists() ? snapshotToArray(snapshot) : [];
+}
 
-  return get(contactsRef).then((snapshot) => {
-    const contacts = [];
-    const minLen = 20;
-    if (snapshot.size &lt; minLen) {
-      for (let index = snapshot.size; index &lt; minLen; index++) {
-        const contact = returnRandomContact();
-        addContact(contact[0], contact[1], contact[2]);
-      }
-    }
-
-    snapshot.forEach((childSnapshot) => {
-      const contact = childSnapshot.val();
-      contact.id = childSnapshot.key;
-      contacts.push(contact);
-    });
-
-    return contacts;
+/**
+ * Converts a Firebase snapshot into an array of contact objects.
+ * @param {Object} snapshot - The Firebase snapshot containing contact data.
+ * @returns {Array} An array of contact objects.
+ */
+function snapshotToArray(snapshot) {
+  const contacts = [];
+  snapshot.forEach((childSnapshot) => {
+    contacts.push({ id: childSnapshot.key, ...childSnapshot.val() });
   });
+  return contacts;
+}
+
+/**
+ * Fills the contact list with randomly generated contacts until it reaches 20 entries.
+ * @param {Array} contacts - The current list of contacts.
+ * @returns {Array} The updated list of contacts.
+ */
+function fillContacts(contacts) {
+  while (contacts.length &lt; 20) {
+    const contact = returnRandomContact();
+    addContact(contact[0], contact[1], contact[2]);
+  }
+  return contacts;
 }
 
 /**
@@ -111,7 +139,7 @@ export function addContact(fullName, email, phone) {
   };
 
   const { database } = getFirebase();
-  const contactsRef = ref(database, 'contacts');
+  const contactsRef = ref(database, "contacts");
 
   const newContactRef = push(contactsRef, userObject);
   return newContactRef.key;
@@ -124,12 +152,11 @@ export function addContact(fullName, email, phone) {
 export async function deleteContact(id) {
   const { database } = getFirebase();
   const contactsRef = ref(database, `contacts/${id}`);
-  const boardSnap = await get(ref(database, 'board/'));
-
+  const boardSnap = await get(ref(database, "board/"));
   boardSnap.forEach((slot) => {
     slot.forEach((task) => {
       const taskRef = task.val();
-      if (taskRef.assignee.includes(id)) {
+      if (Array.isArray(taskRef.assignee) &amp;&amp; taskRef.assignee.includes(id)) {
         taskRef.assignee = taskRef.assignee.filter((assignee) => assignee !== id);
         set(ref(database, `board/${slot.key}/${task.key}`), taskRef);
       }
@@ -154,35 +181,50 @@ export function editContact(id, name, email, phone, userColor) {
     phone: phone,
     userColor: userColor,
   }).catch((error) => {
-    console.error('Error updating contact:', error);
+    console.error("Error updating contact:", error);
   });
 }
 
 /**
- * Retrieves the entire task board or a specific slot of tasks.
- * @param {string} [slot] - The specific slot to retrieve (e.g., "todo", "done").
- * @returns {Promise&lt;Object>} A promise that resolves to an object representing the board or a specific slot.
+ * Fetches the board data from the Firebase database.
+ *
+ * @returns {Promise&lt;Object>} The board object from the database.
+ */
+async function fetchBoardData() {
+  const { database } = getFirebase();
+  const snapshot = await get(ref(database, "board/"));
+  return snapshot.val();
+}
+
+/**
+ * Processes the board data by adding an ID to each task.
+ *
+ * @param {Object} board - The board object to be processed.
+ * @returns {Object} The processed board object with tasks that have an ID.
+ */
+function processBoardData(board) {
+  for (let slot in board) {
+    board[slot] = Object.entries(board[slot]).map(([key, task]) => {
+      task.id = key;
+      return task;
+    });
+  }
+  return board;
+}
+
+/**
+ * Returns the entire board or a specific slot from the board.
+ *
+ * @param {string} [slot] - The specific slot to fetch from the board.
+ * @returns {Promise&lt;Object>} The board or the specific slot data.
  */
 export async function returnBoard(slot) {
-  const { database } = getFirebase();
-
   try {
-    const snapshot = await get(ref(database, 'board/'));
-    const board = snapshot.val();
-
-    if (snapshot) {
-      for (let slot in board) {
-        board[slot] = Object.entries(board[slot]).map(([key, task]) => {
-          task.id = key;
-          return task;
-        });
-      }
+    const board = await fetchBoardData();
+    if (board) {
+      const processedBoard = processBoardData(board);
+      return slot === undefined ? processedBoard : processedBoard[slot];
     }
-
-    if (slot === undefined) {
-      return board;
-    }
-    return board[slot];
   } catch (error) {
     console.error(error);
   }
@@ -196,10 +238,8 @@ export async function returnBoard(slot) {
 export async function returnTaskById(id) {
   const { database } = getFirebase();
   const boardRef = ref(database, `board/`);
-
   const boardSnapshot = await get(boardRef);
   const board = boardSnapshot.val();
-
   for (const slot in board) {
     if (board[slot] &amp;&amp; board[slot][id]) {
       let task = board[slot][id];
@@ -207,7 +247,6 @@ export async function returnTaskById(id) {
       return board[slot][id];
     }
   }
-
   return null;
 }
 
@@ -243,7 +282,7 @@ export async function returnSubTasks(id, slot) {
  * @param {Array&lt;string>} subTasks - An array of sub-task titles.
  * @param {Array&lt;string>} assignee - An array of user IDs assigned to the task.
  */
-export function addTask(slot = 'todo', title, description, type, priority, dueDate, subTasks, assignee) {
+export function addTask(slot = "todo", title, description, type, priority, dueDate, subTasks, assignee) {
   const { database } = getFirebase();
   const taskRef = ref(database, `board/${slot}`);
 
@@ -304,49 +343,46 @@ export function editTask(slot, id, title, description, type, priority, dueDate, 
  */
 export async function moveTaskToSlot(newSlot, id) {
   try {
-    newSlot = newSlot.replace('-tasks', '');
-
+    const cleanSlot = sanitizeSlotName(newSlot);
     const { database } = getFirebase();
-    let taskRef = null;
-    let taskData = null;
-    let currentSlot = null;
+    const board = await fetchBoard(database);
 
-    const boardRef = ref(database, 'board/');
+    const { taskRef, taskData, currentSlot } = await findTask(board, id, database);
+    if (!taskData || currentSlot === cleanSlot) return;
 
-    const boardSnapshot = await get(boardRef);
-    const board = boardSnapshot.val();
-
-    for (const slot in board) {
-      if (board[slot] &amp;&amp; board[slot][id]) {
-        currentSlot = slot;
-        taskRef = ref(database, `board/${slot}/${id}`);
-        const taskSnapshot = await get(taskRef);
-
-        if (taskSnapshot.exists()) {
-          taskData = taskSnapshot.val();
-          break;
-        }
-      }
-    }
-
-    if (!taskData) {
-      return;
-    }
-
-    if (currentSlot === newSlot) {
-      return;
-    }
-
-    const newTaskRef = ref(database, `board/${newSlot}/${id}`);
-    if (!newTaskRef) {
-      return;
-    }
-
-    await set(newTaskRef, taskData);
-    await remove(taskRef);
+    await transferTask(database, cleanSlot, id, taskRef, taskData);
   } catch (error) {
     throw error;
   }
+}
+
+function sanitizeSlotName(slot) {
+  return slot.replace("-tasks", "");
+}
+
+async function fetchBoard(database) {
+  const boardRef = ref(database, "board/");
+  const boardSnapshot = await get(boardRef);
+  return boardSnapshot.val();
+}
+
+async function findTask(board, id, database) {
+  for (const slot in board) {
+    if (board[slot]?.[id]) {
+      const taskRef = ref(database, `board/${slot}/${id}`);
+      const taskSnapshot = await get(taskRef);
+      if (taskSnapshot.exists()) {
+        return { taskRef, taskData: taskSnapshot.val(), currentSlot: slot };
+      }
+    }
+  }
+  return { taskRef: null, taskData: null, currentSlot: null };
+}
+
+async function transferTask(database, newSlot, id, oldTaskRef, taskData) {
+  const newTaskRef = ref(database, `board/${newSlot}/${id}`);
+  await set(newTaskRef, taskData);
+  await remove(oldTaskRef);
 }
 
 /**
@@ -366,7 +402,7 @@ export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked, ti
   try {
     await set(subTaskRef, { checked: isChecked, title: title });
   } catch (error) {
-    console.error('Error updating subtask status:', error);
+    console.error("Error updating subtask status:", error);
     throw error;
   }
 }
@@ -402,7 +438,7 @@ export async function getAuthUser() {
 export async function checkAuth() {
   const user = await getAuthUser();
   if (!user) {
-    window.location.href = '/index.html';
+    window.location.href = "/index.html";
   }
 }
 
@@ -435,9 +471,9 @@ export async function signOutUser() {
   const { auth } = getFirebase();
   try {
     await signOut(auth);
-    window.location.href = '/';
+    window.location.href = "/";
   } catch (error) {
-    console.error('Error signing out:', error);
+    console.error("Error signing out:", error);
     throw error;
   }
 }
@@ -452,7 +488,7 @@ export async function signInAnonymouslyUser() {
   const { auth } = getFirebase();
   try {
     const userCredential = await signInAnonymously(auth);
-    userCredential.user.displayName = 'Guest';
+    userCredential.user.displayName = "Guest";
 
     return userCredential.user;
   } catch (error) {
@@ -492,13 +528,13 @@ export async function signUp(fullName, email, password) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateModal">activateModal</a></li><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#assignedContacts">assignedContacts</a></li><li><a href="global.html#categoryValidation">categoryValidation</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clearPriority">clearPriority</a></li><li><a href="global.html#closeModal">closeModal</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#contactList">contactList</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#dateValidation">dateValidation</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#finalizeTask">finalizeTask</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#getTaskData">getTaskData</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handlePriorityClick">handlePriorityClick</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleSubmitTask">handleSubmitTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#initializeForm">initializeForm</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#isValidTask">isValidTask</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#preventDrag">preventDrag</a></li><li><a href="global.html#preventEnterKeySubmit">preventEnterKeySubmit</a></li><li><a href="global.html#renderAssigneeList">renderAssigneeList</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderModal">renderModal</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSelectedAssignees">renderSelectedAssignees</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTaskForm">renderTaskForm</a></li><li><a href="global.html#renderTaskPage">renderTaskPage</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnAssigneeInput">returnAssigneeInput</a></li><li><a href="global.html#returnAssigneeTemplate">returnAssigneeTemplate</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnBoardTemplate">returnBoardTemplate</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnFieldValues">returnFieldValues</a></li><li><a href="global.html#returnHeaderTemplate">returnHeaderTemplate</a></li><li><a href="global.html#returnLoginTemplate">returnLoginTemplate</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnRegisterTemplate">returnRegisterTemplate</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubTasksTemplate">returnSubTasksTemplate</a></li><li><a href="global.html#returnSummaryTemplate">returnSummaryTemplate</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskForm">returnTaskForm</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#saveSubtask">saveSubtask</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showDatepicker">showDatepicker</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#subtasks">subtasks</a></li><li><a href="global.html#titleValidation">titleValidation</a></li><li><a href="global.html#toggleAssigneeInList">toggleAssigneeInList</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#updateTask">updateTask</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li><li><a href="global.html#waitForElement">waitForElement</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateModal">activateModal</a></li><li><a href="global.html#addActionEventListeners">addActionEventListeners</a></li><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#assignedContacts">assignedContacts</a></li><li><a href="global.html#categoryValidation">categoryValidation</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clearPriority">clearPriority</a></li><li><a href="global.html#closeModal">closeModal</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#contactList">contactList</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#dateValidation">dateValidation</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#disableDragAndDrop">disableDragAndDrop</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#enableDragAndDrop">enableDragAndDrop</a></li><li><a href="global.html#fetchBoardData">fetchBoardData</a></li><li><a href="global.html#fetchContacts">fetchContacts</a></li><li><a href="global.html#fillContacts">fillContacts</a></li><li><a href="global.html#finalizeTask">finalizeTask</a></li><li><a href="global.html#generateContactsList">generateContactsList</a></li><li><a href="global.html#getAssignees">getAssignees</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFilterValue">getFilterValue</a></li><li><a href="global.html#getFilteredContacts">getFilteredContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#getTaskData">getTaskData</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handlePriorityClick">handlePriorityClick</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleSubmitTask">handleSubmitTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#initializeForm">initializeForm</a></li><li><a href="global.html#isAssigned">isAssigned</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#isValidTask">isValidTask</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#preventDrag">preventDrag</a></li><li><a href="global.html#preventEnterKeySubmit">preventEnterKeySubmit</a></li><li><a href="global.html#processBoardData">processBoardData</a></li><li><a href="global.html#renderAssigneeList">renderAssigneeList</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderModal">renderModal</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSelectedAssignees">renderSelectedAssignees</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTaskForm">renderTaskForm</a></li><li><a href="global.html#renderTaskPage">renderTaskPage</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnAssigneeInput">returnAssigneeInput</a></li><li><a href="global.html#returnAssigneeTemplate">returnAssigneeTemplate</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnBoardTemplate">returnBoardTemplate</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnFieldValues">returnFieldValues</a></li><li><a href="global.html#returnHeaderTemplate">returnHeaderTemplate</a></li><li><a href="global.html#returnLoginTemplate">returnLoginTemplate</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnRegisterTemplate">returnRegisterTemplate</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubTasksTemplate">returnSubTasksTemplate</a></li><li><a href="global.html#returnSummaryTemplate">returnSummaryTemplate</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskForm">returnTaskForm</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#saveSubtask">saveSubtask</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showDatepicker">showDatepicker</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#snapshotToArray">snapshotToArray</a></li><li><a href="global.html#subtasks">subtasks</a></li><li><a href="global.html#titleValidation">titleValidation</a></li><li><a href="global.html#toggleAssigneeInList">toggleAssigneeInList</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateDropdown">updateDropdown</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#updateTask">updateTask</a></li><li><a href="global.html#updateValidationUI">updateValidationUI</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li><li><a href="global.html#waitForElement">waitForElement</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Feb 05 2025 14:22:51 GMT+0100 (Mitteleuropäische Normalzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Feb 06 2025 09:24:08 GMT+0100 (Mitteleuropäische Normalzeit)
 </footer>
 
 <script> prettyPrint(); </script>

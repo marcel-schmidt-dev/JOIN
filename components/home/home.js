@@ -1,9 +1,9 @@
 /**
  * Imports required modules and functions.
  */
-import returnIcon from '../icons.js';
-import { signIn, signInAnonymouslyUser, signUp } from '../firebase.js';
-import { showToast } from '../toast/toast.js';
+import returnIcon from "../icons.js";
+import { signIn, signInAnonymouslyUser, signUp } from "../firebase.js";
+import { showToast } from "../toast/toast.js";
 
 window.anonymouslyLogin = anonymouslyLogin;
 window.renderRegister = renderRegister;
@@ -14,13 +14,13 @@ window.handleRegister = handleRegister;
 /**
  * Initializes the app and sets up the default UI on DOMContentLoaded.
  */
-document.addEventListener('DOMContentLoaded', function () {
-  const contentRef = document.querySelector('.content');
+document.addEventListener("DOMContentLoaded", function () {
+  const contentRef = document.querySelector(".content");
   contentRef.innerHTML = returnHeaderTemplate();
   renderLogin();
 
   setTimeout(() => {
-    document.querySelector('.logo-background').style.display = 'none';
+    document.querySelector(".logo-background").style.display = "none";
   }, 2000);
 });
 
@@ -29,11 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
  * @param {boolean} [displayButtons] - Whether to display buttons for toggling views.
  */
 function renderLogin(displayButtons) {
-  const formRef = document.querySelector('.form-container');
-  const btnContainerRef = document.querySelectorAll('.btn-container');
+  const formRef = document.querySelector(".form-container");
+  const btnContainerRef = document.querySelectorAll(".btn-container");
 
   if (displayButtons) {
-    btnContainerRef.forEach((btn) => (btn.style.display = ''));
+    btnContainerRef.forEach((btn) => (btn.style.display = ""));
   }
 
   formRef.innerHTML = returnLoginTemplate();
@@ -43,9 +43,9 @@ function renderLogin(displayButtons) {
  * Renders the registration form and hides toggle buttons.
  */
 function renderRegister() {
-  const formRef = document.querySelector('.form-container');
-  const btnContainerRef = document.querySelectorAll('.btn-container');
-  btnContainerRef.forEach((btn) => (btn.style.display = 'none'));
+  const formRef = document.querySelector(".form-container");
+  const btnContainerRef = document.querySelectorAll(".btn-container");
+  btnContainerRef.forEach((btn) => (btn.style.display = "none"));
 
   formRef.innerHTML = returnRegisterTemplate();
 }
@@ -56,14 +56,14 @@ function renderRegister() {
  */
 async function handleLogin(e) {
   e.preventDefault();
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
   const user = await signIn(email, password);
 
-  if (user) window.location.href = '/summary.html';
+  if (user) window.location.href = "/summary.html";
   else {
-    const formRef = document.querySelector('.form');
-    formRef.classList.add('error');
+    const formRef = document.querySelector(".form");
+    formRef.classList.add("error");
   }
 }
 
@@ -73,7 +73,7 @@ async function handleLogin(e) {
 async function anonymouslyLogin() {
   try {
     const user = await signInAnonymouslyUser();
-    if (user) window.location.href = '/summary.html';
+    if (user) window.location.href = "/summary.html";
   } catch (error) {
     throw error;
   }
@@ -86,19 +86,16 @@ async function anonymouslyLogin() {
 async function handleRegister(e) {
   e.preventDefault();
   const { name, email, password, confirmPassword, checkPrivacy } = returnFieldValues();
-  const errorRef = document.querySelector('.form .error-message');
-  errorRef.innerText = '';
-
+  const errorRef = document.querySelector(".form .error-message");
+  errorRef.innerText = "";
   const { errorMessages, returnState } = validateRegister(name, email, password, confirmPassword, checkPrivacy);
-
   if (!returnState) {
     errorRef.innerHTML = errorMessages;
-    document.querySelector('.form').classList.add('error');
+    document.querySelector(".form").classList.add("error");
     return;
   }
-
   const user = await signUp(name, email, password);
-  if (user) renderLogin(), showToast('You Signed Up successfully');
+  if (user) renderLogin(), showToast("You Signed Up successfully");
 }
 
 /**
@@ -112,11 +109,11 @@ async function handleRegister(e) {
  */
 function returnFieldValues() {
   const getField = (id) => document.getElementById(id).value;
-  const name = getField('name');
-  const email = getField('email');
-  const password = getField('password');
-  const confirmPassword = getField('confirm-password');
-  const checkPrivacy = document.getElementById('check-privacy').checked;
+  const name = getField("name");
+  const email = getField("email");
+  const password = getField("password");
+  const confirmPassword = getField("confirm-password");
+  const checkPrivacy = document.getElementById("check-privacy").checked;
 
   return { name, email, password, confirmPassword, checkPrivacy };
 }
@@ -131,14 +128,14 @@ function returnFieldValues() {
  * @returns {{ errorMessages: string, returnState: boolean }} - Validation results.
  */
 function validateRegister(name, email, password, confirmPassword, checkPrivacy) {
-  let errorMessages = '',
+  let errorMessages = "",
     returnState = true;
 
-  if (![name, email, password, confirmPassword].every(Boolean)) (errorMessages += 'Fill all fields.<br>'), (returnState = false);
-  if (!checkPrivacy) (errorMessages += 'Accept the privacy policy.<br>'), (returnState = false);
-  if (email && !/@/.test(email)) (errorMessages += 'Enter a valid email.<br>'), (returnState = false);
-  if (password.length < 6) (errorMessages += 'Password must be at least 6 characters.<br>'), (returnState = false);
-  if (password !== confirmPassword) (errorMessages += 'Passwords do not match.<br>'), (returnState = false);
+  if (![name, email, password, confirmPassword].every(Boolean)) (errorMessages += "Fill all fields.<br>"), (returnState = false);
+  if (!checkPrivacy) (errorMessages += "Accept the privacy policy.<br>"), (returnState = false);
+  if (email && !/@/.test(email)) (errorMessages += "Enter a valid email.<br>"), (returnState = false);
+  if (password.length < 6) (errorMessages += "Password must be at least 6 characters.<br>"), (returnState = false);
+  if (password !== confirmPassword) (errorMessages += "Passwords do not match.<br>"), (returnState = false);
 
   return { errorMessages, returnState };
 }
@@ -153,7 +150,7 @@ function returnHeaderTemplate() {
       <div class="head">
         <div class="logo-container">
           <div class="logo">
-            ${returnIcon('logo-dark')}
+            ${returnIcon("logo-dark")}
           </div>
         <div class="logo-background"></div>
       </div>
@@ -192,13 +189,13 @@ function returnLoginTemplate() {
                 <div class="input-container">
                     <input type="email" id="email" placeholder="Email" />
                     <span>
-                        ${returnIcon('mail-outline')}
+                        ${returnIcon("mail-outline")}
                     </span>
                 </div>
                 <div class="input-container">
                     <input type="password" id="password" placeholder="Password" />
                     <span>
-                        ${returnIcon('lock')}
+                        ${returnIcon("lock")}
                     </span>
                 </div>
             </div>
@@ -225,32 +222,32 @@ function returnRegisterTemplate() {
     <div class="register">
       <div class="header">
         <h1>Sign up<hr></h1>
-        <button onclick="renderLogin(true)">${returnIcon('arrow-left')}</button>
+        <button onclick="renderLogin(true)">${returnIcon("arrow-left")}</button>
       </div>
       <form class="form" onsubmit=handleRegister(event)>
         <div class="inputs">
           <div class="input-container">
             <input type="text" id="name" placeholder="Name" />
             <span>
-                ${returnIcon('user-outline')}
+                ${returnIcon("user-outline")}
             </span>
           </div>
           <div class="input-container">
               <input type="email" id="email" placeholder="Email" />
               <span>
-                  ${returnIcon('mail-outline')}
+                  ${returnIcon("mail-outline")}
               </span>
           </div>
           <div class="input-container">
               <input type="password" id="password" placeholder="Password" />
               <span>
-                  ${returnIcon('lock')}
+                  ${returnIcon("lock")}
               </span>
           </div>
           <div class="input-container">
               <input type="password" id="confirm-password" placeholder="Confirm Password" />
               <span>
-                  ${returnIcon('lock')}
+                  ${returnIcon("lock")}
               </span>
           </div>
         </div>

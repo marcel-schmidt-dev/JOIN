@@ -19,21 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
  */
 export function showContactDetails(id) {
   const contact = contactList.find((contact) => contact.id.toString() === id.toString());
-
   const contentRef = document.querySelector(".content");
   let contactSectionRef = contentRef.querySelector(".contact-details-container");
-
   if (contactSectionRef) {
     contactSectionRef.innerHTML = getContactDetailsTemplate(contact);
   } else {
-    contentRef.innerHTML += `<div class="contact-details-container">${getContactDetailsTemplate(
-      contact
-    )}</div>`;
+    contentRef.innerHTML += `<div class="contact-details-container">${getContactDetailsTemplate(contact)}</div>`;
   }
-
   const contactListItems = document.querySelectorAll(".contact");
   contactListItems.forEach((item) => item.classList.remove("active"));
-
   const activeContact = document.querySelector(`.contact[data-id="${id}"]`);
   if (activeContact) {
     activeContact.classList.add("active");

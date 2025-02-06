@@ -1,12 +1,12 @@
 /**
  * Imports necessary functions and icons for task details.
  */
-import { returnTaskById, getContact, returnSubTasks, deleteTask } from '../../firebase.js';
-import returnIcon from '../../icons.js';
-import { getInitialsFromName } from '../../utility-functions.js';
-import { renderBoardTemplate, renderTasks } from '../board.js';
-import { moveTaskToSlot } from '../../firebase.js';
-import { renderTaskForm } from '../task-form/task-form.js';
+import { returnTaskById, getContact, returnSubTasks, deleteTask } from "../../firebase.js";
+import returnIcon from "../../icons.js";
+import { getInitialsFromName } from "../../utility-functions.js";
+import { renderBoardTemplate, renderTasks } from "../board.js";
+import { moveTaskToSlot } from "../../firebase.js";
+import { renderTaskForm } from "../task-form/task-form.js";
 
 // Attach the moveTaskToSlot function to the global window object.
 window.moveTaskToSlot = moveTaskToSlot;
@@ -19,43 +19,67 @@ window.moveTaskToSlot = moveTaskToSlot;
  */
 export default async function showTaskDetails(taskId, slot) {
   const task = await returnTaskById(taskId);
-  const contentRef = document.querySelector('.content');
-  const assignees = task.assignee ? await Promise.all(task.assignee.map((id) => getContact(id))) : [];
+  const assignees = await getAssignees(task);
   const subTasks = await returnSubTasks(taskId, slot);
 
-  contentRef.innerHTML += returnTaskDetailsTemplate(taskId, task, slot, assignees, subTasks);
+  renderTaskDetails(taskId, task, slot, assignees, subTasks);
+  addMoveEventListeners(taskId);
+  addActionEventListeners(slot, taskId);
+}
 
-  const moveButtons = contentRef.querySelectorAll('.move-btn');
-  moveButtons.forEach((button) => {
-    button.addEventListener('click', async (event) => {
-      const slot = event.target.dataset.slot;
-      await moveTaskToSlot(slot, taskId);
+/**
+ * Retrieves the assignees for a given task.
+ *
+ * @param {Object} task - The task object containing assignee information.
+ * @param {Array} task.assignee - An array of assignee identifiers.
+ * @returns {Promise<Array>} A promise that resolves to an array of assignee contact information.
+ */
+async function getAssignees(task) {
+  return task.assignee ? Promise.all(task.assignee.map(getContact)) : [];
+}
+
+function renderTaskDetails(taskId, task, slot, assignees, subTasks) {
+  document.querySelector(".content").innerHTML += returnTaskDetailsTemplate(taskId, task, slot, assignees, subTasks);
+}
+
+function addMoveEventListeners(taskId) {
+  document.querySelectorAll(".move-btn").forEach((button) => {
+    button.addEventListener("click", async (event) => {
+      await moveTaskToSlot(event.target.dataset.slot, taskId);
       closeTaskDetails();
       await renderBoardTemplate();
     });
   });
+}
 
-  ['delete-btn', 'edit-btn'].forEach((className) => {
-    const button = contentRef.querySelector(`.${className}`);
-    if (button) {
-      button.addEventListener('click', async () => {
-        if (className === 'delete-btn') {
-          deleteTask(slot, taskId);
-        } else {
-          document.querySelector('.task-details-container').remove();
-          renderTaskForm(slot, taskId);
-        }
-        await renderBoardTemplate();
-      });
-    }
+/**
+ * Adds event listeners to the delete and edit buttons for a specific task.
+ *
+ * @param {number} slot - The slot number where the task is located.
+ * @param {string} taskId - The unique identifier of the task.
+ */
+function addActionEventListeners(slot, taskId) {
+  ["delete-btn", "edit-btn"].forEach((className) => {
+    const button = document.querySelector(`.${className}`);
+    if (!button) return;
+
+    button.addEventListener("click", async () => {
+      className === "delete-btn" ? deleteTask(slot, taskId) : editTask(slot, taskId);
+      await renderBoardTemplate();
+    });
   });
+}
+
+function editTask(slot, taskId) {
+  document.querySelector(".task-details-container").remove();
+  renderTaskForm(slot, taskId);
 }
 
 /**
  * Closes the task details view.
  */
 export function closeTaskDetails() {
-  document.querySelector('.task-details-container').remove();
+  document.querySelector(".task-details-container").remove();
 }
 
 function returnTaskDetailsTemplate(taskId, task, slot, assignees, subTasks) {
@@ -63,7 +87,7 @@ function returnTaskDetailsTemplate(taskId, task, slot, assignees, subTasks) {
   <div class="task-details-container">
       <div class="task-details" data-task-id=${taskId} data-task-slot=${slot}>
           <div class="top">
-              <div class="type" style="background-color: ${task.type === 'Technical Task' ? '#1FD7C1' : '#0038FF'}">${task.type}</div>
+              <div class="type" style="background-color: ${task.type === "Technical Task" ? "#1FD7C1" : "#0038FF"}">${task.type}</div>
               <div class="close" onclick="closeTaskDetails()">✘</div>
           </div>
           <h2>${task.title}</h2>
@@ -91,17 +115,17 @@ function returnTaskDetailsTemplate(taskId, task, slot, assignees, subTasks) {
                   <span>${assignee.fullName}</span>
                   </div>`;
                  })
-                 .join('')}
+                 .join("")}
                   ${
                     assignees.length > 3
                       ? `<div class="assignee extra-assignees" title="${assignees
                           .slice(3)
                           .map((a) => a.fullName)
-                          .join(', ')}">
+                          .join(", ")}">
                           <div class="bubble" style="background-color: #d1d1d1;">+${assignees.length - 3}</div>
                             <span>+ ${assignees.length - 3} more</span>
                           </div>`
-                      : ''
+                      : ""
                   }
               </div>
             </div>
@@ -111,9 +135,11 @@ function returnTaskDetailsTemplate(taskId, task, slot, assignees, subTasks) {
               <div class="subtask-container">
               ${subTasks
                 .map((subtask) => {
-                  return `<div class="subtask"><input type="checkbox" ${subtask.checked ? 'checked' : ''} name="${subtask.id}" id="${subtask.id}"><span>${subtask.title}</span></div>`;
+                  return `<div class="subtask"><input type="checkbox" ${subtask.checked ? "checked" : ""} name="${subtask.id}" id="${subtask.id}"><span>${
+                    subtask.title
+                  }</span></div>`;
                 })
-                .join('')}
+                .join("")}
               </div>
           </div>
           <div class="move-buttons">
@@ -123,9 +149,9 @@ function returnTaskDetailsTemplate(taskId, task, slot, assignees, subTasks) {
               <button class="move-btn" data-slot="done-tasks">Done</button>
           </div>
           <div class="buttons">
-              <button class="delete-btn">${returnIcon('trash-outline')}Delete</button>
+              <button class="delete-btn">${returnIcon("trash-outline")}Delete</button>
               <hr>
-              <button class="edit-btn">${returnIcon('pen')}Edit</button>
+              <button class="edit-btn">${returnIcon("pen")}Edit</button>
           </div>
       </div>
   </div>

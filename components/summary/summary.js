@@ -1,13 +1,13 @@
 /**
  * Imports required functions and modules.
  */
-import returnIcon from '../icons.js';
-import { returnBoard, getAuthUser, checkAuth } from '../firebase.js';
+import returnIcon from "../icons.js";
+import { returnBoard, getAuthUser, checkAuth } from "../firebase.js";
 
 /**
  * Listens for the DOM content to be fully loaded and then renders the summary template.
  */
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener("DOMContentLoaded", async () => {
   checkAuth();
   await renderSummaryTemplate();
 });
@@ -22,23 +22,22 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 function getRelevantDueDate(tasks) {
   const today = new Date();
-  const parsedDueDates = tasks.map((task) => new Date(task.dueDate));
-  const overdueDates = parsedDueDates.filter((date) => date < today);
+  const parsedDueDates = tasks.map(({ dueDate }) => new Date(dueDate));
+  const overdueDates = filterOverdueDates(parsedDueDates, today);
+  const selectedDate = overdueDates.length ? getEarliestDate(overdueDates) : getEarliestDate(parsedDueDates);
+  return formatDate(selectedDate);
+}
 
-  let selectedDate;
-  if (overdueDates.length > 0) {
-    overdueDates.sort((a, b) => a - b);
-    selectedDate = overdueDates[0];
-  } else {
-    parsedDueDates.sort((a, b) => a - b);
-    selectedDate = parsedDueDates[0];
-  }
+function filterOverdueDates(dates, today) {
+  return dates.filter((date) => date < today);
+}
 
-  return selectedDate.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+function getEarliestDate(dates) {
+  return dates.sort((a, b) => a - b)[0];
+}
+
+function formatDate(date) {
+  return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 }
 
 /**
@@ -53,18 +52,15 @@ async function renderSummaryTemplate() {
   let urgentTasks = [];
   let allTasks = [];
   let contentRef;
-
   Object.keys(board).forEach((key) => {
     board[key].forEach((task) => {
       allTasks.push(task);
-      if (task.priority === 'urgent') urgentTasks.push(task);
+      if (task.priority === "urgent") urgentTasks.push(task);
     });
   });
-
-  while ((contentRef = document.querySelector('.content')) === null) {
+  while ((contentRef = document.querySelector(".content")) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
-
   contentRef.innerHTML = returnSummaryTemplate(user, board, allTasks, urgentTasks);
 }
 
@@ -91,16 +87,16 @@ function returnSummaryTemplate(user, board, allTasks, urgentTasks) {
           <div class="summary-col">
               <div class="summary-grid">
                   <a href="./board.html" class="summary-card-2">
-                      <div class="summary-card-icon">${returnIcon('pen')}</div>
-                      <div class="summary-card-content"><span>${board['todo'] ? board['todo'].length : 0}</span><br>To-do</div>
+                      <div class="summary-card-icon">${returnIcon("pen")}</div>
+                      <div class="summary-card-content"><span>${board["todo"] ? board["todo"].length : 0}</span><br>To-do</div>
                   </a>
                   <a href="./board.html" class="summary-card-2">
-                      <div class="summary-card-icon">${returnIcon('check')}</div>
-                      <div class="summary-card-content"><span>${board['done'] ? board['done'].length : 0}</span><br>Done</div>
+                      <div class="summary-card-icon">${returnIcon("check")}</div>
+                      <div class="summary-card-content"><span>${board["done"] ? board["done"].length : 0}</span><br>Done</div>
                   </a>
                   <a href="./board.html" class="summary-card-1">
                       <div>
-                          <div class="summary-card-icon">${returnIcon('urgent')}</div>
+                          <div class="summary-card-icon">${returnIcon("urgent")}</div>
                           <div class="summary-card-content"><span>${urgentTasks.length}</span><br>Urgent</div>
                       </div>
                       <hr>
@@ -113,17 +109,17 @@ function returnSummaryTemplate(user, board, allTasks, urgentTasks) {
                       <span>${allTasks.length}</span>Tasks in Board
                   </a>
                   <a href="./board.html" class="summary-card-3">
-                      <span>${board['inProgress'] ? board['inProgress'].length : 0}</span>Tasks in Progress
+                      <span>${board["inProgress"] ? board["inProgress"].length : 0}</span>Tasks in Progress
                   </a>
                   <a href="./board.html" class="summary-card-3">
-                      <span>${board['awaitFeedback'] ? board['awaitFeedback'].length : 0}</span>Awaiting Feedback
+                      <span>${board["awaitFeedback"] ? board["awaitFeedback"].length : 0}</span>Awaiting Feedback
                   </a>
               </div>
           </div>
           <div class="summary-col">
               <div class="welcome">
                   Good morning,
-                  <div>${user.displayName ? user.displayName : 'Guest'}</div>
+                  <div>${user.displayName ? user.displayName : "Guest"}</div>
               </div>
           </div>
       </div>
