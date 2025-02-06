@@ -29,13 +29,13 @@
             <pre class="prettyprint source linenums"><code>/**
  * Imports required functions and modules.
  */
-import returnIcon from "../icons.js";
-import { returnBoard, getAuthUser, checkAuth } from "../firebase.js";
+import returnIcon from '../icons.js';
+import { returnBoard, getAuthUser, checkAuth } from '../firebase.js';
 
 /**
  * Listens for the DOM content to be fully loaded and then renders the summary template.
  */
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener('DOMContentLoaded', async () => {
   checkAuth();
   await renderSummaryTemplate();
 });
@@ -49,11 +49,15 @@ document.addEventListener("DOMContentLoaded", async () => {
  * @returns {string} - A string representing the most relevant due date in the format "Month Day, Year".
  */
 function getRelevantDueDate(tasks) {
-  const today = new Date();
-  const parsedDueDates = tasks.map(({ dueDate }) => new Date(dueDate));
-  const overdueDates = filterOverdueDates(parsedDueDates, today);
-  const selectedDate = overdueDates.length ? getEarliestDate(overdueDates) : getEarliestDate(parsedDueDates);
-  return formatDate(selectedDate);
+  if (tasks &amp;&amp; tasks.length > 0) {
+    const today = new Date();
+    const parsedDueDates = tasks.map(({ dueDate }) => new Date(dueDate));
+    const overdueDates = filterOverdueDates(parsedDueDates, today);
+    const selectedDate = overdueDates.length ? getEarliestDate(overdueDates) : getEarliestDate(parsedDueDates);
+    return formatDate(selectedDate);
+  } else {
+    return formatDate(new Date());
+  }
 }
 
 function filterOverdueDates(dates, today) {
@@ -65,7 +69,7 @@ function getEarliestDate(dates) {
 }
 
 function formatDate(date) {
-  return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 /**
@@ -75,18 +79,23 @@ function formatDate(date) {
  * @returns {Promise&lt;void>} - A promise that resolves once the summary template is rendered.
  */
 async function renderSummaryTemplate() {
-  const board = await returnBoard();
+  let board = await returnBoard();
   const user = await getAuthUser();
   let urgentTasks = [];
   let allTasks = [];
   let contentRef;
-  Object.keys(board).forEach((key) => {
-    board[key].forEach((task) => {
-      allTasks.push(task);
-      if (task.priority === "urgent") urgentTasks.push(task);
+
+  if (!board) {
+    board = { todo: [], inProgress: [], done: [], awaitFeedback: [] };
+    Object.keys(board).forEach((key) => {
+      board[key].forEach((task) => {
+        allTasks.push(task);
+        if (task.priority === 'urgent') urgentTasks.push(task);
+      });
     });
-  });
-  while ((contentRef = document.querySelector(".content")) === null) {
+  }
+
+  while ((contentRef = document.querySelector('.content')) === null) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
   contentRef.innerHTML = returnSummaryTemplate(user, board, allTasks, urgentTasks);
@@ -115,16 +124,16 @@ function returnSummaryTemplate(user, board, allTasks, urgentTasks) {
           &lt;div class="summary-col">
               &lt;div class="summary-grid">
                   &lt;a href="./board.html" class="summary-card-2">
-                      &lt;div class="summary-card-icon">${returnIcon("pen")}&lt;/div>
-                      &lt;div class="summary-card-content">&lt;span>${board["todo"] ? board["todo"].length : 0}&lt;/span>&lt;br>To-do&lt;/div>
+                      &lt;div class="summary-card-icon">${returnIcon('pen')}&lt;/div>
+                      &lt;div class="summary-card-content">&lt;span>${board['todo'] ? board['todo'].length : 0}&lt;/span>&lt;br>To-do&lt;/div>
                   &lt;/a>
                   &lt;a href="./board.html" class="summary-card-2">
-                      &lt;div class="summary-card-icon">${returnIcon("check")}&lt;/div>
-                      &lt;div class="summary-card-content">&lt;span>${board["done"] ? board["done"].length : 0}&lt;/span>&lt;br>Done&lt;/div>
+                      &lt;div class="summary-card-icon">${returnIcon('check')}&lt;/div>
+                      &lt;div class="summary-card-content">&lt;span>${board['done'] ? board['done'].length : 0}&lt;/span>&lt;br>Done&lt;/div>
                   &lt;/a>
                   &lt;a href="./board.html" class="summary-card-1">
                       &lt;div>
-                          &lt;div class="summary-card-icon">${returnIcon("urgent")}&lt;/div>
+                          &lt;div class="summary-card-icon">${returnIcon('urgent')}&lt;/div>
                           &lt;div class="summary-card-content">&lt;span>${urgentTasks.length}&lt;/span>&lt;br>Urgent&lt;/div>
                       &lt;/div>
                       &lt;hr>
@@ -137,17 +146,17 @@ function returnSummaryTemplate(user, board, allTasks, urgentTasks) {
                       &lt;span>${allTasks.length}&lt;/span>Tasks in Board
                   &lt;/a>
                   &lt;a href="./board.html" class="summary-card-3">
-                      &lt;span>${board["inProgress"] ? board["inProgress"].length : 0}&lt;/span>Tasks in Progress
+                      &lt;span>${board['inProgress'] ? board['inProgress'].length : 0}&lt;/span>Tasks in Progress
                   &lt;/a>
                   &lt;a href="./board.html" class="summary-card-3">
-                      &lt;span>${board["awaitFeedback"] ? board["awaitFeedback"].length : 0}&lt;/span>Awaiting Feedback
+                      &lt;span>${board['awaitFeedback'] ? board['awaitFeedback'].length : 0}&lt;/span>Awaiting Feedback
                   &lt;/a>
               &lt;/div>
           &lt;/div>
           &lt;div class="summary-col">
               &lt;div class="welcome">
                   Good morning,
-                  &lt;div>${user.displayName ? user.displayName : "Guest"}&lt;/div>
+                  &lt;div>${user.displayName ? user.displayName : 'Guest'}&lt;/div>
               &lt;/div>
           &lt;/div>
       &lt;/div>
@@ -164,13 +173,13 @@ function returnSummaryTemplate(user, board, allTasks, urgentTasks) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateModal">activateModal</a></li><li><a href="global.html#addActionEventListeners">addActionEventListeners</a></li><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#assignedContacts">assignedContacts</a></li><li><a href="global.html#categoryValidation">categoryValidation</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clearPriority">clearPriority</a></li><li><a href="global.html#closeModal">closeModal</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#contactList">contactList</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#dateValidation">dateValidation</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#disableDragAndDrop">disableDragAndDrop</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#enableDragAndDrop">enableDragAndDrop</a></li><li><a href="global.html#fetchBoardData">fetchBoardData</a></li><li><a href="global.html#fetchContacts">fetchContacts</a></li><li><a href="global.html#fillContacts">fillContacts</a></li><li><a href="global.html#finalizeTask">finalizeTask</a></li><li><a href="global.html#generateContactsList">generateContactsList</a></li><li><a href="global.html#getAssignees">getAssignees</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFilterValue">getFilterValue</a></li><li><a href="global.html#getFilteredContacts">getFilteredContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#getTaskData">getTaskData</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handlePriorityClick">handlePriorityClick</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleSubmitTask">handleSubmitTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#initializeForm">initializeForm</a></li><li><a href="global.html#isAssigned">isAssigned</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#isValidTask">isValidTask</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#preventDrag">preventDrag</a></li><li><a href="global.html#preventEnterKeySubmit">preventEnterKeySubmit</a></li><li><a href="global.html#processBoardData">processBoardData</a></li><li><a href="global.html#renderAssigneeList">renderAssigneeList</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderModal">renderModal</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSelectedAssignees">renderSelectedAssignees</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTaskForm">renderTaskForm</a></li><li><a href="global.html#renderTaskPage">renderTaskPage</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnAssigneeInput">returnAssigneeInput</a></li><li><a href="global.html#returnAssigneeTemplate">returnAssigneeTemplate</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnBoardTemplate">returnBoardTemplate</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnFieldValues">returnFieldValues</a></li><li><a href="global.html#returnHeaderTemplate">returnHeaderTemplate</a></li><li><a href="global.html#returnLoginTemplate">returnLoginTemplate</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnRegisterTemplate">returnRegisterTemplate</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubTasksTemplate">returnSubTasksTemplate</a></li><li><a href="global.html#returnSummaryTemplate">returnSummaryTemplate</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskForm">returnTaskForm</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#saveSubtask">saveSubtask</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showDatepicker">showDatepicker</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#snapshotToArray">snapshotToArray</a></li><li><a href="global.html#subtasks">subtasks</a></li><li><a href="global.html#titleValidation">titleValidation</a></li><li><a href="global.html#toggleAssigneeInList">toggleAssigneeInList</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateDropdown">updateDropdown</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#updateTask">updateTask</a></li><li><a href="global.html#updateValidationUI">updateValidationUI</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li><li><a href="global.html#waitForElement">waitForElement</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateModal">activateModal</a></li><li><a href="global.html#addActionEventListeners">addActionEventListeners</a></li><li><a href="global.html#addContact">addContact</a></li><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#anonymouslyLogin">anonymouslyLogin</a></li><li><a href="global.html#assignedContacts">assignedContacts</a></li><li><a href="global.html#categoryValidation">categoryValidation</a></li><li><a href="global.html#checkAuth">checkAuth</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#clearPriority">clearPriority</a></li><li><a href="global.html#closeModal">closeModal</a></li><li><a href="global.html#closeTaskDetails">closeTaskDetails</a></li><li><a href="global.html#contactList">contactList</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#dateValidation">dateValidation</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#disableDragAndDrop">disableDragAndDrop</a></li><li><a href="global.html#editContact">editContact</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#editTask">editTask</a></li><li><a href="global.html#enableDragAndDrop">enableDragAndDrop</a></li><li><a href="global.html#fetchBoardData">fetchBoardData</a></li><li><a href="global.html#fetchContacts">fetchContacts</a></li><li><a href="global.html#fillContacts">fillContacts</a></li><li><a href="global.html#finalizeTask">finalizeTask</a></li><li><a href="global.html#generateContactsList">generateContactsList</a></li><li><a href="global.html#getAssignees">getAssignees</a></li><li><a href="global.html#getAuthUser">getAuthUser</a></li><li><a href="global.html#getContact">getContact</a></li><li><a href="global.html#getContacts">getContacts</a></li><li><a href="global.html#getFilterValue">getFilterValue</a></li><li><a href="global.html#getFilteredContacts">getFilteredContacts</a></li><li><a href="global.html#getFirebase">getFirebase</a></li><li><a href="global.html#getInitialsFromName">getInitialsFromName</a></li><li><a href="global.html#getRelevantDueDate">getRelevantDueDate</a></li><li><a href="global.html#getTaskData">getTaskData</a></li><li><a href="global.html#handleAddContact">handleAddContact</a></li><li><a href="global.html#handleContactOverlayTemplate">handleContactOverlayTemplate</a></li><li><a href="global.html#handleDeleteContact">handleDeleteContact</a></li><li><a href="global.html#handleEditContact">handleEditContact</a></li><li><a href="global.html#handleLogin">handleLogin</a></li><li><a href="global.html#handlePriorityClick">handlePriorityClick</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#handleSubmitTask">handleSubmitTask</a></li><li><a href="global.html#initializeBoard">initializeBoard</a></li><li><a href="global.html#initializeForm">initializeForm</a></li><li><a href="global.html#isAssigned">isAssigned</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#isValidTask">isValidTask</a></li><li><a href="global.html#moveTaskToSlot">moveTaskToSlot</a></li><li><a href="global.html#preventDrag">preventDrag</a></li><li><a href="global.html#preventEnterKeySubmit">preventEnterKeySubmit</a></li><li><a href="global.html#processBoardData">processBoardData</a></li><li><a href="global.html#removeContactFromAllTask">removeContactFromAllTask</a></li><li><a href="global.html#renderAssigneeList">renderAssigneeList</a></li><li><a href="global.html#renderBoardTemplate">renderBoardTemplate</a></li><li><a href="global.html#renderContactHeader">renderContactHeader</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderLogin">renderLogin</a></li><li><a href="global.html#renderModal">renderModal</a></li><li><a href="global.html#renderRegister">renderRegister</a></li><li><a href="global.html#renderSelectedAssignees">renderSelectedAssignees</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#renderSummaryTemplate">renderSummaryTemplate</a></li><li><a href="global.html#renderTaskForm">renderTaskForm</a></li><li><a href="global.html#renderTaskPage">renderTaskPage</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#returnAssigneeInput">returnAssigneeInput</a></li><li><a href="global.html#returnAssigneeTemplate">returnAssigneeTemplate</a></li><li><a href="global.html#returnBoard">returnBoard</a></li><li><a href="global.html#returnBoardTemplate">returnBoardTemplate</a></li><li><a href="global.html#returnCheckedSubtasks">returnCheckedSubtasks</a></li><li><a href="global.html#returnContactList">returnContactList</a></li><li><a href="global.html#returnContacts">returnContacts</a></li><li><a href="global.html#returnFieldValues">returnFieldValues</a></li><li><a href="global.html#returnHeaderTemplate">returnHeaderTemplate</a></li><li><a href="global.html#returnLoginTemplate">returnLoginTemplate</a></li><li><a href="global.html#returnPath">returnPath</a></li><li><a href="global.html#returnRandomContact">returnRandomContact</a></li><li><a href="global.html#returnRandomUserColor">returnRandomUserColor</a></li><li><a href="global.html#returnRegisterTemplate">returnRegisterTemplate</a></li><li><a href="global.html#returnSubTasks">returnSubTasks</a></li><li><a href="global.html#returnSubTasksTemplate">returnSubTasksTemplate</a></li><li><a href="global.html#returnSummaryTemplate">returnSummaryTemplate</a></li><li><a href="global.html#returnTaskById">returnTaskById</a></li><li><a href="global.html#returnTaskForm">returnTaskForm</a></li><li><a href="global.html#returnTaskTemplate">returnTaskTemplate</a></li><li><a href="global.html#saveSubtask">saveSubtask</a></li><li><a href="global.html#showContactDetails">showContactDetails</a></li><li><a href="global.html#showDatepicker">showDatepicker</a></li><li><a href="global.html#showToast">showToast</a></li><li><a href="global.html#signIn">signIn</a></li><li><a href="global.html#signInAnonymouslyUser">signInAnonymouslyUser</a></li><li><a href="global.html#signOutUser">signOutUser</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#snapshotToArray">snapshotToArray</a></li><li><a href="global.html#subtasks">subtasks</a></li><li><a href="global.html#titleValidation">titleValidation</a></li><li><a href="global.html#toggleAssigneeInList">toggleAssigneeInList</a></li><li><a href="global.html#toggleBurgerMenu">toggleBurgerMenu</a></li><li><a href="global.html#toggleDragAndDrop">toggleDragAndDrop</a></li><li><a href="global.html#toggleMenu">toggleMenu</a></li><li><a href="global.html#updateDropdown">updateDropdown</a></li><li><a href="global.html#updateSubTaskStatus">updateSubTaskStatus</a></li><li><a href="global.html#updateTask">updateTask</a></li><li><a href="global.html#updateValidationUI">updateValidationUI</a></li><li><a href="global.html#validateForm">validateForm</a></li><li><a href="global.html#validateRegister">validateRegister</a></li><li><a href="global.html#waitForElement">waitForElement</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Feb 06 2025 09:24:08 GMT+0100 (Mitteleuropäische Normalzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Feb 06 2025 13:59:45 GMT+0100 (Mitteleuropäische Normalzeit)
 </footer>
 
 <script> prettyPrint(); </script>
