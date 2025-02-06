@@ -493,7 +493,7 @@ function getTaskData(form) {
  * @returns {boolean} True if the task data is valid, otherwise false.
  */
 function isValidTask({ title, dueDate, category }) {
-  return dateValidation(dueDate) && titleValidation(title) && categoryValidation(category);
+  return titleValidation(title) && dateValidation(dueDate) && categoryValidation(category);
 }
 
 /**
