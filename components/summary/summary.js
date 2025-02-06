@@ -32,14 +32,33 @@ function getRelevantDueDate(tasks) {
   }
 }
 
+/**
+ * Filters an array of dates to return only those that are overdue.
+ *
+ * @param {Date[]} dates - An array of Date objects to be filtered.
+ * @param {Date} today - The current date to compare against.
+ * @returns {Date[]} An array of Date objects that are before the current date.
+ */
 function filterOverdueDates(dates, today) {
   return dates.filter((date) => date < today);
 }
 
+/**
+ * Returns the earliest date from an array of dates.
+ *
+ * @param {Date[]} dates - An array of Date objects.
+ * @returns {Date} The earliest date in the array.
+ */
 function getEarliestDate(dates) {
   return dates.sort((a, b) => a - b)[0];
 }
 
+/**
+ * Formats a given date into a string with the format "Month Day, Year".
+ *
+ * @param {Date} date - The date to format.
+ * @returns {string} The formatted date string.
+ */
 function formatDate(date) {
   return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
