@@ -1,5 +1,5 @@
-import returnIcon from "../../icons.js";
-import { getInitialsFromName } from "../../utility-functions.js";
+import returnIcon from '../../icons.js';
+import { getInitialsFromName } from '../../utility-functions.js';
 
 /**
  * Returns the HTML template for the contact list.
@@ -10,7 +10,7 @@ export default function returnContactListTemplate(contactList) {
   return /*html*/ `
         <div class="contact-list">
             <div class="button-container">
-                <button onclick="handleContactOverlayTemplate()"><span>Add new contact</span> ${returnIcon("add-user")}</button>
+                <button onclick="handleContactOverlayTemplate()"><span>Add new contact</span> ${returnIcon('add-user')}</button>
             </div>
             <div class="list-content">
                 ${returnContactList(contactList)}
@@ -29,13 +29,11 @@ export default function returnContactListTemplate(contactList) {
  * @returns {string} The HTML for the contact list, sorted and grouped alphabetically.
  */
 function returnContactList(contactList) {
-  let currentLetter = ""; // Tracks the current alphabetical letter for grouping
-  let htmlList = ""; // The resulting HTML for the contact list
+  let currentLetter = '';
+  let htmlList = '';
 
-  // Sort contacts alphabetically by full name
   const sortedContacts = contactList.sort((a, b) => a.fullName.localeCompare(b.fullName));
 
-  // Generate the HTML for each contact
   sortedContacts.forEach((contact) => {
     const firstLetter = contact.fullName.charAt(0).toUpperCase();
     if (firstLetter !== currentLetter) {
@@ -44,7 +42,7 @@ function returnContactList(contactList) {
     }
     htmlList += /*html*/ `
             <div class="contact" onclick="showContactDetails('${contact.id}')" data-id="${contact.id}">
-                <div class="initials-bubble" style="background-color: ${"#" + contact.userColor}">
+                <div class="initials-bubble" style="background-color: ${'#' + contact.userColor}">
                     ${getInitialsFromName(contact.fullName)}
                 </div>
                 <div class="details">
