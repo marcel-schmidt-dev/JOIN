@@ -286,24 +286,6 @@ function setupDragAndDrop() {
 }
 
 /**
- * Updates the visibility of placeholders within slot elements.
- *
- * This function iterates over all elements with the class 'slot-content'.
- * If a slot element has no children, it removes the 'd-none' class from its
- * child element with the class 'placeholder', making the placeholder visible.
- *
- * @param {Array} slots - An array of slot elements to be processed.
- */
-function updatePlaceholders(slots) {
-  document.querySelectorAll('.slot-content').forEach((slot) => {
-    if (slot.children.length < 1) {
-      slot.querySelector('.placeholder').classList.remove('d-none');
-    }
-  });
-  updatePlaceholders();
-}
-
-/**
  * Checks if the current device is mobile based on the viewport width.
  * @returns {boolean} `true` if the device is mobile, `false` otherwise.
  */
