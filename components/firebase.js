@@ -122,6 +122,7 @@ export async function deleteContact(id) {
       }
     });
   });
+  removeContactFromAllTask(id);
   remove(contactsRef);
 }
 
@@ -476,5 +477,27 @@ export async function signUp(fullName, email, password) {
     return user;
   } catch (error) {
     throw error;
+  }
+}
+
+/**
+ * Removes a contact from all tasks in the board.
+ * @param {string} contactId - The ID of the contact to remove from all tasks.
+ */
+async function removeContactFromAllTask(contactId) {
+  const { database } = getFirebase();
+  const boardRef = ref(database, 'board/');
+  const boardSnapshot = await get(boardRef);
+  const board = boardSnapshot.val();
+  for (const slot in board) {
+    for (const task in board[slot]) {
+      const taskRef = ref(database, `board/${slot}/${task}`);
+      const taskSnapshot = await get(taskRef);
+      const taskData = taskSnapshot.val();
+      if (taskData.assignee.includes(contactId)) {
+        taskData.assignee = taskData.assignee.filter((id) => id !== contactId);
+        set(taskRef, taskData);
+      }
+    }
   }
 }
