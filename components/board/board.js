@@ -220,7 +220,7 @@ export async function renderTasks() {
   const boardData = await returnBoard();
   await renderTasksFromData(boardData, slots);
   setupDragAndDrop();
-  updatePlaceholders(slots);
+  updatePlaceholder();
 }
 
 /**
