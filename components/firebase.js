@@ -1,15 +1,7 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getDatabase, ref, get, push, remove, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
-import { returnRandomUserColor, returnRandomContact } from "./utility-functions.js";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signInAnonymously,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  signOut,
-} from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js';
+import { getDatabase, ref, get, push, remove, set } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js';
+import { returnRandomUserColor, returnRandomContact } from './utility-functions.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, createUserWithEmailAndPassword, updateProfile, signOut } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js';
 
 /**
  * Initializes and returns the Firebase app, database, and authentication instance.
@@ -17,13 +9,13 @@ import {
  */
 function getFirebase() {
   const firebaseConfig = {
-    apiKey: "AIzaSyBDHRtmOAgzYOtLRS0haC7KvV_AQO-HodA",
-    authDomain: "join-d177e.firebaseapp.com",
-    databaseURL: "https://join-d177e-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "join-d177e",
-    storageBucket: "join-d177e.appspot.com",
-    messagingSenderId: "224091284746",
-    appId: "1:224091284746:web:22cd033dcc6f13c23146f3",
+    apiKey: 'AIzaSyBDHRtmOAgzYOtLRS0haC7KvV_AQO-HodA',
+    authDomain: 'join-d177e.firebaseapp.com',
+    databaseURL: 'https://join-d177e-default-rtdb.europe-west1.firebasedatabase.app',
+    projectId: 'join-d177e',
+    storageBucket: 'join-d177e.appspot.com',
+    messagingSenderId: '224091284746',
+    appId: '1:224091284746:web:22cd033dcc6f13c23146f3',
   };
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
@@ -32,18 +24,17 @@ function getFirebase() {
 }
 
 /**
- * Retrieves all contacts from the Firebase database.
- * If there are fewer than 20 contacts, it generates and adds dummy contacts.
- * @returns {Promise<Array>} A promise that resolves to an array of contacts.
- */
-/**
  * Retrieves the contact list from the Firebase database.
  * If there are fewer than 20 contacts, it fills the list with random contacts.
  * @returns {Promise<Array>} A promise that resolves to an array of contacts.
  */
 export async function getContacts() {
-  const contacts = await fetchContacts();
-  return contacts.length < 20 ? fillContacts(contacts) : contacts;
+  let contacts = await fetchContacts();
+  while (contacts.length < 20) {
+    fillContacts();
+    contacts = await fetchContacts();
+  }
+  return contacts;
 }
 
 /**
@@ -52,7 +43,7 @@ export async function getContacts() {
  */
 async function fetchContacts() {
   const { database } = getFirebase();
-  const snapshot = await get(ref(database, "contacts"));
+  const snapshot = await get(ref(database, 'contacts'));
   return snapshot.exists() ? snapshotToArray(snapshot) : [];
 }
 
@@ -74,12 +65,9 @@ function snapshotToArray(snapshot) {
  * @param {Array} contacts - The current list of contacts.
  * @returns {Array} The updated list of contacts.
  */
-function fillContacts(contacts) {
-  while (contacts.length < 20) {
-    const contact = returnRandomContact();
-    addContact(contact[0], contact[1], contact[2]);
-  }
-  return contacts;
+function fillContacts() {
+  const contact = returnRandomContact();
+  addContact(contact[0], contact[1], contact[2]);
 }
 
 /**
@@ -111,7 +99,7 @@ export function addContact(fullName, email, phone) {
   };
 
   const { database } = getFirebase();
-  const contactsRef = ref(database, "contacts");
+  const contactsRef = ref(database, 'contacts');
 
   const newContactRef = push(contactsRef, userObject);
   return newContactRef.key;
@@ -124,7 +112,7 @@ export function addContact(fullName, email, phone) {
 export async function deleteContact(id) {
   const { database } = getFirebase();
   const contactsRef = ref(database, `contacts/${id}`);
-  const boardSnap = await get(ref(database, "board/"));
+  const boardSnap = await get(ref(database, 'board/'));
   boardSnap.forEach((slot) => {
     slot.forEach((task) => {
       const taskRef = task.val();
@@ -153,7 +141,7 @@ export function editContact(id, name, email, phone, userColor) {
     phone: phone,
     userColor: userColor,
   }).catch((error) => {
-    console.error("Error updating contact:", error);
+    console.error('Error updating contact:', error);
   });
 }
 
@@ -164,7 +152,7 @@ export function editContact(id, name, email, phone, userColor) {
  */
 async function fetchBoardData() {
   const { database } = getFirebase();
-  const snapshot = await get(ref(database, "board/"));
+  const snapshot = await get(ref(database, 'board/'));
   return snapshot.val();
 }
 
@@ -254,7 +242,7 @@ export async function returnSubTasks(id, slot) {
  * @param {Array<string>} subTasks - An array of sub-task titles.
  * @param {Array<string>} assignee - An array of user IDs assigned to the task.
  */
-export function addTask(slot = "todo", title, description, type, priority, dueDate, subTasks, assignee) {
+export function addTask(slot = 'todo', title, description, type, priority, dueDate, subTasks, assignee) {
   const { database } = getFirebase();
   const taskRef = ref(database, `board/${slot}`);
 
@@ -329,11 +317,11 @@ export async function moveTaskToSlot(newSlot, id) {
 }
 
 function sanitizeSlotName(slot) {
-  return slot.replace("-tasks", "");
+  return slot.replace('-tasks', '');
 }
 
 async function fetchBoard(database) {
-  const boardRef = ref(database, "board/");
+  const boardRef = ref(database, 'board/');
   const boardSnapshot = await get(boardRef);
   return boardSnapshot.val();
 }
@@ -374,7 +362,7 @@ export async function updateSubTaskStatus(slot, taskId, subTaskId, isChecked, ti
   try {
     await set(subTaskRef, { checked: isChecked, title: title });
   } catch (error) {
-    console.error("Error updating subtask status:", error);
+    console.error('Error updating subtask status:', error);
     throw error;
   }
 }
@@ -410,7 +398,7 @@ export async function getAuthUser() {
 export async function checkAuth() {
   const user = await getAuthUser();
   if (!user) {
-    window.location.href = "/index.html";
+    window.location.href = '/index.html';
   }
 }
 
@@ -443,9 +431,9 @@ export async function signOutUser() {
   const { auth } = getFirebase();
   try {
     await signOut(auth);
-    window.location.href = "/";
+    window.location.href = '/';
   } catch (error) {
-    console.error("Error signing out:", error);
+    console.error('Error signing out:', error);
     throw error;
   }
 }
@@ -460,7 +448,7 @@ export async function signInAnonymouslyUser() {
   const { auth } = getFirebase();
   try {
     const userCredential = await signInAnonymously(auth);
-    userCredential.user.displayName = "Guest";
+    userCredential.user.displayName = 'Guest';
 
     return userCredential.user;
   } catch (error) {
